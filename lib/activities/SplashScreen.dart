@@ -1,3 +1,4 @@
+import 'package:drapyy/helper/ToastUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,9 @@ class SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _initializeApp();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Toastutils.showSnackbar("title","hello how are you?");
+    });
   }
 
   /// Combines initialization tasks
@@ -68,7 +72,7 @@ class SplashScreenState extends State<SplashScreen> {
       backgroundColor: white,
       body: Center(
         child: Image.asset(
-          Drawables.splashLogo,
+          Drawables.img_logo,
           height: 224,
           width: 300,
         ),
