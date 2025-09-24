@@ -1,3 +1,7 @@
+import 'package:drapyy/activities/ForgotPasswordActivity.dart';
+import 'package:drapyy/activities/MainActivity.dart';
+import 'package:drapyy/activities/RegisterActivity.dart';
+import 'package:drapyy/fragments/ProfileFragment.dart';
 import 'package:drapyy/helper/ToastUtils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +50,7 @@ class SplashScreenState extends State<SplashScreen> {
     //NavigationHelper.moveToNewScreenAndPreviousSave(LoginScreen());
     //--------------------------------------------------------------
     // it will finish previous screen.
-    NavigationHelper.moveToNewScreenAndPreviousRevome(LoginScreen());
+    NavigationHelper.moveToNewScreenAndPreviousRevome(MainActivity());
     //--------------------------------------------------------------
     //send value to next screen.
     // NavigationHelper.moveToNextScreenWithArgument(

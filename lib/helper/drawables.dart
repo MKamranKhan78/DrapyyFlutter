@@ -10,6 +10,7 @@ class Drawables {
   static const String round_trip =  'assets/images/img_round_trip.png';
   static const String oneway_trip =  'assets/images/img_oneway_trip.png';
   static const String logo =  'assets/images/logo_screen.png';
+  static const String img_drappy_white =  'assets/images/img_drappy_white.png';
 
 
 
