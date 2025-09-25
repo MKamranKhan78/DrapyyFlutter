@@ -41,23 +41,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Product> products = [
     Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
+      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
+      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
       code: '77147',
-      imageUrl: 'assets/images/product1.jpg', // Replace with your image path
+      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
     ),
     Product(
       name: 'CLAUDETTE CORSET',
       description: 'SHIRT DRESS WHITE',
       code: '77147',
-      imageUrl: 'assets/images/product2.jpg', // Replace with your image path
+      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
     ),
 
     Product(
       name: 'CLAUDETTE CORSET2',
       description: 'SHIRT DRESS WHITE2',
       code: '771472',
-      imageUrl: 'assets/images/product2.jpg', // Replace with your image path
+      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
     ),
     // Add more products as needed
   ];
@@ -220,12 +220,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }*/
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // 👈 Wrap with SingleChildScrollView
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -275,8 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // Horizontal ListView - Need to constrain height
-              SizedBox( // 👈 Constrain height for horizontal ListView
+              // Horizontal ListView
+              SizedBox(
                 height: 80,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -306,11 +305,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // GridView - Need to constrain height or use shrinkWrap
-              SizedBox( // 👈 Constrain height for GridView
-                height: 400, // Adjust this height based on your content
+              // GridView - Fixed height based on content
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0,right: 10),
                 child: GridView.builder(
-                  //physics: const NeverScrollableScrollPhysics(), // 👈 Disable inner scrolling
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -320,13 +319,52 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   itemCount: products.length,
                   itemBuilder: (context, index) {
-                    return ProductItemAlt(product: products[index]);
+                    return ProductItemAlt(
+                      product: products[index],
+                      onItemClick: () {
+                        // Handle complete item click
+                        print('Product clicked: ${products[index].name}');
+                        // Add your navigation logic here
+                      },
+                      onFavoriteClick: () {
+                        // Handle favorite click
+                        setState(() {
+                          //products[index].isFavorite = !products[index].isFavorite;
+                        });
+                        print('Favorite toggled for: ${products[index].name}');
+                      },
+                    );
                   },
                 ),
               ),
 
-              // Add some bottom padding to avoid overflow
+              // Add some bottom padding
               const SizedBox(height: 20),
+
+              Row(
+                children: [
+                  Text(
+                    "Explore More",
+                    style: TextStyle(
+                      fontFamily: FontConstants.gothamPro,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  Icon(
+                    Icons.arrow_right_alt,
+                    size: 100,
+                    color: app_color_black,
+                  ),
+                ],
+              )
+
+
+
+
+
             ],
           ),
         ),
@@ -353,129 +391,153 @@ class Product {
 
 
 
-// Alternative version with white background text (if you prefer no overlay)
-class ProductItemAlt extends StatefulWidget {
+
+class ProductItemAlt extends StatelessWidget {
   final Product product;
+  final VoidCallback onItemClick;
+  final VoidCallback onFavoriteClick;
 
-  const ProductItemAlt({super.key, required this.product});
-
-  @override
-  State<ProductItemAlt> createState() => _ProductItemAltState();
-}
-
-class _ProductItemAltState extends State<ProductItemAlt> {
-  bool isFavorite = false;
+  const ProductItemAlt({
+    super.key,
+    required this.product,
+    required this.onItemClick,
+    required this.onFavoriteClick,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image Container with fixed height
-          Container(
-            height: 200, // 👈 Fixed height for image
-            width: double.infinity, // 👈 Match parent width
-            child: Stack(
-              children: [
-                // Product Image
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
-                  ),
-                  child: SizedBox( // 👈 Add SizedBox with fixed height
-                    height: 200, // 👈 Fixed height
-                    width: double.infinity, // 👈 Match parent width
-                    child: Image.asset(
-                      widget.product.imageUrl,
+    return GestureDetector(
+      onTap: onItemClick, // Complete item click
+      child: Container(
+        height: 150,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image Container with fixed height
+            Container(
+              height: 170,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  // Product Image
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8.0),
+                      topRight: Radius.circular(8.0),
+                    ),
+                    child: SizedBox(
+                      height: 180,
                       width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-
-                // Favorite Button - positioned in top right
-                Positioned(
-                  top: 8.0,
-                  right: 8.0,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isFavorite = !isFavorite;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        size: 18.0,
-                        color: isFavorite ? Colors.red : Colors.black,
+                      child: Image.network(
+                        product.imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          );
+                        },
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
 
-          // Product Details
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.product.name,
-                  style: const TextStyle(
-                    fontFamily: FontConstants.gothamPro,
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
+                  // Favorite Button - with separate click handler
+                  Positioned(
+                    top: 8.0,
+                    right: 8.0,
+                    child: GestureDetector(
+                      onTap: onFavoriteClick,
+                      child: Container(
+                        padding: const EdgeInsets.all(6.0), // 👈 Increased padding for larger size
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(8.0), // 👈 Added rounded corners
+                        ),
+                        child: Icon(
+                          Icons.favorite_border,
+                          size: 22.0, // 👈 Increased icon size
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.product.description,
-                  style: const TextStyle(
-                    fontFamily: FontConstants.gothamPro,
-                    fontSize: 10,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.product.code,
-                  style: const TextStyle(
-                    fontFamily: FontConstants.gothamPro,
-                    fontSize: 10,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            // Product Details
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontFamily: FontConstants.gothamPro,
+                      fontSize: 10,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                     maxLines: 2, // ✅ Limits to 2 lines
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    product.description,
+                    style: const TextStyle(
+                      fontFamily: FontConstants.gothamPro,
+                      fontSize: 10,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    maxLines: 2,
+                     overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "PKR " + product.code,
+                      style: const TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 10,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Container(width: 5),
+                    Text(
+                      "PKR " + "333333",
+                      style: TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 10,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: Colors.black,
+                        decorationThickness: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
