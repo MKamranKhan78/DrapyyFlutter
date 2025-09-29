@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 
 const Color app_color_black = Color(0xFF000000);
+const Color grey_color = Color(0xFF999999);
 const Color white = Color(0xFFFFFFFF);
 const Color purple_200 = Color(0xFFBB86FC);
 const Color purple_500 = Color(0xFF6200EE);
@@ -22,6 +23,7 @@ const Color visacardtext = Color(0xFF383838);
 const Color lighgrey = Color(0xFFA7A7A7);
 const Color sky_light_grey = Color(0xFFE3E5E5);
 const Color searchtxtcolor = Color(0xFF555555);
+const Color sky_grey_dark = Color(0xFF979C9E);
 const Color darkgrey = Color(0xFF33302);
 const Color carttextcolor = Color(0xFF272728);
 const Color SeparatorColorLightNoTransparency = Color(0xFFC6C6C8);

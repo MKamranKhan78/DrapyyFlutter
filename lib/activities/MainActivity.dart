@@ -26,57 +26,59 @@ class _BottomNavScreenState extends State<MainActivity> {
     SearchScreen(),
     ProfileFragment(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack( // keeps state of all fragments
+      body: IndexedStack(
+        // keeps state of all fragments
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: Container(
-        height: 60,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(5, (index) {
-            final icons = [
-              Icons.home,
-              Icons.menu,
-              Icons.shopping_cart,
-              Icons.search,
-              Icons.person,
-            ];
-
-            bool isSelected = _currentIndex == index;
-
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.all(8),
-                margin: EdgeInsets.only(bottom: isSelected ? 8 : 0), // 👆 move up
-                child: Icon(
-                  icons[index],
-                  size: isSelected ? 30 : 26,
-                  color: Colors.black,
-                ),
+      bottomNavigationBar: SafeArea( // 👈 Fix: avoids overlap with system nav
+        child: Container(
+          height: 60,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, -2),
               ),
-            );
-          }),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(5, (index) {
+              final icons = [
+                Icons.home,
+                Icons.menu,
+                Icons.shopping_cart,
+                Icons.search,
+                Icons.person,
+              ];
+
+              bool isSelected = _currentIndex == index;
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(8),
+                  margin: EdgeInsets.only(bottom: isSelected ? 8 : 0), // 👆 move up
+                  child: Icon(
+                    icons[index],
+                    size: isSelected ? 30 : 26,
+                    color: Colors.black,
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

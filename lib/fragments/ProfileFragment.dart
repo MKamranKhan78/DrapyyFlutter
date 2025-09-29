@@ -1,8 +1,16 @@
 
+import 'package:drapyy/activities/AccountInformationScreen.dart';
+import 'package:drapyy/activities/BecomePartnerScreen.dart';
+import 'package:drapyy/activities/RedeemScreen.dart';
 import 'package:drapyy/helper/FontsConstants.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../activities/AddressListScreen.dart';
+import '../helper/NavigationHelper.dart';
 
 class ProfileFragment extends StatefulWidget {
   const ProfileFragment({super.key});
@@ -172,49 +180,36 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
               // Menu Items (inline, no extra widget class)
               buildMenuRow("ACCOUNT INFORMATION", () {
-                print("Account Information Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
+                 Get.to(() => const AccountInformationScreen());
               }),
               buildMenuRow("DELIVERY ADDRESS", () {
                 print("DELIVERY Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
+                Get.to(() => const AddressListScreen());
+
               }),
               buildMenuRow("WALLET", () {
                 print("WALLET Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
+
               }),
               buildMenuRow("VOCHERS", () {
                 print("VOCHERS Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
               }),
               buildMenuRow("REDEEM POINTS", () {
                 print("REDEEM Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
+                Get.to(() => const RedeemScreen());
               }),
               buildMenuRow("PAYMENT METHODS", () {
                 print("PAYMENT Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
               }),
               buildMenuRow("BECOME PARTNER", () {
                 print("PAYMENT Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
+                Get.to(() => const BecomePartnerScreen());
               }),
               buildMenuRow("SETTINGS", () {
                 print("SETTINGS Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
               }),
               buildMenuRow("HELPS FAQS", () {
                 print("HELPS FAQS Clicked");
-                // Navigate to another screen
-                // NavigationHelper.moveToNewScreenAndPreviousSave(AccountScreen());
               }),
 
               const SizedBox(height: 30),
@@ -253,104 +248,129 @@ class _ProfileScreenState extends State<ProfileFragment> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
-                    Container(height: 30,),
+                    Container(height: 40),
                     Image.asset(
                       Drawables.img_drappy_white,
                       width: 200,
                       height: 100,
                     ),
 
-
-                    Container(height: 30,),
+                    Container(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          "INSTAGRAM",
-                          style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        InkWell(
+                          onTap: () {
+                            print("INSTAGRAM clicked");
+                            // 👉 Add navigation or link open here
+                          },
+                          child: Text(
+                            "INSTAGRAM",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        Text(
-                          "FACEBOOK",
-                          style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        InkWell(
+                          onTap: () {
+                            print("FACEBOOK clicked");
+                          },
+                          child: Text(
+                            "FACEBOOK",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        Text(
-                          "PINTEREST",
-                          style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        InkWell(
+                          onTap: () {
+                            print("PINTEREST clicked");
+                          },
+                          child: Text(
+                            "PINTEREST",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    Container(height: 20,),
-                    Text(
-                      "YOUTUBE",
-                      style: const TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+
+                    Container(height: 30),
+                    InkWell(
+                      onTap: () {
+                        print("YOUTUBE clicked");
+                      },
+                      child: Text(
+                        "YOUTUBE",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
 
-                    Container(height: 20,),
-
-                    Container(width: 300,height: 1,color: Colors.grey,),
-
-                    Container(height: 20,),
+                    Container(height: 30),
+                    Container(width: 300, height: 1, color: Colors.grey),
+                    Container(height: 30),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          "PRIVACY POLICY",
-                          style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        InkWell(
+                          onTap: () {
+                            print("PRIVACY POLICY clicked");
+                          },
+                          child: Text(
+                            "PRIVACY POLICY",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                         Text(
                           "/",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: FontConstants.gothamPro,
                             fontSize: 16,
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Text(
-                          "TERMS OF USE",
-                          style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                        InkWell(
+                          onTap: () {
+                            print("TERMS OF USE clicked");
+                          },
+                          child: Text(
+                            "TERMS OF USE",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30),
-
-
+                    const SizedBox(height: 50),
                   ],
                 ),
-              ),
-
+              )
 
 
             ],

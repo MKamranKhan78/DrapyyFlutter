@@ -1,3 +1,5 @@
+import 'package:drapyy/activities/ForgotPasswordActivity.dart';
+import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/activities/RegisterActivity.dart';
 import 'package:drapyy/helper/SizeConstants.dart';
 import 'package:drapyy/helper/colors.dart';
@@ -180,17 +182,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Spacer(),
                       InkWell(
                         onTap: (){
+                          Get.to(() => const ForgotPasswordActivity());
 
                         },
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "FORGOT PASSWORD?",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 11,
-                              color: Colors.black,
-                            ),
+                        child: Text(
+                          "FORGOT PASSWORD?",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 11,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -205,14 +205,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
+                        /*setState(() {
                           isLoading = true;
                         });
                         Future.delayed(const Duration(seconds: 2), () {
                           setState(() {
                             isLoading = false;
                           });
-                        });
+                        });*/
+
+                        Get.to(() => const MainActivity());
+
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -249,7 +253,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(width: 5),
                       InkWell(
                         onTap: () {
-                          NavigationHelper.moveToNewScreenAndPreviousSave(const RegisterActivity());
+                          Get.to(() => const RegisterActivity());
+
                         },
                         child: const Text(
                           "SIGN UP",

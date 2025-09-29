@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'package:drapyy/activities/ProductDetailsSccreen.dart';
 import 'package:drapyy/helper/colors.dart';
+import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import '../activities/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,6 +67,58 @@ class _HomeScreenState extends State<HomeScreen> {
     // Add more products as needed
   ];
 
+  final List<Product> products2 = [
+    Product(
+      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
+      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
+      code: '77147',
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    Product(
+      name: 'CLAUDETTE CORSET',
+      description: 'SHIRT DRESS WHITE',
+      code: '77147',
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+
+    Product(
+      name: 'CLAUDETTE CORSET2',
+      description: 'SHIRT DRESS WHITE2',
+      code: '771472',
+      imageUrl: 'hhttps://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+
+    Product(
+      name: 'CLAUDETTE CORSET2',
+      description: 'SHIRT DRESS WHITE2',
+      code: '771472',
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    // Add more products as needed
+  ];
+
+  final List<Brand> brands = [
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
+    ),
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
+    ),
+    Brand(
+      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
+    ),
+    // Add more products as needed
+  ];
+
 
 
 
@@ -97,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 15),
-      width: 4, // vertical line
+      width: 2, // vertical line
       height: isActive ? 70 : 40, // taller if selected
       decoration: BoxDecoration(
         color: isActive ? Colors.black : Colors.grey,
@@ -106,119 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
- /* @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea( // 👈 keeps banner below status bar
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Banner Slider
-            SizedBox(
-              height: 300,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _banners.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Image.network(
-                    _banners[index],
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  );
-                },
-              ),
-            ),
-
-            // Indicators
-            Container(
-              height: 80,
-              margin: const EdgeInsets.only(top: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _banners.length,
-                      (index) => _buildIndicator(index == _currentPage),
-                ),
-              ),
-            ),
-
-            Container(height: 20,),
-
-            Text(
-              "New Arrivals",
-              style: TextStyle(
-                fontFamily: FontConstants.gothamPro,
-                fontSize: 24,
-                fontWeight: FontWeight.w400,
-                color: Colors.black,
-              ),
-            ),
-
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0,right: 10),
-          child: SizedBox(
-            height: 80, // height of the horizontal list
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal, // 👈 horizontal
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    // 👇 Click event for each item
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("${items[index]} clicked")),
-                    );
-                  },
-                  child: Container(
-                     margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-
-                    alignment: Alignment.center,
-                    child: Text(
-                      items[index],
-                      style: const TextStyle(
-                        color: Colors.black, // ✅ change text to white
-                        fontSize: 14,
-                        fontFamily: FontConstants.gothamPro,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-
-
-
-             Container(
-               height: 200,
-               child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
-                    childAspectRatio: 0.7, // Adjust based on your design
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return ProductItem(product: products[index]);
-                  },
-                ),
-             ),
-
-
-
-
-        ],
-        ),
-      ),
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
 
               const Text(
-                "New Arrivals",
+                "NEW ARRIVALS",
                 style: TextStyle(
                   fontFamily: FontConstants.gothamPro,
                   fontSize: 24,
@@ -273,6 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 10),
 
               // Horizontal ListView
               SizedBox(
@@ -323,7 +268,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       product: products[index],
                       onItemClick: () {
                         // Handle complete item click
-                        print('Product clicked: ${products[index].name}');
+                        //print('Product clicked: ${products[index].name}');
+                        Get.to(() => const ProductDetailsSccreen());
+
                         // Add your navigation logic here
                       },
                       onFavoriteClick: () {
@@ -342,9 +289,10 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
 
               Row(
+                mainAxisSize: MainAxisSize.min, // 👈 keeps children tight
                 children: [
                   Text(
-                    "Explore More",
+                    "EXPLORE MORE",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 24,
@@ -352,17 +300,257 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.black,
                     ),
                   ),
-
-                  Icon(
-                    Icons.arrow_right_alt,
-                    size: 100,
-                    color: app_color_black,
+                   Image.asset(Drawables.arrow_farward
+                  ,width: 70,
+                    height: 40,
                   ),
                 ],
+              ),
+
+              Container(height: 40,),
+
+              //brands
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.5, // width / height → tweak until rows look right
+                    crossAxisSpacing: 15.0,  // horizontal space
+                    mainAxisSpacing: 10.0,   // 👈 vertical space between rows
+                  ),
+                  itemCount: brands.length,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      brands[index].imageUrl.toString(),
+                      fit: BoxFit.contain, // keeps image aspect ratio
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey.shade200,
+                          child: const Icon(Icons.image, color: Colors.grey),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+
+              Container(height: 20,),
+
+              const Text(
+                "YOU MAY ALSO LIKE",
+                style: TextStyle(
+                  fontFamily: FontConstants.gothamPro,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+              ),
+
+              Container(height: 40,),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  height: 250, // 👈 adjust based on ProductItemAlt height
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal, // 👈 horizontal scroll
+                    itemCount: products2.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16.0), // space between items
+                        child: SizedBox(
+                          width: 180, // 👈 each item width (tweak as needed)
+                          child: ProductItemAlt(
+                            product: products2[index],
+                            onItemClick: () {
+                              print('Product clicked: ${products2[index].name}');
+                              // Add your navigation logic here
+                            },
+                            onFavoriteClick: () {
+                              setState(() {
+                                // products[index].isFavorite = !products[index].isFavorite;
+                              });
+                              print('Favorite toggled for: ${products2[index].name}');
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Container(height: 40,),
+
+              const Text(
+                "GET THE LATEST TRENDS FIRST",
+                style: TextStyle(
+                  fontFamily: FontConstants.gothamPro,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+
+              Container(height: 20,),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  textAlign: TextAlign.center, // 👈 Center text & hint
+                  decoration: const InputDecoration(
+                    hintText: "ENTER YOUR EMAIL",
+                    hintStyle: TextStyle(
+                      color: Colors.grey,       // 👈 hint color
+                      fontSize: 14,             // 👈 hint size
+                      fontWeight: FontWeight.w400,
+                      fontFamily: FontConstants.gothamPro,
+                      letterSpacing: 1.2,       // 👈 spacing for uppercase look
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black,       // 👈 text color
+                    fontSize: 16,              // 👈 entered text size
+                    fontWeight: FontWeight.w400,
+                    fontFamily: FontConstants.gothamPro,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+
+
+              Container(height: 30,),
+              Container(
+                color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(height: 40),
+                    Image.asset(
+                      Drawables.img_drappy_white,
+                      width: 200,
+                      height: 100,
+                    ),
+
+                    Container(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            print("INSTAGRAM clicked");
+                            // 👉 Add navigation or link open here
+                          },
+                          child: Text(
+                            "INSTAGRAM",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            print("FACEBOOK clicked");
+                          },
+                          child: Text(
+                            "FACEBOOK",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            print("PINTEREST clicked");
+                          },
+                          child: Text(
+                            "PINTEREST",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Container(height: 30),
+                    InkWell(
+                      onTap: () {
+                        print("YOUTUBE clicked");
+                      },
+                      child: Text(
+                        "YOUTUBE",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+
+                    Container(height: 30),
+                    Container(width: 300, height: 1, color: Colors.grey),
+                    Container(height: 30),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            print("PRIVACY POLICY clicked");
+                          },
+                          child: Text(
+                            "PRIVACY POLICY",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "/",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            print("TERMS OF USE clicked");
+                          },
+                          child: Text(
+                            "TERMS OF USE",
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 50),
+                  ],
+                ),
               )
-
-
-
 
 
             ],
@@ -373,7 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 }
-
+/*
 class Product {
   final String name;
   final String description;
@@ -386,12 +574,16 @@ class Product {
     required this.code,
     required this.imageUrl,
   });
+}*/
+
+class Brand {
+  final String imageUrl;
+
+  Brand({
+    required this.imageUrl,
+  });
 }
-
-
-
-
-
+/*
 class ProductItemAlt extends StatelessWidget {
   final Product product;
   final VoidCallback onItemClick;
@@ -409,28 +601,28 @@ class ProductItemAlt extends StatelessWidget {
     return GestureDetector(
       onTap: onItemClick, // Complete item click
       child: Container(
-        height: 150,
-        decoration: BoxDecoration(
+        height: 200,
+        *//*decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(8.0),
-        ),
+        ),*//*
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image Container with fixed height
             Container(
-              height: 170,
+              height: 165,
               width: double.infinity,
               child: Stack(
                 children: [
                   // Product Image
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
+                    *//*borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8.0),
                       topRight: Radius.circular(8.0),
-                    ),
+                    ),*//*
                     child: SizedBox(
-                      height: 180,
+                      height: 165,
                       width: double.infinity,
                       child: Image.network(
                         product.imageUrl,
@@ -450,7 +642,7 @@ class ProductItemAlt extends StatelessWidget {
                   // Favorite Button - with separate click handler
                   Positioned(
                     top: 8.0,
-                    right: 8.0,
+                    right: 15.0,
                     child: GestureDetector(
                       onTap: onFavoriteClick,
                       child: Container(
@@ -463,7 +655,7 @@ class ProductItemAlt extends StatelessWidget {
                         child: Icon(
                           Icons.favorite_border,
                           size: 22.0, // 👈 Increased icon size
-                          color: Colors.black,
+                          color: grey_color,
                         ),
                       ),
                     ),
@@ -493,7 +685,7 @@ class ProductItemAlt extends StatelessWidget {
                     style: const TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 10,
-                      color: Colors.black,
+                      color: grey_color,
                       fontWeight: FontWeight.w400,
                     ),
                     maxLines: 2,
@@ -516,7 +708,7 @@ class ProductItemAlt extends StatelessWidget {
                         fontFamily: FontConstants.gothamPro,
                         fontSize: 10,
                         color: Colors.black,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                     Container(width: 5),
@@ -526,7 +718,7 @@ class ProductItemAlt extends StatelessWidget {
                         fontFamily: FontConstants.gothamPro,
                         fontSize: 10,
                         color: Colors.black,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w900,
                         decoration: TextDecoration.lineThrough,
                         decorationColor: Colors.black,
                         decorationThickness: 1.5,
@@ -541,4 +733,4 @@ class ProductItemAlt extends StatelessWidget {
       ),
     );
   }
-}
+}*/

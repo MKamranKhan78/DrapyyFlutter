@@ -1,3 +1,4 @@
+import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/ForgotPasswordActivity.dart';
 import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/activities/RegisterActivity.dart';
@@ -24,9 +25,9 @@ class SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _initializeApp();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+   /* WidgetsBinding.instance.addPostFrameCallback((_) {
       Toastutils.showSnackbar("title","hello how are you?");
-    });
+    });*/
   }
 
   /// Combines initialization tasks
@@ -50,7 +51,8 @@ class SplashScreenState extends State<SplashScreen> {
     //NavigationHelper.moveToNewScreenAndPreviousSave(LoginScreen());
     //--------------------------------------------------------------
     // it will finish previous screen.
-    NavigationHelper.moveToNewScreenAndPreviousRevome(MainActivity());
+    NavigationHelper.moveToNewScreenAndPreviousRevome(LoginScreen());
+    //NavigationHelper.moveToNewScreenAndPreviousRevome(AccountInformationScreen());
     //--------------------------------------------------------------
     //send value to next screen.
     // NavigationHelper.moveToNextScreenWithArgument(

@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+
+import '../helper/FontsConstants.dart';
+
+class AddressListScreen extends StatefulWidget {
+  const AddressListScreen({super.key});
+
+  @override
+  State<AddressListScreen> createState() => _AddressListScreenState();
+}
+
+class _AddressListScreenState extends State<AddressListScreen> {
+  final List<String> addresses = [
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+    "9-E-2 BLOCK E 2 GULBERG III, LAHORE, PUNJAB",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea( // 👈 keeps content below status bar
+        child: Column(
+          children: [
+            // Back arrow with left padding
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0, top: 8.0), // 👈 space from start & top
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.arrow_back, color: Colors.black),
+                ),
+              ),
+            ),
+
+            // Add icon at top right
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.add, color: Colors.black,size: 30,),
+                onPressed: () {
+                  // Add new address
+                },
+              ),
+            ),
+
+            // ListView below
+            Expanded(
+              child: ListView.separated(
+                itemCount: addresses.length,
+                separatorBuilder: (context, index) =>
+                    Divider(height: 1, color: Colors.grey.shade400),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                addresses[index],
+                                style: const TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(6),
+                                  onTap: () {
+                                    // Edit address
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(4),
+                                    child: Icon(Icons.edit,
+                                        size: 18, color: Colors.black),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(6),
+                                  onTap: () {
+                                    setState(() {
+                                      addresses.removeAt(index);
+                                    });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(4),
+                                    child: Icon(Icons.delete,
+                                        size: 18, color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          "dhfj djfh jhd fjkhdjkfh hdf h dhfjdhf hd fh dfdgd fgdf gfdfgvvgdfgvdfvg gdfg df ",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
