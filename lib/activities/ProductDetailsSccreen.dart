@@ -20,7 +20,6 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
 
   final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
   final List<Color> colors = [
-    const Color(0xFF000000),
     const Color(0xFF964B00),
     const Color(0xFFFF0000),
     const Color(0xFF0000FF),

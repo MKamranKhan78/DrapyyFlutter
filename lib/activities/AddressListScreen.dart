@@ -1,4 +1,7 @@
+import 'package:drapyy/activities/AddAddressScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../helper/FontsConstants.dart';
 
@@ -46,6 +49,8 @@ class _AddressListScreenState extends State<AddressListScreen> {
                 icon: const Icon(Icons.add, color: Colors.black,size: 30,),
                 onPressed: () {
                   // Add new address
+
+                  Get.to(() => const AddAddressScreen());
                 },
               ),
             ),

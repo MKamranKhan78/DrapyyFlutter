@@ -28,7 +28,7 @@ class _SearchFragmentState extends State<SearchScreen> {
               hintStyle: TextStyle(
                 color: Colors.grey,       // 👈 hint color
                 fontSize: 14,             // 👈 hint size
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 fontFamily: FontConstants.gothamPro,
                 letterSpacing: 1.2,       // 👈 spacing for uppercase look
               ),

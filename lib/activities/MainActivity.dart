@@ -2,6 +2,7 @@
 
 import 'package:drapyy/fragments/MenuFragment.dart';
 import 'package:drapyy/fragments/ProfileFragment.dart';
+import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -51,11 +52,11 @@ class _BottomNavScreenState extends State<MainActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(5, (index) {
               final icons = [
-                Icons.home,
-                Icons.menu,
-                Icons.shopping_cart,
-                Icons.search,
-                Icons.person,
+                Drawables.img_home,
+                Drawables.img_menu,
+                Drawables.img_cart,
+                Drawables.img_search,
+                Drawables.img_profile,
               ];
 
               bool isSelected = _currentIndex == index;
@@ -70,11 +71,12 @@ class _BottomNavScreenState extends State<MainActivity> {
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(8),
                   margin: EdgeInsets.only(bottom: isSelected ? 8 : 0), // 👆 move up
-                  child: Icon(
-                    icons[index],
-                    size: isSelected ? 30 : 26,
-                    color: Colors.black,
-                  ),
+                  child: Image.asset(
+                    icons[index], // 👈 your image path list
+                    height: isSelected ? 32 : 26, // selected = larger
+                    width: isSelected ? 32 : 26,
+                    color: Colors.black, // 👈 optional, only if your icons are monochrome PNG/SVG
+                  )
                 ),
               );
             }),

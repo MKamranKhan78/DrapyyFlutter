@@ -1,7 +1,10 @@
 
+import 'package:drapyy/activities/MyOrdersPage.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../helper/FontsConstants.dart';
 import '../helper/colors.dart';
@@ -216,25 +219,31 @@ class _CartScreenState extends State<CartScreen> {
                     child: Container(
                       color: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "CHECKOUT NOW",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: FontConstants.gothamPro,
-                              fontWeight: FontWeight.w600,
+                      child: InkWell(
+                        onTap: (){
+                          Get.to(() => const MyOrdersPage());
+
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "CHECKOUT NOW",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: FontConstants.gothamPro,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Image.asset(
-                            Drawables.arrow_farward,
-                            width: 25,
-                            height: 25,
-                            color: Colors.white,
-                          ),
-                        ],
+                            Image.asset(
+                              Drawables.arrow_farward,
+                              width: 25,
+                              height: 25,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

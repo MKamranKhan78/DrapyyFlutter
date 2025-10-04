@@ -1,6 +1,9 @@
 
 import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/BecomePartnerScreen.dart';
+import 'package:drapyy/activities/FilterScreen.dart';
+import 'package:drapyy/activities/MyVoucherListingScreen.dart';
+import 'package:drapyy/activities/NotificationsScreen.dart';
 import 'package:drapyy/activities/RedeemScreen.dart';
 import 'package:drapyy/helper/FontsConstants.dart';
 import 'package:drapyy/helper/drawables.dart';
@@ -30,9 +33,40 @@ class _ProfileScreenState extends State<ProfileFragment> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
+              Row(
+                children: [
+
+                  const SizedBox(width: 48), // same width as IconButton
+
+                  // Expanded makes the Text take remaining space and stay centered
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "PROFILE", // 👈 your text here
+                        style: const TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Back button
+                  IconButton(
+                    icon: const Icon(Icons.notifications_none, color: Colors.black,size: 25,),
+                    onPressed: () {
+                      Get.to(() => NotificationsScreen());
+                    },
+                  ),
+
+                  // To balance Row (so title stays centered even with only one button)
+                ],
+              ),
+
               // Profile Image
               Padding(
-                padding: const EdgeInsets.only(left: 20.0,top: 50),
+                padding: const EdgeInsets.only(left: 20.0,top: 30),
                 child: const CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.black12,
@@ -189,10 +223,14 @@ class _ProfileScreenState extends State<ProfileFragment> {
               }),
               buildMenuRow("WALLET", () {
                 print("WALLET Clicked");
+                Get.to(() => FilterScreen());
 
               }),
               buildMenuRow("VOCHERS", () {
                 print("VOCHERS Clicked");
+
+                Get.to(() => const MyVoucherListingScreen());
+
               }),
               buildMenuRow("REDEEM POINTS", () {
                 print("REDEEM Clicked");
