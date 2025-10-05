@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:drapyy/activities/BrandDetailsScreen.dart';
 import 'package:drapyy/activities/ProductDetailsSccreen.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:drapyy/helper/drawables.dart';
@@ -319,19 +320,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisCount: 3,
                     childAspectRatio: 1.5, // width / height → tweak until rows look right
                     crossAxisSpacing: 15.0,  // horizontal space
-                    mainAxisSpacing: 10.0,   // 👈 vertical space between rows
+                    mainAxisSpacing: 10.0,   // vertical space
                   ),
                   itemCount: brands.length,
                   itemBuilder: (context, index) {
-                    return Image.network(
-                      brands[index].imageUrl.toString(),
-                      fit: BoxFit.contain, // keeps image aspect ratio
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        );
+                    return InkWell(
+                      onTap: () {
+                        // 👉 Handle click here
+                        debugPrint("Clicked brand: ${brands[index].imageUrl}");
+                        Get.to(() => const BranddetailsScreen());
+
                       },
+                      child: Image.network(
+                        brands[index].imageUrl.toString(),
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

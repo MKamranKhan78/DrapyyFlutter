@@ -4,7 +4,9 @@ import 'package:drapyy/activities/BecomePartnerScreen.dart';
 import 'package:drapyy/activities/FilterScreen.dart';
 import 'package:drapyy/activities/MyVoucherListingScreen.dart';
 import 'package:drapyy/activities/NotificationsScreen.dart';
+import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
 import 'package:drapyy/activities/RedeemScreen.dart';
+import 'package:drapyy/activities/TermsAndConditionScreen.dart';
 import 'package:drapyy/helper/FontsConstants.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
@@ -369,6 +371,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("PRIVACY POLICY clicked");
+                            Get.to(() => const Privacypolicyscreen());
+
                           },
                           child: Text(
                             "PRIVACY POLICY",
@@ -392,6 +396,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("TERMS OF USE clicked");
+                            Get.to(() => const Termsandconditionscreen());
+
                           },
                           child: Text(
                             "TERMS OF USE",
@@ -420,25 +426,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
 
 
-  Widget _buildSocialMediaSection() {
-    return Column(
-      children: [
-        _buildClickableSocialMediaItem('INSTAGRAM', 'https://instagram.com/yourprofile'),
-        _buildClickableSocialMediaItem('FACEBOOK', 'https://facebook.com/yourprofile'),
-        _buildClickableSocialMediaItem('PINTEREST', 'https://pinterest.com/yourprofile'),
-        _buildClickableSocialMediaItem('YOUTUBE', 'https://youtube.com/yourprofile'),
-      ],
-    );
-  }
 
-  Widget _buildLegalLinksSection() {
-    return Column(
-      children: [
-        _buildClickableLegalLink('PRIVACY POLICY', '/privacy-policy'),
-        _buildClickableLegalLink('TERMS OF USE', '/terms-of-use'),
-      ],
-    );
-  }
 
   Widget _buildClickableSocialMediaItem(String text, String url) {
     return GestureDetector(
@@ -468,6 +456,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
       onTap: () {
         // Navigate to the respective page
         // Navigator.pushNamed(context, route);
+
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6.0),
