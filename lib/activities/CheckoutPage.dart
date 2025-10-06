@@ -6,14 +6,14 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 
-class MyOrdersPage extends StatefulWidget {
-  const MyOrdersPage({super.key});
+class CheckoutPage extends StatefulWidget {
+  const CheckoutPage({super.key});
 
   @override
-  State<MyOrdersPage> createState() => _MyOrdersPageState();
+  State<CheckoutPage> createState() => _MyOrdersPageState();
 }
 
-class _MyOrdersPageState extends State<MyOrdersPage> {
+class _MyOrdersPageState extends State<CheckoutPage> {
   String? selectedShipping;
   String? selectedPayment;
 
@@ -35,7 +35,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: const Icon(Icons.arrow_back_ios, color: Colors.black),
         title: const Text(
           "MY ORDER",
           style: TextStyle(

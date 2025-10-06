@@ -1,5 +1,5 @@
 
-import 'package:drapyy/activities/MyOrdersPage.dart';
+import 'package:drapyy/activities/CheckoutPage.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -221,8 +221,7 @@ class _CartScreenState extends State<CartScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                       child: InkWell(
                         onTap: (){
-                          Get.to(() => const MyOrdersPage());
-
+                          Get.to(() => const CheckoutPage());
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

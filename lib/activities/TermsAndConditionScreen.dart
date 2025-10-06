@@ -15,7 +15,7 @@ class _TermsAndConditionsPageState extends State<Termsandconditionscreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context); // go back
           },

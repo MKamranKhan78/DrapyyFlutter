@@ -37,7 +37,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
                 padding: const EdgeInsets.only(left: 12.0, top: 8.0), // 👈 space from start & top
                 child: GestureDetector(
                   onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.arrow_back, color: Colors.black),
+                  child: const Icon(Icons.arrow_back_ios, color: Colors.black),
                 ),
               ),
             ),

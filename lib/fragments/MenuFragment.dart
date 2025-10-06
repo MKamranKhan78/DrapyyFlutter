@@ -57,8 +57,18 @@ class _MenuFragmentState extends State<MenuFragment> {
     return Scaffold(
       body: Column(
         children: [
-          Container(height: 30),
+          Container(height: 50),
 
+          Center(
+            child: Text(
+              "MENU", // 👈 your text here
+              style: const TextStyle(
+                fontFamily: FontConstants.gothamPro,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           // Horizontal List
           SizedBox(
             height: 80,

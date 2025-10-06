@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../activities/AddressListScreen.dart';
+import '../activities/MyOrdersScreen.dart';
 import '../helper/NavigationHelper.dart';
 
 class ProfileFragment extends StatefulWidget {
@@ -99,9 +100,9 @@ class _ProfileScreenState extends State<ProfileFragment> {
               // Tabs Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
+                children: [
                   // WALLET
-                  Column(
+                  const Column(
                     children: [
 
                       Text(
@@ -128,7 +129,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ),
 
                   // POINTS
-                  Column(
+                  const Column(
                     children: [
 
                       Text(
@@ -157,33 +158,40 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ),
 
                   // ORDERS
-                  Column(
-                    children: [
+                  InkWell(
+                    onTap: (){
 
-                      Text(
-                        "ORDERS",
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "25",
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                      Get.to(() =>  Myordersscreen());
 
-                    ],
+                    },
+                    child: const Column(
+                      children: [
+
+                        Text(
+                          "ORDERS",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "25",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+
+                      ],
+                    ),
                   ),
 
                   // FOLLOWING
-                  Column(
+                  const Column(
                     children: [
 
                       Text(
