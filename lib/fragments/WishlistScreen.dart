@@ -1,9 +1,19 @@
+import 'dart:convert';
+
+import 'package:drapyy/models/Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 
 import '../activities/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
+import '../helper/ToastUtils.dart';
 import '../helper/colors.dart';
+import '../helper/customHttpClient.dart';
+import '../helper/preference_manager.dart';
+import '../network/Network.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -14,6 +24,7 @@ class WishlistScreen extends StatefulWidget {
 
 class _WishlistScreenState extends State<WishlistScreen> {
 
+  bool isLoading = false;
 
   final List<Product> products = [
     Product(
@@ -55,6 +66,12 @@ class _WishlistScreenState extends State<WishlistScreen> {
     // Add more products as needed
   ];
 
+
+  @override
+  void initState() {
+     super.initState();
+    getWishlist();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,177 +104,180 @@ class _WishlistScreenState extends State<WishlistScreen> {
       ),
     );
   }
-}
-
-/*
 
 
-class ProductItemAlt extends StatelessWidget {
-  final Product product;
-  final VoidCallback onItemClick;
-  final VoidCallback onFavoriteClick;
+  Future<void> getWishlist() async {
+    setState(() {
+      isLoading = true;
+    });
 
-  const ProductItemAlt({
-    super.key,
-    required this.product,
-    required this.onItemClick,
-    required this.onFavoriteClick,
-  });
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.wishlist);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onItemClick, // Complete item click
-      child: Container(
-        height: 200,
-        */
-/*decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8.0),
-        ),*//*
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Container with fixed height
-            Container(
-              height: 165,
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  // Product Image
-                  ClipRRect(
-                    */
-/*borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0),
-                    ),*//*
+    final client = CustomHttpClient(http.Client());
 
-                    child: SizedBox(
-                      height: 165,
-                      width: double.infinity,
-                      child: Image.network(
-                        product.imageUrl,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.image, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+    try {
+      final response = await client.get(
+        url,
+        headers: headers,
+      );
 
-                  // Favorite Button - with separate click handler
-                  Positioned(
-                    top: 8.0,
-                    right: 15.0,
-                    child: GestureDetector(
-                      onTap: onFavoriteClick,
-                      child: Container(
-                        padding: const EdgeInsets.all(6.0), // 👈 Increased padding for larger size
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(8.0), // 👈 Added rounded corners
-                        ),
-                        child: Icon(
-                          Icons.favorite_border,
-                          size: 22.0, // 👈 Increased icon size
-                          color: grey_color,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Product Details
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 10,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2, // ✅ Limits to 2 lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    product.description,
-                    style: const TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 10,
-                      color: grey_color,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "PKR " + product.code,
-                      style: const TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 10,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Container(width: 5),
-                    Text(
-                      "PKR " + "333333",
-                      style: TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 10,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: Colors.black,
-                        decorationThickness: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = GetWishlistResponse.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+          Get.snackbar(
+            "Status ${model.status}",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
-}
 
-class Product {
-  final String name;
-  final String description;
-  final String code;
-  final String imageUrl;
+  Future<void> addRemoveWishlist(String id,String quantity) async {
+    setState(() {
+      isLoading = true;
+    });
 
-  Product({
-    required this.name,
-    required this.description,
-    required this.code,
-    required this.imageUrl,
-  });
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.syncWishlist);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "id": id.toString(),
+     };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      AddWishlistModell.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
 }
-*/

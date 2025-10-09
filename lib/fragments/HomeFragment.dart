@@ -1,14 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:drapyy/activities/BrandDetailsScreen.dart';
 import 'package:drapyy/activities/ProductDetailsSccreen.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:drapyy/helper/drawables.dart';
+import 'package:drapyy/models/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 
 import '../activities/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
+import '../helper/ToastUtils.dart';
+import '../helper/customHttpClient.dart';
+import '../helper/preference_manager.dart';
+import '../network/Network.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Timer? _timer;
+  bool isLoading = false;
+
+
 
   // Static list of banner images (replace with API data later)
   final List<String> _banners = [
@@ -127,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _startAutoSlide();
+    getHome();
   }
 
   void _startAutoSlide() {
@@ -569,22 +580,92 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> getHome() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.home);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.get(
+        url,
+        headers: headers,
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = GetHomeModelResponsee.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+          Get.snackbar(
+            "Status ${model.status}",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
 }
-/*
-class Product {
-  final String name;
-  final String description;
-  final String code;
-  final String imageUrl;
-
-  Product({
-    required this.name,
-    required this.description,
-    required this.code,
-    required this.imageUrl,
-  });
-}*/
-
 class Brand {
   final String imageUrl;
 
@@ -592,154 +673,3 @@ class Brand {
     required this.imageUrl,
   });
 }
-/*
-class ProductItemAlt extends StatelessWidget {
-  final Product product;
-  final VoidCallback onItemClick;
-  final VoidCallback onFavoriteClick;
-
-  const ProductItemAlt({
-    super.key,
-    required this.product,
-    required this.onItemClick,
-    required this.onFavoriteClick,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onItemClick, // Complete item click
-      child: Container(
-        height: 200,
-        *//*decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8.0),
-        ),*//*
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Container with fixed height
-            Container(
-              height: 165,
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  // Product Image
-                  ClipRRect(
-                    *//*borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      topRight: Radius.circular(8.0),
-                    ),*//*
-                    child: SizedBox(
-                      height: 165,
-                      width: double.infinity,
-                      child: Image.network(
-                        product.imageUrl,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.image, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-
-                  // Favorite Button - with separate click handler
-                  Positioned(
-                    top: 8.0,
-                    right: 15.0,
-                    child: GestureDetector(
-                      onTap: onFavoriteClick,
-                      child: Container(
-                        padding: const EdgeInsets.all(6.0), // 👈 Increased padding for larger size
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(8.0), // 👈 Added rounded corners
-                        ),
-                        child: Icon(
-                          Icons.favorite_border,
-                          size: 22.0, // 👈 Increased icon size
-                          color: grey_color,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Product Details
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 10,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                     maxLines: 2, // ✅ Limits to 2 lines
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    product.description,
-                    style: const TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 10,
-                      color: grey_color,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    maxLines: 2,
-                     overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0,top: 5),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "PKR " + product.code,
-                      style: const TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 10,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Container(width: 5),
-                    Text(
-                      "PKR " + "333333",
-                      style: TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 10,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: Colors.black,
-                        decorationThickness: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
