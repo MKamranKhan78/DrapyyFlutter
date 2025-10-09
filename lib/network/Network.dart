@@ -10,10 +10,11 @@ class NetworkManager {
    //internet check added apis.
    static const String productByBroand ="products-by-brand";
    static const String my_follow ="customer/my-follows"; //screen missed not used in any screen
+
+
+
+
     static const String search ="search";
-
-
-
     static const String productColor ="product-colors";
     static const String getMenu ="get-menu";
     static const String avail_Points ="customer/avail-points";

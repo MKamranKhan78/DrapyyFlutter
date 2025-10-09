@@ -4626,4 +4626,74 @@ class DataSizee {
   }
 }
 
+//-----------------------Search -----------------------------------------
+
+class ProductResponsee {
+  int? status;
+  String? message;
+  ProductDataa? data;
+
+  ProductResponsee({this.status, this.message, this.data});
+
+  factory ProductResponsee.fromJson(Map<String, dynamic> json) {
+    return ProductResponsee(
+      status: json['status'] is String
+          ? int.tryParse(json['status'])
+          : json['status'],
+      message: json['message'],
+      data:
+      json['data'] != null ? ProductDataa.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data?.toJson(),
+    };
+  }
+}
+
+class ProductDataa {
+  List<CategoryProductt>? products;
+  bool? hasMorePage;
+  int? currentPage;
+  int? totalPages;
+
+  ProductDataa({
+    this.products,
+    this.hasMorePage,
+    this.currentPage,
+    this.totalPages,
+  });
+
+  factory ProductDataa.fromJson(Map<String, dynamic> json) {
+    return ProductDataa(
+      products: json['products'] != null
+          ? (json['products'] as List)
+          .map((e) => CategoryProductt.fromJson(e))
+          .toList()
+          : [],
+      hasMorePage: json['has_more_page'] is String
+          ? json['has_more_page'].toString().toLowerCase() == 'true'
+          : json['has_more_page'],
+      currentPage: json['current_page'] is String
+          ? int.tryParse(json['current_page'])
+          : json['current_page'],
+      totalPages: json['totalPages'] is String
+          ? int.tryParse(json['totalPages'])
+          : json['totalPages'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'products': products?.map((e) => e.toJson()).toList(),
+      'has_more_page': hasMorePage,
+      'current_page': currentPage,
+      'totalPages': totalPages,
+    };
+  }
+}
 
