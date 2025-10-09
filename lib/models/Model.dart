@@ -3016,32 +3016,1614 @@ double? _toDouble(dynamic value) {
   return null;
 }
 
+//------------------------------Get Profile------------------------------
+
+class GetProfileResponsee {
+  int? status;
+  String? message;
+  DataProfilee? data;
+
+  GetProfileResponsee({this.status, this.message, this.data});
+
+  factory GetProfileResponsee.fromJson(Map<String, dynamic> json) {
+    return GetProfileResponsee(
+      status: json['status'] is String
+          ? int.tryParse(json['status'])
+          : json['status'],
+      message: json['message'],
+      data: json['data'] != null
+          ? DataProfilee.fromJson(json['data'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': data?.toJson(),
+  };
+}
+
+class DataProfilee {
+  UserProfile? user;
+  int? wallet;
+  int? points;
+  int? orders;
+  int? following;
+
+  DataProfilee({this.user, this.wallet, this.points, this.orders, this.following});
+
+  factory DataProfilee.fromJson(Map<String, dynamic> json) {
+    return DataProfilee(
+      user: json['user'] != null ? UserProfile.fromJson(json['user']) : null,
+      wallet: json['wallet'] is String
+          ? int.tryParse(json['wallet'])
+          : json['wallet'],
+      points: json['points'] is String
+          ? int.tryParse(json['points'])
+          : json['points'],
+      orders: json['orders'] is String
+          ? int.tryParse(json['orders'])
+          : json['orders'],
+      following: json['following'] is String
+          ? int.tryParse(json['following'])
+          : json['following'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'user': user?.toJson(),
+    'wallet': wallet,
+    'points': points,
+    'orders': orders,
+    'following': following,
+  };
+}
+
+class UserProfile {
+  int? id;
+  String? name;
+  String? email;
+  String? phoneNo;
+  String? address;
+  String? city;
+  String? dateOfBirth;
+  String? image;
+
+  UserProfile({
+    this.id,
+    this.name,
+    this.email,
+    this.phoneNo,
+    this.address,
+    this.city,
+    this.dateOfBirth,
+    this.image,
+  });
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      name: json['name'],
+      email: json['email'],
+      phoneNo: json['phone_no'],
+      address: json['address'],
+      city: json['city'],
+      dateOfBirth: json['date_of_birth'],
+      image: json['image'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'email': email,
+    'phone_no': phoneNo,
+    'address': address,
+    'city': city,
+    'date_of_birth': dateOfBirth,
+    'image': image,
+  };
+}
+
+//----------------------------Voucher list-----------------------------
+
+class GetVoucherlistResponsee {
+  int? status;
+  String? message;
+  VoucherDataa? data;
+
+  GetVoucherlistResponsee({this.status, this.message, this.data});
+
+  factory GetVoucherlistResponsee.fromJson(Map<String, dynamic> json) {
+    return GetVoucherlistResponsee(
+      status: json['status'] is String
+          ? int.tryParse(json['status'])
+          : json['status'],
+      message: json['message'],
+      data: json['data'] != null
+          ? VoucherDataa.fromJson(json['data'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': data?.toJson(),
+  };
+}
+
+class VoucherDataa {
+  List<Voucherr>? vouchers;
+
+  VoucherDataa({this.vouchers});
+
+  factory VoucherDataa.fromJson(Map<String, dynamic> json) {
+    return VoucherDataa(
+      vouchers: (json['vouchers'] as List?)
+          ?.map((v) => Voucherr.fromJson(v))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'vouchers': vouchers?.map((v) => v.toJson()).toList(),
+  };
+}
+
+class Voucherr {
+  int? id;
+  String? title;
+  String? code;
+  int? discount;
+  int? maxAmount;
+  String? startAt;
+  String? endAt;
+  int? customerId;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+
+  Voucherr({
+    this.id,
+    this.title,
+    this.code,
+    this.discount,
+    this.maxAmount,
+    this.startAt,
+    this.endAt,
+    this.customerId,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory Voucherr.fromJson(Map<String, dynamic> json) {
+    return Voucherr(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      title: json['title'],
+      code: json['code'],
+      discount: json['discount'] is String
+          ? int.tryParse(json['discount'])
+          : json['discount'],
+      maxAmount: json['maxAmount'] is String
+          ? int.tryParse(json['maxAmount'])
+          : json['maxAmount'],
+      startAt: json['startAt'],
+      endAt: json['endAt'],
+      customerId: json['customerId'] is String
+          ? int.tryParse(json['customerId'])
+          : json['customerId'],
+      status: json['status'] is String
+          ? int.tryParse(json['status'])
+          : json['status'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'code': code,
+    'discount': discount,
+    'maxAmount': maxAmount,
+    'startAt': startAt,
+    'endAt': endAt,
+    'customerId': customerId,
+    'status': status,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+  };
+}
+
+//------------------------My Followers---screen missed not used in any screen-----------------------------
+
+class MyFollowersResponsee {
+  int? status;
+  String? message;
+  Dataaa? data;
+
+  MyFollowersResponsee({this.status, this.message, this.data});
+
+  factory MyFollowersResponsee.fromJson(Map<String, dynamic> json) {
+    return MyFollowersResponsee(
+      status: json['status'] is String ? int.tryParse(json['status']) : json['status'],
+      message: json['message'],
+      data: json['data'] != null ? Dataaa.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': data?.toJson(),
+  };
+}
+
+class Dataaa {
+  List<MyFollowerr>? myFollowes;
+
+  Dataaa({this.myFollowes});
+
+  factory Dataaa.fromJson(Map<String, dynamic> json) {
+    return Dataaa(
+      myFollowes: (json['my_followes'] as List?)
+          ?.map((v) => MyFollowerr.fromJson(v))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'my_followes': myFollowes?.map((v) => v.toJson()).toList(),
+  };
+}
+
+class MyFollowerr {
+  int? id;
+  int? merchantId;
+  int? followerId;
+  String? createdAt;
+  String? updatedAt;
+  Merchanttt? merchant;
+
+  MyFollowerr({
+    this.id,
+    this.merchantId,
+    this.followerId,
+    this.createdAt,
+    this.updatedAt,
+    this.merchant,
+  });
+
+  factory MyFollowerr.fromJson(Map<String, dynamic> json) {
+    return MyFollowerr(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      merchantId: json['merchant_id'] is String ? int.tryParse(json['merchant_id']) : json['merchant_id'],
+      followerId: json['follower_id'] is String ? int.tryParse(json['follower_id']) : json['follower_id'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      merchant: json['merchant'] != null ? Merchanttt.fromJson(json['merchant']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'merchant_id': merchantId,
+    'follower_id': followerId,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'merchant': merchant?.toJson(),
+  };
+}
+
+class Merchanttt {
+  int? id;
+  String? name;
+  String? email;
+  String? username;
+  String? emailVerifiedAt;
+  int? type;
+  String? image;
+  String? phoneNo;
+  String? address;
+  String? city;
+  String? dateOfBirth;
+  String? postalCode;
+  int? merchantId;
+  String? cnic;
+  String? bankName;
+  String? bankAccountTitle;
+  String? bankAccountNumber;
+  String? facebookLink;
+  String? instagramLink;
+  String? tiktokLink;
+  int? newsletter;
+  int? official;
+  int? status;
+  int? isApproved;
+  String? guestToken;
+  int? isGuest;
+  String? createdAt;
+  String? updatedAt;
+  String? gUserId;
+  String? imagePath;
+  int? walletAmount;
+  MerchantProfilee? merchantProfile;
+  dynamic wallet;
+
+  Merchanttt({
+    this.id,
+    this.name,
+    this.email,
+    this.username,
+    this.emailVerifiedAt,
+    this.type,
+    this.image,
+    this.phoneNo,
+    this.address,
+    this.city,
+    this.dateOfBirth,
+    this.postalCode,
+    this.merchantId,
+    this.cnic,
+    this.bankName,
+    this.bankAccountTitle,
+    this.bankAccountNumber,
+    this.facebookLink,
+    this.instagramLink,
+    this.tiktokLink,
+    this.newsletter,
+    this.official,
+    this.status,
+    this.isApproved,
+    this.guestToken,
+    this.isGuest,
+    this.createdAt,
+    this.updatedAt,
+    this.gUserId,
+    this.imagePath,
+    this.walletAmount,
+    this.merchantProfile,
+    this.wallet,
+  });
+
+  factory Merchanttt.fromJson(Map<String, dynamic> json) {
+    return Merchanttt(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      name: json['name'],
+      email: json['email'],
+      username: json['username'],
+      emailVerifiedAt: json['email_verified_at'],
+      type: json['type'] is String ? int.tryParse(json['type']) : json['type'],
+      image: json['image'],
+      phoneNo: json['phone_no'],
+      address: json['address'],
+      city: json['city'],
+      dateOfBirth: json['date_of_birth'],
+      postalCode: json['postal_code'],
+      merchantId: json['merchant_id'] is String ? int.tryParse(json['merchant_id']) : json['merchant_id'],
+      cnic: json['cnic'],
+      bankName: json['bank_name'],
+      bankAccountTitle: json['bank_account_title'],
+      bankAccountNumber: json['bank_account_number'],
+      facebookLink: json['facebook_link'],
+      instagramLink: json['instagram_link'],
+      tiktokLink: json['tiktok_link'],
+      newsletter: json['newsletter'] is String ? int.tryParse(json['newsletter']) : json['newsletter'],
+      official: json['official'] is String ? int.tryParse(json['official']) : json['official'],
+      status: json['status'] is String ? int.tryParse(json['status']) : json['status'],
+      isApproved: json['is_approved'] is String ? int.tryParse(json['is_approved']) : json['is_approved'],
+      guestToken: json['guest_token'],
+      isGuest: json['is_guest'] is String ? int.tryParse(json['is_guest']) : json['is_guest'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      gUserId: json['g_user_id'],
+      imagePath: json['image_path'],
+      walletAmount: json['wallet_amount'] is String ? int.tryParse(json['wallet_amount']) : json['wallet_amount'],
+      merchantProfile: json['merchant_profile'] != null
+          ? MerchantProfilee.fromJson(json['merchant_profile'])
+          : null,
+      wallet: json['wallet'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'email': email,
+    'username': username,
+    'email_verified_at': emailVerifiedAt,
+    'type': type,
+    'image': image,
+    'phone_no': phoneNo,
+    'address': address,
+    'city': city,
+    'date_of_birth': dateOfBirth,
+    'postal_code': postalCode,
+    'merchant_id': merchantId,
+    'cnic': cnic,
+    'bank_name': bankName,
+    'bank_account_title': bankAccountTitle,
+    'bank_account_number': bankAccountNumber,
+    'facebook_link': facebookLink,
+    'instagram_link': instagramLink,
+    'tiktok_link': tiktokLink,
+    'newsletter': newsletter,
+    'official': official,
+    'status': status,
+    'is_approved': isApproved,
+    'guest_token': guestToken,
+    'is_guest': isGuest,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'g_user_id': gUserId,
+    'image_path': imagePath,
+    'wallet_amount': walletAmount,
+    'merchant_profile': merchantProfile?.toJson(),
+    'wallet': wallet,
+  };
+}
+
+class MerchantProfilee {
+  int? id;
+  int? userId;
+  String? brandName;
+  String? sellerType;
+  String? tax;
+  String? code;
+  String? city;
+  String? hasWebsite;
+  String? businessOperation;
+  String? catalogueSize;
+  String? supplyChain;
+  String? productionInventory;
+  String? rating;
+  String? feedback;
+  String? websiteUrl;
+  String? socialUrl;
+  int? commission;
+  String? warehouseAddress;
+  String? businessAddress;
+  int? isAffiliate;
+  String? affiliateCode;
+  int? affiliateRegistrationCommission;
+  int? registrationFees;
+  String? createdAt;
+  String? updatedAt;
+  int? tPickupId;
+  int? cityId;
+
+  MerchantProfilee({
+    this.id,
+    this.userId,
+    this.brandName,
+    this.sellerType,
+    this.tax,
+    this.code,
+    this.city,
+    this.hasWebsite,
+    this.businessOperation,
+    this.catalogueSize,
+    this.supplyChain,
+    this.productionInventory,
+    this.rating,
+    this.feedback,
+    this.websiteUrl,
+    this.socialUrl,
+    this.commission,
+    this.warehouseAddress,
+    this.businessAddress,
+    this.isAffiliate,
+    this.affiliateCode,
+    this.affiliateRegistrationCommission,
+    this.registrationFees,
+    this.createdAt,
+    this.updatedAt,
+    this.tPickupId,
+    this.cityId,
+  });
+
+  factory MerchantProfilee.fromJson(Map<String, dynamic> json) {
+    return MerchantProfilee(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      userId: json['user_id'] is String ? int.tryParse(json['user_id']) : json['user_id'],
+      brandName: json['brand_name'],
+      sellerType: json['seller_type'],
+      tax: json['tax'],
+      code: json['code'],
+      city: json['city'],
+      hasWebsite: json['has_website'],
+      businessOperation: json['business_operation'],
+      catalogueSize: json['catalogue_size'],
+      supplyChain: json['supply_chain'],
+      productionInventory: json['production_inventory'],
+      rating: json['rating'],
+      feedback: json['feedback'],
+      websiteUrl: json['website_url'],
+      socialUrl: json['social_url'],
+      commission: json['commission'] is String ? int.tryParse(json['commission']) : json['commission'],
+      warehouseAddress: json['warehouse_address'],
+      businessAddress: json['business_address'],
+      isAffiliate: json['is_affiliate'] is String ? int.tryParse(json['is_affiliate']) : json['is_affiliate'],
+      affiliateCode: json['affiliate_code'],
+      affiliateRegistrationCommission: json['affiliate_registration_commission'] is String
+          ? int.tryParse(json['affiliate_registration_commission'])
+          : json['affiliate_registration_commission'],
+      registrationFees: json['registration_fees'] is String
+          ? int.tryParse(json['registration_fees'])
+          : json['registration_fees'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      tPickupId: json['t_pickup_id'] is String ? int.tryParse(json['t_pickup_id']) : json['t_pickup_id'],
+      cityId: json['city_id'] is String ? int.tryParse(json['city_id']) : json['city_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'user_id': userId,
+    'brand_name': brandName,
+    'seller_type': sellerType,
+    'tax': tax,
+    'code': code,
+    'city': city,
+    'has_website': hasWebsite,
+    'business_operation': businessOperation,
+    'catalogue_size': catalogueSize,
+    'supply_chain': supplyChain,
+    'production_inventory': productionInventory,
+    'rating': rating,
+    'feedback': feedback,
+    'website_url': websiteUrl,
+    'social_url': socialUrl,
+    'commission': commission,
+    'warehouse_address': warehouseAddress,
+    'business_address': businessAddress,
+    'is_affiliate': isAffiliate,
+    'affiliate_code': affiliateCode,
+    'affiliate_registration_commission': affiliateRegistrationCommission,
+    'registration_fees': registrationFees,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    't_pickup_id': tPickupId,
+    'city_id': cityId,
+  };
+}
 
 
+//-------------------------Product Details--------------------------------
+
+class DetailProductDetailsModel {
+  int? status;
+  String? message;
+  DetailDataProductDetail? data;
+
+  DetailProductDetailsModel({this.status, this.message, this.data});
+
+  DetailProductDetailsModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null
+        ? DetailDataProductDetail.fromJson(json['data'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['status'] = status;
+    dataMap['message'] = message;
+    if (data != null) {
+      dataMap['data'] = data!.toJson();
+    }
+    return dataMap;
+  }
+}
+
+class DetailDataProductDetail {
+  DetailProductt? product;
+  List<Productt>? similarProducts;
+  List<Productt>? matchWithProducts;
+  List<DetailSizes>? sizes;
+  List<DetailColors>? colors;
+
+  DetailDataProductDetail(
+      {this.product,
+        this.similarProducts,
+        this.matchWithProducts,
+        this.sizes,
+        this.colors});
+
+  DetailDataProductDetail.fromJson(Map<String, dynamic> json) {
+    product = json['product'] != null
+        ? DetailProductt.fromJson(json['product'])
+        : null;
+    if (json['similar_products'] != null) {
+      similarProducts = List.from(json['similar_products'])
+          .map((e) => Productt.fromJson(e))
+          .toList();
+    }
+    if (json['match_with_products'] != null) {
+      matchWithProducts = List.from(json['match_with_products'])
+          .map((e) => Productt.fromJson(e))
+          .toList();
+    }
+    if (json['sizes'] != null) {
+      sizes = List.from(json['sizes'])
+          .map((e) => DetailSizes.fromJson(e))
+          .toList();
+    }
+    if (json['colors'] != null) {
+      colors = List.from(json['colors'])
+          .map((e) => DetailColors.fromJson(e))
+          .toList();
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    if (product != null) dataMap['product'] = product!.toJson();
+    if (similarProducts != null) {
+      dataMap['similar_products'] =
+          similarProducts!.map((v) => v.toJson()).toList();
+    }
+    if (matchWithProducts != null) {
+      dataMap['match_with_products'] =
+          matchWithProducts!.map((v) => v.toJson()).toList();
+    }
+    if (sizes != null) dataMap['sizes'] = sizes!.map((v) => v.toJson()).toList();
+    if (colors != null)
+      dataMap['colors'] = colors!.map((v) => v.toJson()).toList();
+    return dataMap;
+  }
+}
+
+class DetailProductt {
+  int? id;
+  String? barcode;
+  int? merchantId;
+  String? name;
+  String? slug;
+  String? productType;
+  int? isVariant;
+  String? keyWords;
+  String? description;
+  String? summary;
+  String? sizes;
+  String? colors;
+  String? type;
+  int? isFeatured;
+  String? image;
+  String? imageUrl;
+  String? sizeGuide;
+  String? video;
+  double? weight;
+  List<String>? images;
+  List<String>? imagesUrl;
+  String? brandId;
+  int? categoryLevel1Id;
+  int? categoryLevel2Id;
+  int? categoryLevel3Id;
+  String? updatedBy;
+  String? deletedBy;
+  int? isApproved;
+  int? noOfOrders;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  DetailVariant? variant;
+  String? brandName;
+  DetailMerchant? merchant;
+  List<String>? reviews;
+
+  DetailProductt(
+      {this.id,
+        this.barcode,
+        this.merchantId,
+        this.name,
+        this.slug,
+        this.productType,
+        this.isVariant,
+        this.keyWords,
+        this.description,
+        this.summary,
+        this.sizes,
+        this.colors,
+        this.type,
+        this.isFeatured,
+        this.image,
+        this.imageUrl,
+        this.sizeGuide,
+        this.video,
+        this.weight,
+        this.images,
+        this.imagesUrl,
+        this.brandId,
+        this.categoryLevel1Id,
+        this.categoryLevel2Id,
+        this.categoryLevel3Id,
+        this.updatedBy,
+        this.deletedBy,
+        this.isApproved,
+        this.noOfOrders,
+        this.deletedAt,
+        this.createdAt,
+        this.updatedAt,
+        this.variant,
+        this.brandName,
+        this.merchant,
+        this.reviews});
+
+  DetailProductt.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    barcode = json['barcode'];
+    merchantId = json['merchant_id'];
+    name = json['name'];
+    slug = json['slug'];
+    productType = json['product_type'];
+    isVariant = json['is_variant'];
+    keyWords = json['key_words'];
+    description = json['description'];
+    summary = json['summary'];
+    sizes = json['sizes'];
+    colors = json['colors'];
+    type = json['type'];
+    isFeatured = json['is_featured'];
+    image = json['image'];
+    imageUrl = json['image_url'];
+    sizeGuide = json['size_guide'];
+    video = json['video'];
+    weight = (json['weight'] is num) ? (json['weight'] as num).toDouble() : null;
+    images = (json['images'] != null)
+        ? List<String>.from(json['images'])
+        : <String>[];
+    imagesUrl = (json['images_url'] != null)
+        ? List<String>.from(json['images_url'])
+        : <String>[];
+    brandId = json['brand_id'];
+    categoryLevel1Id = json['category_level1_id'];
+    categoryLevel2Id = json['category_level2_id'];
+    categoryLevel3Id = json['category_level3_id'];
+    updatedBy = json['updated_by'];
+    deletedBy = json['deleted_by'];
+    isApproved = json['is_approved'];
+    noOfOrders = json['no_of_orders'];
+    deletedAt = json['deleted_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    variant =
+    json['variant'] != null ? DetailVariant.fromJson(json['variant']) : null;
+    brandName = json['brand_name'];
+    merchant = json['merchant'] != null
+        ? DetailMerchant.fromJson(json['merchant'])
+        : null;
+    reviews = (json['reviews'] != null)
+        ? List<String>.from(json['reviews'])
+        : <String>[];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['id'] = id;
+    dataMap['barcode'] = barcode;
+    dataMap['merchant_id'] = merchantId;
+    dataMap['name'] = name;
+    dataMap['slug'] = slug;
+    dataMap['product_type'] = productType;
+    dataMap['is_variant'] = isVariant;
+    dataMap['key_words'] = keyWords;
+    dataMap['description'] = description;
+    dataMap['summary'] = summary;
+    dataMap['sizes'] = sizes;
+    dataMap['colors'] = colors;
+    dataMap['type'] = type;
+    dataMap['is_featured'] = isFeatured;
+    dataMap['image'] = image;
+    dataMap['image_url'] = imageUrl;
+    dataMap['size_guide'] = sizeGuide;
+    dataMap['video'] = video;
+    dataMap['weight'] = weight;
+    dataMap['images'] = images;
+    dataMap['images_url'] = imagesUrl;
+    dataMap['brand_id'] = brandId;
+    dataMap['category_level1_id'] = categoryLevel1Id;
+    dataMap['category_level2_id'] = categoryLevel2Id;
+    dataMap['category_level3_id'] = categoryLevel3Id;
+    dataMap['updated_by'] = updatedBy;
+    dataMap['deleted_by'] = deletedBy;
+    dataMap['is_approved'] = isApproved;
+    dataMap['no_of_orders'] = noOfOrders;
+    dataMap['deleted_at'] = deletedAt;
+    dataMap['created_at'] = createdAt;
+    dataMap['updated_at'] = updatedAt;
+    if (variant != null) dataMap['variant'] = variant!.toJson();
+    dataMap['brand_name'] = brandName;
+    if (merchant != null) dataMap['merchant'] = merchant!.toJson();
+    dataMap['reviews'] = reviews;
+    return dataMap;
+  }
+}
+
+class DetailMerchant {
+  int? id;
+  String? name;
+  String? email;
+  String? username;
+  String? phoneNo;
+  String? city;
+  String? image;
+
+  DetailMerchant(
+      {this.id,
+        this.name,
+        this.email,
+        this.username,
+        this.phoneNo,
+        this.city,
+        this.image});
+
+  DetailMerchant.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    username = json['username'];
+    phoneNo = json['phone_no'];
+    city = json['city'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['id'] = id;
+    dataMap['name'] = name;
+    dataMap['email'] = email;
+    dataMap['username'] = username;
+    dataMap['phone_no'] = phoneNo;
+    dataMap['city'] = city;
+    dataMap['image'] = image;
+    return dataMap;
+  }
+}
+
+class DetailColors {
+  int? id;
+  int? productId;
+  int? size;
+  int? color;
+  int? price;
+  String? offerPrice;
+  int? quantity;
+  int? isAvailable;
+  String? createdAt;
+  String? updatedAt;
+  String? hexCode;
+  String? colorName;
+  String? sizeName;
+
+  DetailColors(
+      {this.id,
+        this.productId,
+        this.size,
+        this.color,
+        this.price,
+        this.offerPrice,
+        this.quantity,
+        this.isAvailable,
+        this.createdAt,
+        this.updatedAt,
+        this.hexCode,
+        this.colorName,
+        this.sizeName});
+
+  DetailColors.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    productId = json['product_id'];
+    size = json['size'];
+    color = json['color'];
+    price = json['price'];
+    offerPrice = json['offer_price'];
+    quantity = json['quantity'];
+    isAvailable = json['is_available'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    hexCode = json['hex_code'];
+    colorName = json['color_name'];
+    sizeName = json['size_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['id'] = id;
+    dataMap['product_id'] = productId;
+    dataMap['size'] = size;
+    dataMap['color'] = color;
+    dataMap['price'] = price;
+    dataMap['offer_price'] = offerPrice;
+    dataMap['quantity'] = quantity;
+    dataMap['is_available'] = isAvailable;
+    dataMap['created_at'] = createdAt;
+    dataMap['updated_at'] = updatedAt;
+    dataMap['hex_code'] = hexCode;
+    dataMap['color_name'] = colorName;
+    dataMap['size_name'] = sizeName;
+    return dataMap;
+  }
+}
+
+class DetailSizes {
+  int? id;
+  int? productId;
+  int? size;
+  int? color;
+  int? price;
+  String? offerPrice;
+  int? quantity;
+  int? isAvailable;
+  String? createdAt;
+  String? updatedAt;
+  String? colorName;
+  String? sizeName;
+
+  DetailSizes(
+      {this.id,
+        this.productId,
+        this.size,
+        this.color,
+        this.price,
+        this.offerPrice,
+        this.quantity,
+        this.isAvailable,
+        this.createdAt,
+        this.updatedAt,
+        this.colorName,
+        this.sizeName});
+
+  DetailSizes.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    productId = json['product_id'];
+    size = json['size'];
+    color = json['color'];
+    price = json['price'];
+    offerPrice = json['offer_price'];
+    quantity = json['quantity'];
+    isAvailable = json['is_available'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    colorName = json['color_name'];
+    sizeName = json['size_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['id'] = id;
+    dataMap['product_id'] = productId;
+    dataMap['size'] = size;
+    dataMap['color'] = color;
+    dataMap['price'] = price;
+    dataMap['offer_price'] = offerPrice;
+    dataMap['quantity'] = quantity;
+    dataMap['is_available'] = isAvailable;
+    dataMap['created_at'] = createdAt;
+    dataMap['updated_at'] = updatedAt;
+    dataMap['color_name'] = colorName;
+    dataMap['size_name'] = sizeName;
+    return dataMap;
+  }
+}
+
+class DetailVariant {
+  // Define this if you have a variant structure in your API.
+  DetailVariant();
+
+  DetailVariant.fromJson(Map<String, dynamic> json);
+
+  Map<String, dynamic> toJson() => {};
+}
+
+// ---------------------- Privacy Policy Models ----------------------
+
+class PrivacyPolicyResponse {
+  int? status;
+  String? message;
+  PrivacyPolicyData? data;
+
+  PrivacyPolicyResponse({this.status, this.message, this.data});
+
+  PrivacyPolicyResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data =
+    json['data'] != null ? PrivacyPolicyData.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['status'] = status;
+    dataMap['message'] = message;
+    if (data != null) dataMap['data'] = data!.toJson();
+    return dataMap;
+  }
+}
+
+class PrivacyPolicyData {
+  PrivacyPolicyContent? content;
+
+  PrivacyPolicyData({this.content});
+
+  PrivacyPolicyData.fromJson(Map<String, dynamic> json) {
+    content = json['content'] != null
+        ? PrivacyPolicyContent.fromJson(json['content'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    if (content != null) dataMap['content'] = content!.toJson();
+    return dataMap;
+  }
+}
+
+class PrivacyPolicyContent {
+  int? id;
+  String? name;
+  String? slug;
+  String? keyWords;
+  String? description;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+
+  PrivacyPolicyContent(
+      {this.id,
+        this.name,
+        this.slug,
+        this.keyWords,
+        this.description,
+        this.status,
+        this.createdAt,
+        this.updatedAt});
+
+  PrivacyPolicyContent.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    slug = json['slug'];
+    keyWords = json['key_words'];
+    description = json['description'];
+    status = json['status'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> dataMap = {};
+    dataMap['id'] = id;
+    dataMap['name'] = name;
+    dataMap['slug'] = slug;
+    dataMap['key_words'] = keyWords;
+    dataMap['description'] = description;
+    dataMap['status'] = status;
+    dataMap['created_at'] = createdAt;
+    dataMap['updated_at'] = updatedAt;
+    return dataMap;
+  }
+}
+
+//----------------------------Get Address----------------------------
+
+class GetAddressesResponse {
+  int? status;
+  String? message;
+  DataAddd? data;
+
+  GetAddressesResponse({this.status, this.message, this.data});
+
+  GetAddressesResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? DataAddd.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['status'] = status;
+    map['message'] = message;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
+
+class DataAddd {
+  List<Addressesee>? addresses;
+
+  DataAddd({this.addresses});
+
+  DataAddd.fromJson(Map<String, dynamic> json) {
+    if (json['addresses'] != null) {
+      addresses = <Addressesee>[];
+      json['addresses'].forEach((v) {
+        addresses!.add(Addressesee.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    if (addresses != null) {
+      map['addresses'] = addresses!.map((v) => v.toJson()).toList();
+    }
+    return map;
+  }
+}
+
+class Addressesee {
+  int? id;
+  int? userId;
+  String? name;
+  String? email;
+  String? phoneNo;
+  String? address;
+  String? billingAddress;
+  String? city;
+  int? status;
+  int? isDefault;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  String? cityName;
+  TCityy? tCity;
+
+  Addressesee({
+    this.id,
+    this.userId,
+    this.name,
+    this.email,
+    this.phoneNo,
+    this.address,
+    this.billingAddress,
+    this.city,
+    this.status,
+    this.isDefault,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.cityName,
+    this.tCity,
+  });
+
+  Addressesee.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    name = json['name'];
+    email = json['email'];
+    phoneNo = json['phone_no'];
+    address = json['address'];
+    billingAddress = json['billing_address'];
+    city = json['city'];
+    status = json['status'];
+    isDefault = json['is_default'];
+    deletedAt = json['deleted_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    cityName = json['city_name'];
+    tCity = json['t_city'] != null ? TCityy.fromJson(json['t_city']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['id'] = id;
+    map['user_id'] = userId;
+    map['name'] = name;
+    map['email'] = email;
+    map['phone_no'] = phoneNo;
+    map['address'] = address;
+    map['billing_address'] = billingAddress;
+    map['city'] = city;
+    map['status'] = status;
+    map['is_default'] = isDefault;
+    map['deleted_at'] = deletedAt;
+    map['created_at'] = createdAt;
+    map['updated_at'] = updatedAt;
+    map['city_name'] = cityName;
+    if (tCity != null) {
+      map['t_city'] = tCity!.toJson();
+    }
+    return map;
+  }
+}
+
+class TCityy {
+  int? id;
+  String? name;
+  int? tHubId;
+  String? tHubName;
+  int? tId;
+  int? tZoneId;
+  String? tZoneName;
+  int? tPickup;
+  String? createdAt;
+  String? updatedAt;
+
+  TCityy({
+    this.id,
+    this.name,
+    this.tHubId,
+    this.tHubName,
+    this.tId,
+    this.tZoneId,
+    this.tZoneName,
+    this.tPickup,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  TCityy.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    tHubId = json['t_hub_id'];
+    tHubName = json['t_hub_name'];
+    tId = json['t_id'];
+    tZoneId = json['t_zone_id'];
+    tZoneName = json['t_zone_name'];
+    tPickup = json['t_pickup'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['id'] = id;
+    map['name'] = name;
+    map['t_hub_id'] = tHubId;
+    map['t_hub_name'] = tHubName;
+    map['t_id'] = tId;
+    map['t_zone_id'] = tZoneId;
+    map['t_zone_name'] = tZoneName;
+    map['t_pickup'] = tPickup;
+    map['created_at'] = createdAt;
+    map['updated_at'] = updatedAt;
+    return map;
+  }
+}
 
 
+//--------------------------Home category products---------------------
 
+class GetCategoryHomeModelResponsee {
+  int? status;
+  String? message;
+  DataCatt? data;
 
+  GetCategoryHomeModelResponsee({this.status, this.message, this.data});
 
+  GetCategoryHomeModelResponsee.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? DataCatt.fromJson(json['data']) : null;
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['status'] = status;
+    map['message'] = message;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
 
+class DataCatt {
+  List<CategoryProductt>? categoryProducts;
 
+  DataCatt({this.categoryProducts});
 
+  DataCatt.fromJson(Map<String, dynamic> json) {
+    if (json['category_products'] != null) {
+      categoryProducts = <CategoryProductt>[];
+      json['category_products'].forEach((v) {
+        categoryProducts!.add(CategoryProductt.fromJson(v));
+      });
+    }
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    if (categoryProducts != null) {
+      map['category_products'] =
+          categoryProducts!.map((v) => v.toJson()).toList();
+    }
+    return map;
+  }
+}
 
+//---------------------------Place order
 
+class PlaceOrderResponsee {
+  int? status;
+  String? message;
+  DataPlaceOrderr? data;
 
+  PlaceOrderResponsee({this.status, this.message, this.data});
 
+  PlaceOrderResponsee.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? DataPlaceOrderr.fromJson(json['data']) : null;
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['status'] = status;
+    map['message'] = message;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
 
+class DataPlaceOrderr {
+  List<String>? orderIds;
 
+  DataPlaceOrderr({this.orderIds});
 
+  DataPlaceOrderr.fromJson(Map<String, dynamic> json) {
+    orderIds = json['order_ids'] != null
+        ? List<String>.from(json['order_ids'])
+        : null;
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    if (orderIds != null) {
+      map['order_ids'] = orderIds;
+    }
+    return map;
+  }
+}
 
+//--------------------------Apply coupon code-----------------------------
 
+class VoucherResponsee {
+  int? status;
+  String? message;
+  VoucherDataaa? data;
 
+  VoucherResponsee({this.status, this.message, this.data});
 
+  VoucherResponsee.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data =
+    json['data'] != null ? VoucherDataaa.fromJson(json['data']) : null;
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['status'] = status;
+    map['message'] = message;
+    if (data != null) {
+      map['data'] = data!.toJson();
+    }
+    return map;
+  }
+}
 
+class VoucherDataaa {
+  String? discountAmount;
+  String? total;
+
+  VoucherDataaa({this.discountAmount, this.total});
+
+  VoucherDataaa.fromJson(Map<String, dynamic> json) {
+    discountAmount = json['discount_amount'];
+    total = json['total'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = {};
+    map['discount_amount'] = discountAmount;
+    map['total'] = total;
+    return map;
+  }
+}
+
+//---------------------------AvailPoints ---------------------------------
+
+class AvailPointsListResponsee {
+  int? status;
+  String? message;
+  VoucherPointsDataa? data;
+
+  AvailPointsListResponsee({this.status, this.message, this.data});
+
+  factory AvailPointsListResponsee.fromJson(Map<String, dynamic> json) {
+    return AvailPointsListResponsee(
+      status: json['status'],
+      message: json['message'],
+      data: json['data'] != null
+          ? VoucherPointsDataa.fromJson(json['data'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data?.toJson(),
+    };
+  }
+}
+
+class VoucherPointsDataa {
+  List<AvailPointt>? availPoints;
+
+  VoucherPointsDataa({this.availPoints});
+
+  factory VoucherPointsDataa.fromJson(Map<String, dynamic> json) {
+    return VoucherPointsDataa(
+      availPoints: json['avail_points'] != null
+          ? List<AvailPointt>.from(
+          json['avail_points'].map((x) => AvailPointt.fromJson(x)))
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'avail_points': availPoints?.map((x) => x.toJson()).toList(),
+    };
+  }
+}
+
+class AvailPointt {
+  int? amount;
+  int? points;
+
+  AvailPointt({this.amount, this.points});
+
+  factory AvailPointt.fromJson(Map<String, dynamic> json) {
+    return AvailPointt(
+      amount: json['amount'] is String
+          ? int.tryParse(json['amount'])
+          : json['amount'],
+      points: json['points'] is String
+          ? int.tryParse(json['points'])
+          : json['points'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'amount': amount,
+      'points': points,
+    };
+  }
+}
+
+//--------------------------Menu Models------------------------------------
+
+class CategoryResponsee {
+  int? status;
+  String? message;
+  CategoryDataa? data;
+
+  CategoryResponsee({this.status, this.message, this.data});
+
+  factory CategoryResponsee.fromJson(Map<String, dynamic> json) {
+    return CategoryResponsee(
+      status: json['status'],
+      message: json['message'],
+      data:
+      json['data'] != null ? CategoryDataa.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data?.toJson(),
+    };
+  }
+}
+
+class CategoryDataa {
+  List<Categoryymeny>? category;
+
+  CategoryDataa({this.category});
+
+  factory CategoryDataa.fromJson(Map<String, dynamic> json) {
+    return CategoryDataa(
+      category: json['category'] != null
+          ? List<Categoryymeny>.from(
+          json['category'].map((x) => Categoryymeny.fromJson(x)))
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'category': category?.map((x) => x.toJson()).toList(),
+    };
+  }
+}
+
+class Categoryymeny {
+  int? id;
+  String? name;
+  String? image;
+  String? imagePath;
+
+  Categoryymeny({this.id, this.name, this.image, this.imagePath});
+
+  factory Categoryymeny.fromJson(Map<String, dynamic> json) {
+    return Categoryymeny(
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
+      name: json['name'],
+      image: json['image'],
+      imagePath: json['image_path'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'image_path': imagePath,
+    };
+  }
+}
+
+//----------------------------Color Response-----------------------------
+
+class ColorsResponsee {
+  int? status;
+  String? message;
+  DataSizee? data;
+
+  ColorsResponsee({this.status, this.message, this.data});
+
+  factory ColorsResponsee.fromJson(Map<String, dynamic> json) {
+    return ColorsResponsee(
+      status: json['status'],
+      message: json['message'],
+      data: json['data'] != null ? DataSizee.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data?.toJson(),
+    };
+  }
+}
+
+class DataSizee {
+  List<DetailColors>? colors;
+
+  DataSizee({this.colors});
+
+  factory DataSizee.fromJson(Map<String, dynamic> json) {
+    return DataSizee(
+      colors: json['colors'] != null
+          ? List<DetailColors>.from(json['colors'].map((x) => DetailColors.fromJson(x)))
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'colors': colors?.map((x) => x.toJson()).toList(),
+    };
+  }
+}
 
 

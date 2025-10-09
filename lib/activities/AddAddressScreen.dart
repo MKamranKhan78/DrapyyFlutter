@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:drapyy/helper/SizeConstants.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 
 import '../helper/FontsConstants.dart';
+import '../helper/ToastUtils.dart';
+import '../helper/customHttpClient.dart';
 import '../helper/drawables.dart';
+import '../helper/preference_manager.dart';
+import '../models/Model.dart';
+import '../network/Network.dart';
 
 
 
@@ -230,4 +238,215 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       ),
     );
   }
+
+
+  Future<void> addAddress(
+      String name,
+      String phone_no,
+      String address,
+      String billing_address,
+      String city,
+      String is_default,
+      ) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.addAddress);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "name": name.toString(),
+      "phone_no": phone_no.toString(),
+      "address": address.toString(),
+      "billing_address": billing_address.toString(),
+      "city": city.toString(),
+      "is_default": is_default.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      PlaceOrderResponsee.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
+  Future<void> updateAddress(
+      String name,
+      String phone_no,
+      String address,
+      String billing_address,
+      String city,
+      String is_default,
+      ) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.addressUpdate);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "name": name.toString(),
+      "phone_no": phone_no.toString(),
+      "address": address.toString(),
+      "billing_address": billing_address.toString(),
+      "city": city.toString(),
+      "is_default": is_default.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      PlaceOrderResponsee.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
+
+
+
 }

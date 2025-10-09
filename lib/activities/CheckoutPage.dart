@@ -376,5 +376,198 @@ class _MyOrdersPageState extends State<CheckoutPage> {
     }
   }
 
+  Future<void> placeOrder(
+      String shipping_method,
+      String payment_method,
+      String voucher,
+      String is_voucher,
+      String address_id,
+      ) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.placeOrder);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "shipping_method": shipping_method.toString(),
+      "payment_method": payment_method.toString(),
+      "voucher": voucher.toString(),
+      "is_voucher": is_voucher.toString(),
+      "address": address_id.toString()
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      PlaceOrderResponsee.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
+  Future<void> applyCouponCode(
+      String voucher,
+      ) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.applyCoupon);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "voucher": voucher.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      VoucherResponsee.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
 
 }
