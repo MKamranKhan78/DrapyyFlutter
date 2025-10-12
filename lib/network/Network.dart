@@ -16,7 +16,6 @@ class NetworkManager {
 
     static const String search ="search";
     static const String productColor ="product-colors";
-    static const String getMenu ="get-menu";
     static const String avail_Points ="customer/avail-points";
     static const String avail_points_list ="customer/avail-points-list";
     static const String my_follows_sync ="customer/my-follows/sync";
@@ -25,7 +24,6 @@ class NetworkManager {
     static const String sync_my_follows ="customer/my-follows/sync";
     static const String addressUpdate ="customer/address/update";
     static const String addAddress ="customer/address/add";
-    static const String home_cat_products ="home-category-products";
     static const String notifications ="customer/notifications";
     static const String address ="customer/address";
     static const String termsAndCondition ="page/terms_and_condition";
@@ -35,28 +33,35 @@ class NetworkManager {
     static const String profile ="customer/profile";
     static const String orders ="customer/orders";
     static const String becomeSeller ="become-seller";
-    static const String config_data ="config-data";
     static const String syncWishlist ="sync-wishlist";
     static const String cartUpdate ="cart/update";
     static const String cartRemove ="cart/remove";
     static const String addCart ="cart/add";
-    static const String register ="register";
     static const String become_seller_data ="become-seller-data";
     static const String logout ="log-out";
     static const String checkout ="checkout";
     static const String wishlist ="customer/wishlist";
     static const String cart ="cart";
-    static const String home ="home";
     static const String forgot_pass ="forgot-password";
-    static const String login ="login";
+
+
+    //------------DONE fully on add fb token---------------------
     static const String guest_api ="guest-user";
+    //---------------------DONE API---------------------------------
+    static const String register ="register";
+    static const String login ="login";
+    static const String home_cat_products ="home-category-products";
+    static const String home ="home";
+    static const String getMenu ="get-menu";
+    static const String config_data ="config-data";
 
 
 
+    //---------------------DONE---------------------------------
     /////// CONSTANTS ///////
    static const String API_TOKEN ="apikey";
    static const String FIREBASE_TOKEN ="firebase_token";
-   static const String PREF_SKIP ="skiiip";
+   //static const String PREF_SKIP ="skiiip";
    static const String PREF_NAME ="name";
    static const String PREF_EMAIL ="email";
    static const String PREF_PROFILE ="profile";
@@ -72,5 +77,24 @@ class NetworkManager {
    static const String PREF_LNG ="lng";
    static const String PREF_BUILDING ="building";
    static const String PREF_FlOOR ="floor";
+
+
+
+   static const String PREF_IS_GUEST ="PREF_IS_GUEST";
+   static const String PREF_MOBILE ="PREF_MOBILE";
+   static const String PREF_FULL_NAME ="PREF_FULL_NAME";
+   static const String PREF_USER_ID ="PREF_USER_ID";
+   static const String PREF_CITY_NAME ="PREF_CITY_NAME";
+   static const String PREF_DOB_NAME ="PREF_DOB_NAME";
+   static const String PREF_ADRESS ="PREF_ADRESS";
+   static const String PREF_POSTAL_CODE ="PREF_POSTAL_CODE";
+
+   static const String PREF_YOUTUBE ="PREF_YOUTUBE";
+   static const String PREF_FACEBOOK ="PREF_FACEBOOK";
+   static const String PREF_INSTAGRAM ="PREF_INSTAGRAM";
+   static const String PREF_PINTREST ="PREF_PINTREST";
+
+
+
 
 }

@@ -25,7 +25,7 @@ class MenuFragment extends StatefulWidget {
 
 class _MenuFragmentState extends State<MenuFragment> {
   // Static list of strings
-  final List<String> items = [
+  /*final List<String> items = [
     "Item 1",
     "Item 2",
     "Item 3",
@@ -36,10 +36,14 @@ class _MenuFragmentState extends State<MenuFragment> {
     "Item 8",
     "Item 9",
     "Item 10",
-  ];
+  ];*/
+  List<Categoryymeny> category_list = [];
+  List<Categoryymeny> product_name_list = [];
+  int selectedIndex = 0; // 👈 Default first item selected
+
   bool isLoading = false;
 
-  final List<String> items2 = [
+  /*final List<String> items2 = [
     "Item 1",
     "Item 2",
     "Item 3",
@@ -59,9 +63,16 @@ class _MenuFragmentState extends State<MenuFragment> {
     "Item 8",
     "Item 9",
     "Item 10",
-  ];
+  ];*/
+
+
 
   @override
+  void initState() {
+     super.initState();
+    getMenuFirst("1");
+  }
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -84,20 +95,18 @@ class _MenuFragmentState extends State<MenuFragment> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              itemCount: items.length,
+              itemCount: category_list.length,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("${items[index]} clicked")),
-                    );
+                    getMenu("2", category_list[index].id.toString());
                   },
                   child: Container(
                     margin:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                     alignment: Alignment.center,
                     child: Text(
-                      items[index],
+                      category_list[index].name.toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -115,7 +124,7 @@ class _MenuFragmentState extends State<MenuFragment> {
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-              itemCount: items2.length,
+              itemCount: product_name_list.length,
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
@@ -127,7 +136,7 @@ class _MenuFragmentState extends State<MenuFragment> {
                         horizontal: 8, vertical: 8),
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      items2[index],
+                      product_name_list[index].name.toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -143,8 +152,121 @@ class _MenuFragmentState extends State<MenuFragment> {
         ],
       ),
     );
-  }
+  }*/
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          /// --- Main UI ---
+          Column(
+            children: [
+              const SizedBox(height: 50),
+
+              Center(
+                child: Text(
+                  "MENU",
+                  style: const TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              /// --- Horizontal List ---
+              SizedBox(
+                height: 80,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  itemCount: category_list.length,
+                  itemBuilder: (context, index) {
+                    final isSelected = index == selectedIndex;
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                        getMenu("2", category_list[index].id.toString());
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                        alignment: Alignment.center,
+                        decoration: isSelected
+                            ? const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black, // underline color
+                              width: 2.0,
+                            ),
+                          ),
+                        )
+                            : null,
+                        child: Text(
+                          category_list[index].name.toString(),
+                          style: TextStyle(
+                            color: isSelected ? Colors.black : Colors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'GothamPro',
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              /// --- Vertical List ---
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  padding:
+                  const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                  itemCount: product_name_list.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Get.to(() => const ProductListingActivity());
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          product_name_list[index].name.toString(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            fontFamily: FontConstants.gothamPro,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+
+          /// --- Loader Overlay ---
+          if (isLoading)
+            Container(
+               child: const Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 
 
 
@@ -195,14 +317,11 @@ class _MenuFragmentState extends State<MenuFragment> {
       CategoryResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        setState(() {
+          category_list.clear();
+          category_list.addAll(model.data!.category as Iterable<Categoryymeny>);
+        });
+        getMenu("2", model.data!.category![0].id.toString());
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {
@@ -290,14 +409,10 @@ class _MenuFragmentState extends State<MenuFragment> {
       CategoryResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        setState(() {
+          product_name_list.clear();
+          product_name_list.addAll(model.data!.category as Iterable<Categoryymeny>);
+        });
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {

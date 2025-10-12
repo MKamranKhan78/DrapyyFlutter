@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:drapyy/activities/BrandDetailsScreen.dart';
+import 'package:drapyy/activities/LoginScreen.dart';
+import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
+import 'package:drapyy/activities/TermsAndConditionScreen.dart';
+import 'package:drapyy/activities/products_items/HomeCategoryProductItem.dart';
 import 'package:drapyy/activities/ProductDetailsSccreen.dart';
+import 'package:drapyy/activities/products_items/HomeProductItem.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:drapyy/models/Model.dart';
@@ -9,8 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
-import '../activities/ProductItemAlt.dart';
+import '../activities/products_items/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
 import '../helper/customHttpClient.dart';
@@ -30,119 +36,48 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _timer;
   bool isLoading = false;
 
+  List<CategoryProductHomee> category_product_list = [];
+  List<BannerHomee> banners_list = [];
+  List<CategoryHomee> category_list = [];
+  List<PartnerHomee> partner_list = [];
+  List<ProductHomee> product_list = [];
+  int? selectedIndex; // 👈 null means no item selected yet
 
-
-  // Static list of banner images (replace with API data later)
-  final List<String> _banners = [
-    "https://picsum.photos/id/1011/800/400",
-    "https://picsum.photos/id/1012/800/400",
-    "https://picsum.photos/id/1013/800/400",
-    "https://picsum.photos/id/1014/800/400",
-  ];
-
-  // Static list of strings
-  final List<String> items = [
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 5",
-    "Item 6",
-    "Item 7",
-    "Item 8",
-    "Item 9",
-    "Item 10",
-  ];
-
-
-  final List<Product> products = [
-    Product(
-      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
-      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    // Add more products as needed
-  ];
-
-  final List<Product> products2 = [
-    Product(
-      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
-      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'hhttps://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    // Add more products as needed
-  ];
-
-  final List<Brand> brands = [
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1012/800/400', // Replace with your image path
-    ),
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Brand(
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    // Add more products as needed
-  ];
-
-
-
-
-  @override
+  /*@override
   void initState() {
     super.initState();
     _startAutoSlide();
     getHome();
+  }*/
+
+  @override
+  void initState() {
+    super.initState();
+    checkGuestStatus();
   }
+
+  Future<void> checkGuestStatus() async {
+    print("HOME_checkGuestStatus------------>");
+    String isGuest = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST)?.toString() ?? "";
+    if (isGuest.isNotEmpty) {
+      print("HOME_checkGuestStatus------------1>-------isGuest--->"+isGuest.toString());
+      if (isGuest == "0") {
+        print("HOME_checkGuestStatus------------2>");
+        getHome();
+      } else {
+        print("HOME_checkGuestStatus------------3>");
+        guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+      }
+    } else {
+      print("HOME_checkGuestStatus------------4>");
+      guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+    }
+  }
+
 
   void _startAutoSlide() {
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < _banners.length - 1) {
+      if (_currentPage < banners_list.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -179,132 +114,51 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Banner Slider
-              SizedBox(
-                height: 300,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _banners.length,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    return Image.network(
-                      _banners[index],
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    );
-                  },
-                ),
-              ),
-
-              // Indicators
-              Container(
-                height: 80,
-                margin: const EdgeInsets.only(top: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _banners.length,
-                        (index) => _buildIndicator(index == _currentPage),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "NEW ARRIVALS",
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              // Horizontal ListView
-              SizedBox(
-                height: 80,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("${items[index]} clicked")),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Banner Slider
+                  SizedBox(
+                    height: 300,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: banners_list.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Image.network(
+                          banners_list[index].imageMobilePath.toString(),
+                          fit: BoxFit.contain,
+                          width: double.infinity,
                         );
                       },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                        alignment: Alignment.center,
-                        child: Text(
-                          items[index],
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontFamily: FontConstants.gothamPro,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              // GridView - Fixed height based on content
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0,right: 10),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
-                    childAspectRatio: 0.7,
+                    ),
                   ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return ProductItemAlt(
-                      product: products[index],
-                      onItemClick: () {
-                        // Handle complete item click
-                        //print('Product clicked: ${products[index].name}');
-                        Get.to(() => const ProductDetailsSccreen());
 
-                        // Add your navigation logic here
-                      },
-                      onFavoriteClick: () {
-                        // Handle favorite click
-                        setState(() {
-                          //products[index].isFavorite = !products[index].isFavorite;
-                        });
-                        print('Favorite toggled for: ${products[index].name}');
-                      },
-                    );
-                  },
-                ),
-              ),
+                  // Indicators
+                  Container(
+                    height: 80,
+                    margin: const EdgeInsets.only(top: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        banners_list.length,
+                            (index) => _buildIndicator(index == _currentPage),
+                      ),
+                    ),
+                  ),
 
-              // Add some bottom padding
-              const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-              Row(
-                mainAxisSize: MainAxisSize.min, // 👈 keeps children tight
-                children: [
-                  Text(
-                    "EXPLORE MORE",
+                  const Text(
+                    "NEW ARRIVALS",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 24,
@@ -312,228 +166,312 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.black,
                     ),
                   ),
-                   Image.asset(Drawables.arrow_farward
-                  ,width: 70,
-                    height: 40,
-                  ),
-                ],
-              ),
+                  const SizedBox(height: 10),
 
-              Container(height: 40,),
+                  // Horizontal ListView
+                  SizedBox(
+                    height: 80,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      itemCount: category_list.length,
+                      itemBuilder: (context, index) {
+                        bool isSelected = selectedIndex == index;
 
-              //brands
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.5, // width / height → tweak until rows look right
-                    crossAxisSpacing: 15.0,  // horizontal space
-                    mainAxisSpacing: 10.0,   // vertical space
-                  ),
-                  itemCount: brands.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        // 👉 Handle click here
-                        debugPrint("Clicked brand: ${brands[index].imageUrl}");
-                        Get.to(() => const BranddetailsScreen());
-
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                            getCategoryProducts(category_list[index].id.toString(),"4");
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  category_list[index].name.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: FontConstants.gothamPro,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                // 👇 Underline shown only if selected
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  height: 2,
+                                  width: isSelected ? 70 : 0,
+                                  color: isSelected ? Colors.black : Colors.transparent,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
-                      child: Image.network(
-                        brands[index].imageUrl.toString(),
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey.shade200,
-                            child: const Icon(Icons.image, color: Colors.grey),
+                    ),
+                  ),
+
+                  // GridView - Fixed height based on content
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0,right: 10),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                        childAspectRatio: 0.7,
+                      ),
+                      itemCount: category_product_list.length,
+                      itemBuilder: (context, index) {
+                        return HomeCategoryProductItem(
+                          product: category_product_list[index],
+                          onItemClick: () {
+                            Get.to(() => const ProductDetailsSccreen());
+                          },
+                          onFavoriteClick: (newWishlistValue) async {
+                            final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                            if (skipValue == "1") {
+                              Get.to(() => const LoginScreen());
+                            } else {
+                              addRemoveWishlist(category_product_list[index].id.toString());
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Add some bottom padding
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min, // 👈 keeps children tight
+                    children: [
+                      Text(
+                        "EXPLORE MORE",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Image.asset(Drawables.arrow_farward
+                        ,width: 70,
+                        height: 40,
+                      ),
+                    ],
+                  ),
+
+                  Container(height: 40,),
+
+                  //brands
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1.5, // width / height → tweak until rows look right
+                        crossAxisSpacing: 15.0,  // horizontal space
+                        mainAxisSpacing: 10.0,   // vertical space
+                      ),
+                      itemCount: partner_list.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            // 👉 Handle click here
+                            debugPrint("Clicked brand: ${partner_list[index].imagePath}");
+                            Get.to(() => const BranddetailsScreen());
+                          },
+                          child: Image.network(
+                            partner_list[index].imagePath.toString(),
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image, color: Colors.grey),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  Container(height: 20,),
+
+                  const Text(
+                    "YOU MAY ALSO LIKE",
+                    style: TextStyle(
+                      fontFamily: FontConstants.gothamPro,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  Container(height: 40,),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SizedBox(
+                      height: 250, // 👈 adjust based on ProductItemAlt height
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal, // 👈 horizontal scroll
+                        itemCount: product_list.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16.0), // space between items
+                            child: SizedBox(
+                              width: 180, // 👈 each item width (tweak as needed)
+                              child: HomeProductItem(
+                                product: product_list[index],
+                                onItemClick: () {
+                                  Get.to(() => const ProductDetailsSccreen());
+                                },
+                                onFavoriteClick: (newWishlistValue) async {
+                                  final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                                  if (skipValue == "1") {
+                                    Get.to(() => const LoginScreen());
+                                  } else {
+                                    addRemoveWishlist(product_list[index].id.toString());
+                                  }
+                                },
+                              ),
+                            ),
                           );
                         },
                       ),
-                    );
-                  },
-                ),
-              ),
-
-              Container(height: 20,),
-
-              const Text(
-                "YOU MAY ALSO LIKE",
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                ),
-              ),
-
-              Container(height: 40,),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SizedBox(
-                  height: 250, // 👈 adjust based on ProductItemAlt height
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal, // 👈 horizontal scroll
-                    itemCount: products2.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16.0), // space between items
-                        child: SizedBox(
-                          width: 180, // 👈 each item width (tweak as needed)
-                          child: ProductItemAlt(
-                            product: products2[index],
-                            onItemClick: () {
-                              print('Product clicked: ${products2[index].name}');
-                              // Add your navigation logic here
-                            },
-                            onFavoriteClick: () {
-                              setState(() {
-                                // products[index].isFavorite = !products[index].isFavorite;
-                              });
-                              print('Favorite toggled for: ${products2[index].name}');
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                    ),
                   ),
-                ),
-              ),
-              Container(height: 40,),
 
-              const Text(
-                "GET THE LATEST TRENDS FIRST",
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
 
-              Container(height: 20,),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center, // 👈 Center text & hint
-                  decoration: const InputDecoration(
-                    hintText: "ENTER YOUR EMAIL",
-                    hintStyle: TextStyle(
-                      color: Colors.grey,       // 👈 hint color
-                      fontSize: 14,             // 👈 hint size
-                      fontWeight: FontWeight.w400,
+                  Container(height: 40,),
+
+                  const Text(
+                    "GET THE LATEST TRENDS FIRST",
+                    style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
-                      letterSpacing: 1.2,       // 👈 spacing for uppercase look
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
                     ),
                   ),
-                  style: TextStyle(
-                    color: Colors.black,       // 👈 text color
-                    fontSize: 16,              // 👈 entered text size
-                    fontWeight: FontWeight.w400,
-                    fontFamily: FontConstants.gothamPro,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ),
 
+                  Container(height: 20,),
 
-              Container(height: 30,),
-              Container(
-                color: Colors.black,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(height: 40),
-                    Image.asset(
-                      Drawables.img_drappy_white,
-                      width: 200,
-                      height: 100,
-                    ),
-
-                    Container(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            print("INSTAGRAM clicked");
-                            // 👉 Add navigation or link open here
-                          },
-                          child: Text(
-                            "INSTAGRAM",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            print("FACEBOOK clicked");
-                          },
-                          child: Text(
-                            "FACEBOOK",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            print("PINTEREST clicked");
-                          },
-                          child: Text(
-                            "PINTEREST",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    Container(height: 30),
-                    InkWell(
-                      onTap: () {
-                        print("YOUTUBE clicked");
-                      },
-                      child: Text(
-                        "YOUTUBE",
-                        style: TextStyle(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      textAlign: TextAlign.center, // 👈 Center text & hint
+                      decoration: const InputDecoration(
+                        hintText: "ENTER YOUR EMAIL",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,       // 👈 hint color
+                          fontSize: 14,             // 👈 hint size
+                          fontWeight: FontWeight.w400,
                           fontFamily: FontConstants.gothamPro,
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2,       // 👈 spacing for uppercase look
                         ),
                       ),
+                      style: TextStyle(
+                        color: Colors.black,       // 👈 text color
+                        fontSize: 16,              // 👈 entered text size
+                        fontWeight: FontWeight.w400,
+                        fontFamily: FontConstants.gothamPro,
+                        letterSpacing: 1.2,
+                      ),
                     ),
+                  ),
 
-                    Container(height: 30),
-                    Container(width: 300, height: 1, color: Colors.grey),
-                    Container(height: 30),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Container(height: 30,),
+                  Container(
+                    color: Colors.black,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Container(height: 40),
+                        Image.asset(
+                          Drawables.img_drappy_white,
+                          width: 200,
+                          height: 100,
+                        ),
+
+                        Container(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                print("INSTAGRAM clicked");
+                                print(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
+                                _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
+                                // 👉 Add navigation or link open here
+                              },
+                              child: Text(
+                                "INSTAGRAM",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                print("FACEBOOK clicked");
+                                print(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
+                                _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
+
+                              },
+                              child: Text(
+                                "FACEBOOK",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                print("PINTEREST clicked");
+                              },
+                              child: Text(
+                                "PINTEREST",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Container(height: 30),
                         InkWell(
                           onTap: () {
-                            print("PRIVACY POLICY clicked");
+                            print("YOUTUBE clicked");
+
+                            _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_YOUTUBE).toString());
                           },
                           child: Text(
-                            "PRIVACY POLICY",
+                            "YOUTUBE",
                             style: TextStyle(
                               fontFamily: FontConstants.gothamPro,
                               fontSize: 16,
@@ -542,43 +480,113 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Text(
-                          "/",
-                          style: TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            print("TERMS OF USE clicked");
-                          },
-                          child: Text(
-                            "TERMS OF USE",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
+
+                        Container(height: 30),
+                        Container(width: 300, height: 1, color: Colors.grey),
+                        Container(height: 30),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                print("PRIVACY POLICY clicked");
+                                Get.to(Privacypolicyscreen());
+                              },
+                              child: Text(
+                                "PRIVACY POLICY",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
-                          ),
+                            Text(
+                              "/",
+                              style: TextStyle(
+                                fontFamily: FontConstants.gothamPro,
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                print("TERMS OF USE clicked");
+                                Get.to(Termsandconditionscreen());
+                              },
+                              child: Text(
+                                "TERMS OF USE",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.gothamPro,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 50),
                       ],
                     ),
-                    const SizedBox(height: 50),
-                  ],
-                ),
-              )
+                  )
 
 
-            ],
+                ],
+              ),
+            ),
           ),
-        ),
+          if (isLoading)
+            Container(
+              child: const Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+        ]
       ),
     );
   }
+
+
+
+  Future<void> _launchSocialLink(String url) async {
+    Uri uri = Uri.parse(url);
+
+    // Try native deep links for known apps
+    if (url.contains('facebook.com')) {
+      final fbAppUrl =
+      Uri.parse('fb://facewebmodal/f?href=$url');
+      if (await canLaunchUrl(fbAppUrl)) {
+        await launchUrl(fbAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } else if (url.contains('instagram.com')) {
+      final username = url.split('/').where((s) => s.isNotEmpty).last;
+      final instaAppUrl = Uri.parse('instagram://user?username=$username');
+      if (await canLaunchUrl(instaAppUrl)) {
+        await launchUrl(instaAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } else if (url.contains('youtube.com')) {
+      final ytAppUrl = Uri.parse('youtube://$url');
+      if (await canLaunchUrl(ytAppUrl)) {
+        await launchUrl(ytAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    }
+
+    // Fallback to browser if native app not available
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
+
 
   Future<void> getHome() async {
     setState(() {
@@ -610,14 +618,23 @@ class _HomeScreenState extends State<HomeScreen> {
       final model = GetHomeModelResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+
+          category_product_list.clear();
+          category_product_list.addAll((model.data?.categoryProducts ?? []).take(4),);
+
+          banners_list.clear();
+          banners_list.addAll(model.data!.banners as Iterable<BannerHomee>);
+          _startAutoSlide();
+
+          category_list.clear();
+          category_list.addAll(model.data!.categories as Iterable<CategoryHomee>);
+
+          product_list.clear();
+          product_list.addAll(model.data!.products as Iterable<ProductHomee>);
+
+          partner_list.clear();
+          partner_list.addAll((model.data?.partners ?? []).take(6),);
+
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -706,9 +723,20 @@ class _HomeScreenState extends State<HomeScreen> {
           "-------------------------------------------------------------------------------------");
 
       final model =
-      DetailProductDetailsModel.fromJson(json.decode(response.body));
+      GetCategoryHomeModelResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+
+        setState(() {
+          /*category_product_list.clear();
+          category_product_list.addAll(model.data!.categoryProducts as Iterable<CategoryProductHomee>);*/
+          category_product_list.clear();
+          category_product_list.addAll((model.data?.categoryProducts ?? []).take(4),);
+        });
+
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
         Get.snackbar(
           "Status ${model.status}",
           model.message.toString(),
@@ -717,6 +745,95 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
+  Future<void> addRemoveWishlist(String id) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.syncWishlist);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "id": id.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      AddWishlistModell.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Wishlist",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+        getHome();
+      }else if (model.status == 2) {
+        Get.snackbar(
+          "Wishlist",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+        getHome();
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {
@@ -759,8 +876,102 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+  Future<void> guestSignup(String deviceToken) async {
+    setState(() {
+      isLoading = true;
+    });
+    final url =
+    Uri.parse(NetworkManager.BASE_URL + NetworkManager.guest_api);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    };
+    final requestBody = {
+      "device_token": deviceToken.toString(),
+    };
+    final client = CustomHttpClient(http.Client());
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+      print('POST URL: $url');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE------------------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = GuestResponsee.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
 
+          PreferenceManager.setString(NetworkManager.API_TOKEN, "Bearer ${model.data?.accessToken.toString()}");
+          PreferenceManager.setString(NetworkManager.PREF_IS_GUEST, model.data!.user!.isGuest.toString());
+          PreferenceManager.setString(NetworkManager.PREF_EMAIL, model.data!.user?.email ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_MOBILE, model.data!.user?.phoneNo ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_FULL_NAME, model.data!.user?.name ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_USER_ID, model.data!.user!.id.toString());
+          PreferenceManager.setString(NetworkManager.PREF_CITY_NAME, model.data!.user?.city ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_DOB_NAME, model.data!.user?.dateOfBirth ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_ADRESS, model.data!.user?.address ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_POSTAL_CODE, model.data!.user?.postalCode ?? "");
+          getHome();
 
+          Get.snackbar(
+            "Guest",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: EdgeInsets.all(10),
+            duration: Duration(seconds: 2),
+          );
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Status "+model.status.toString(),
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Status "+model.status.toString(),
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Status "+model.status.toString(),
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: EdgeInsets.all(10),
+          duration: Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
 
 

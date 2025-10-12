@@ -19,6 +19,7 @@ import '../helper/ToastUtils.dart';
 import '../helper/customHttpClient.dart';
 import '../helper/preference_manager.dart';
 import '../network/Network.dart';
+import 'LoginScreen.dart';
 
 class MainActivity extends StatefulWidget {
   const MainActivity({super.key});
@@ -31,6 +32,12 @@ class _BottomNavScreenState extends State<MainActivity> {
   int _currentIndex = 0;
   bool isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    getconfig();
+  }
+
   final List<Widget> _screens = const [
     HomeScreen(),
     MenuFragment(),
@@ -38,15 +45,14 @@ class _BottomNavScreenState extends State<MainActivity> {
     SearchScreen(),
     ProfileFragment(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        // keeps state of all fragments
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: SafeArea( // 👈 Fix: avoids overlap with system nav
+      // 👇 Only the selected screen is built
+      body: _screens[_currentIndex],
+
+      bottomNavigationBar: SafeArea(
         child: Container(
           height: 60,
           decoration: const BoxDecoration(
@@ -73,21 +79,49 @@ class _BottomNavScreenState extends State<MainActivity> {
               bool isSelected = _currentIndex == index;
 
               return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _currentIndex = index;
-                  });
+                onTap: () async {
+                  if (index == 4) {
+                    final isGuest = PreferenceManager
+                        .getString(NetworkManager.PREF_IS_GUEST)
+                        ?.toString() ??
+                        "";
+
+                    if (isGuest.isNotEmpty) {
+                      if (isGuest == "0") {
+                        // ✅ Normal user
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      } else {
+                        // 🚫 Guest → redirect to login
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const LoginScreen()),
+                        );
+                      }
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      );
+                    }
+                  } else {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  }
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.all(8),
-                  margin: EdgeInsets.only(bottom: isSelected ? 8 : 0), // 👆 move up
+                  margin: EdgeInsets.only(bottom: isSelected ? 8 : 0),
                   child: Image.asset(
-                    icons[index], // 👈 your image path list
-                    height: isSelected ? 32 : 26, // selected = larger
+                    icons[index],
+                    height: isSelected ? 32 : 26,
                     width: isSelected ? 32 : 26,
-                    color: Colors.black, // 👈 optional, only if your icons are monochrome PNG/SVG
-                  )
+                    color: Colors.black,
+                  ),
                 ),
               );
             }),
@@ -97,13 +131,12 @@ class _BottomNavScreenState extends State<MainActivity> {
     );
   }
 
-
   Future<void> getconfig() async {
     setState(() {
       isLoading = true;
     });
 
-    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.cart);
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.config_data);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -128,15 +161,14 @@ class _BottomNavScreenState extends State<MainActivity> {
       final model = GetConfigResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+          PreferenceManager.setString(NetworkManager.PREF_YOUTUBE, model.data!.youtube.toString() ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_FACEBOOK, model.data!.facebook.toString() ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_INSTAGRAM, model.data!.instagram.toString() ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_PINTREST, "Not Provided" ?? "");
         });
+
+
+
       } else if (model.status == 0) {
         Get.snackbar(
           "Status ${model.status}",

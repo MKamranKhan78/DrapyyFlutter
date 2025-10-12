@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../helper/FontsConstants.dart';
-import '../helper/colors.dart'; // adjust path based on your project
+import '../../helper/FontsConstants.dart';
+import '../../helper/colors.dart'; // adjust path based on your project
 
 class ProductItemAlt extends StatelessWidget {
   final Product product;

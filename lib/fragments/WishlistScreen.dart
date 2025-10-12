@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
-import '../activities/ProductItemAlt.dart';
+import '../activities/products_items/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
 import '../helper/colors.dart';
@@ -191,7 +191,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
     }
   }
 
-  Future<void> addRemoveWishlist(String id,String quantity) async {
+  Future<void> addRemoveWishlist(String id) async {
     setState(() {
       isLoading = true;
     });

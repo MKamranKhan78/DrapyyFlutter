@@ -6,6 +6,7 @@ import 'package:drapyy/activities/RegisterActivity.dart';
 import 'package:drapyy/helper/SizeConstants.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -96,13 +97,16 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool rememberMe = false;
   bool obscurePassword = true;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
 
   @override
   void initState() {
      super.initState();
-     login("kamrank@gmail.com", "Password@1");
+    // login("kamrank@gmail.com", "Password@1");
   }
+
 
 
   @override
@@ -131,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   /// Email field
                   TextField(
                     style: const TextStyle(fontFamily: FontConstants.gothamPro),
+                    controller: emailController,
                     decoration: const InputDecoration(
                       labelText: "ENTER YOUR EMAIL ADDRESS",
                       labelStyle: TextStyle(
@@ -149,6 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   /// Password field
                   TextField(
                     obscureText: obscurePassword,
+                    controller: passwordController,
                     style: const TextStyle(fontFamily: FontConstants.gothamPro),
                     decoration: InputDecoration(
                       labelText: "ENTER YOUR PASSWORD",
@@ -221,17 +227,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        /*setState(() {
-                          isLoading = true;
-                        });
-                        Future.delayed(const Duration(seconds: 2), () {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        });*/
 
-                        Get.to(() => const MainActivity());
-
+                        if (_validateInputs()) {
+                          login(
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                          );
+                        }
 
                       },
                       style: ElevatedButton.styleFrom(
@@ -303,6 +305,31 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
+  bool _validateInputs() {
+    if (emailController.text.trim().isEmpty ||
+        !RegExp(
+          r"^[\w\.-]+@[\w\.-]+\.\w+$",
+        ).hasMatch(emailController.text.trim())) {
+      _showError("Please enter a valid email address");
+      return false;
+    } else if (passwordController.text.trim().isEmpty) {
+      _showError("Please enter password");
+      return false;
+    }
+    return true;
+  }
+
+  void _showError(String message) {
+    Get.snackbar(
+      "Validation Error",
+      message,
+      backgroundColor: Colors.black,
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 2),
+    );
+  }
+
 
   Future<void> login(String email, String password) async {
     setState(() {
@@ -348,6 +375,21 @@ class _LoginScreenState extends State<LoginScreen> {
             margin: const EdgeInsets.all(10),
             duration: const Duration(seconds: 2),
           );
+
+
+          PreferenceManager.setString(NetworkManager.API_TOKEN, "Bearer ${model.data?.accessToken.toString()}");
+          PreferenceManager.setString(NetworkManager.PREF_IS_GUEST, model.data!.user!.isGuest.toString());
+          PreferenceManager.setString(NetworkManager.PREF_EMAIL, model.data!.user?.email ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_MOBILE, model.data!.user?.phoneNo ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_FULL_NAME, model.data!.user?.name ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_USER_ID, model.data!.user!.id.toString());
+          PreferenceManager.setString(NetworkManager.PREF_CITY_NAME, model.data!.user?.city ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_DOB_NAME, model.data!.user?.dateOfBirth ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_ADRESS, model.data!.user?.address ?? "");
+          PreferenceManager.setString(NetworkManager.PREF_POSTAL_CODE, model.data!.user?.postalCode ?? "");
+          Get.offAll(() => MainActivity());
+
+
         });
       } else if (model.status == 0) {
         Get.snackbar(

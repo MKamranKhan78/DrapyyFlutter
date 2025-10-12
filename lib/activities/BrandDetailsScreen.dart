@@ -19,7 +19,7 @@ import '../helper/preference_manager.dart';
 import '../models/Model.dart';
 import '../network/Network.dart';
 import 'NotificationsScreen.dart';
-import 'ProductItemAlt.dart';
+import 'products_items/ProductItemAlt.dart';
 
 class BranddetailsScreen extends StatefulWidget {
   const BranddetailsScreen({Key? key}) : super(key: key);

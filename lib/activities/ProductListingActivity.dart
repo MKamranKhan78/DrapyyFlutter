@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../helper/FontsConstants.dart';
 import '../helper/colors.dart';
-import 'ProductItemAlt.dart';
+import 'products_items/ProductItemAlt.dart';
 
 class ProductListingActivity extends StatefulWidget {
   const ProductListingActivity({super.key});

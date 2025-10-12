@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../activities/AddressListScreen.dart';
 import '../activities/MyOrdersScreen.dart';
@@ -324,6 +325,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("INSTAGRAM clicked");
+                            print(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
+                            _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
                             // 👉 Add navigation or link open here
                           },
                           child: Text(
@@ -339,6 +342,9 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("FACEBOOK clicked");
+                            print(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
+                            _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
+
                           },
                           child: Text(
                             "FACEBOOK",
@@ -371,6 +377,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
                     InkWell(
                       onTap: () {
                         print("YOUTUBE clicked");
+
+                        _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_YOUTUBE).toString());
                       },
                       child: Text(
                         "YOUTUBE",
@@ -393,8 +401,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("PRIVACY POLICY clicked");
-                            Get.to(() => const Privacypolicyscreen());
-
+                            Get.to(Privacypolicyscreen());
                           },
                           child: Text(
                             "PRIVACY POLICY",
@@ -418,8 +425,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         InkWell(
                           onTap: () {
                             print("TERMS OF USE clicked");
-                            Get.to(() => const Termsandconditionscreen());
-
+                            Get.to(Termsandconditionscreen());
                           },
                           child: Text(
                             "TERMS OF USE",
@@ -446,6 +452,35 @@ class _ProfileScreenState extends State<ProfileFragment> {
     );
   }
 
+  Future<void> _launchSocialLink(String url) async {
+    Uri uri = Uri.parse(url);
+
+    // Try native deep links for known apps
+    if (url.contains('facebook.com')) {
+      final fbAppUrl =
+      Uri.parse('fb://facewebmodal/f?href=$url');
+      if (await canLaunchUrl(fbAppUrl)) {
+        await launchUrl(fbAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } else if (url.contains('instagram.com')) {
+      final username = url.split('/').where((s) => s.isNotEmpty).last;
+      final instaAppUrl = Uri.parse('instagram://user?username=$username');
+      if (await canLaunchUrl(instaAppUrl)) {
+        await launchUrl(instaAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    } else if (url.contains('youtube.com')) {
+      final ytAppUrl = Uri.parse('youtube://$url');
+      if (await canLaunchUrl(ytAppUrl)) {
+        await launchUrl(ytAppUrl, mode: LaunchMode.externalApplication);
+        return;
+      }
+    }
+
+    // Fallback to browser if native app not available
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
 
 
 
