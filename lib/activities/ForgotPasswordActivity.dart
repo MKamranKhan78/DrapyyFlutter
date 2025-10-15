@@ -29,12 +29,13 @@ class ForgotPasswordActivity extends StatefulWidget {
 
 class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
   bool isLoading = false;
+  final TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
      super.initState();
-    forgotPassword("kamran@gmail.com");
-  }
+
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
 
                   InkWell(
                     onTap: (){
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: Icon(
                       Icons.arrow_back_ios_new,
@@ -73,6 +74,8 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
 
                   /// Email field
                   TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
                     style: const TextStyle(fontFamily: FontConstants.gothamPro),
                     decoration: const InputDecoration(
                       labelText: "ENTER YOUR EMAIL ADDRESS",
@@ -96,14 +99,21 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        Future.delayed(const Duration(seconds: 2), () {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        });
+
+                        if (emailController.text.trim().isEmpty) {
+                          Get.snackbar(
+                            "Forget",
+                            "Enter your email",
+                            backgroundColor: Colors.black,
+                            colorText: Colors.white,
+                            margin: const EdgeInsets.all(10),
+                            duration: const Duration(seconds: 2),
+                          );
+                        }else{
+                          forgotPassword(emailController.text.toString());
+                        }
+
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -179,6 +189,8 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
       final model = LoginResponseModel.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
+
+          Get.back();
           Get.snackbar(
             "Status ${model.status}",
             model.message.toString(),

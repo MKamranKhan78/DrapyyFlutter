@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
@@ -21,20 +22,15 @@ class MyVoucherListingScreen extends StatefulWidget {
 }
 
 class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
-  final List<String> addresses = [
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-    "User promocode sample",
-  ];
+  final List<Voucherr> voucher_list = [];
   bool isLoading = false;
 
+
+  @override
+  void initState() {
+     super.initState();
+    getVoucherList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,66 +48,104 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
                 ),
 
                 // Expanded makes the Text take remaining space and stay centered
-                Expanded(
+                const Expanded(
                   child: Center(
                     child: Text(
                       "MY VOUCHERS", // 👈 your text here
-                      style: const TextStyle(
-                        fontFamily: FontConstants.gothamPro,
+                      style: TextStyle(
+                        fontFamily: 'GothamPro', // ✅ FontConstants.gothamPro
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                   ),
                 ),
 
                 // To balance Row (so title stays centered even with only one button)
-                const SizedBox(width: 48), // same width as IconButton
+                SizedBox(width: 48), // same width as IconButton
               ],
             ),
 
-            Container(height: 20,),
+            const SizedBox(height: 20),
 
-
-            // ListView below
+            // Main Content
             Expanded(
-              child: ListView.separated(
-                itemCount: addresses.length,
+              child: isLoading
+                  ? const Center(
+                child: CircularProgressIndicator(), // ✅ Loading state
+              )
+                  : voucher_list.isEmpty
+                  ? const Center(
+                child: Text(
+                  "No vouchers found", // ✅ Empty list state
+                  style: TextStyle(
+                    fontFamily: 'GothamPro',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              )
+                  :ListView.separated(
+                itemCount: voucher_list.length,
                 separatorBuilder: (context, index) =>
                     Divider(height: 1, color: Colors.grey.shade400),
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                addresses[index],
-                                style: const TextStyle(
-                                  fontFamily: FontConstants.gothamPro,
+                  return InkWell(
+                    onTap: () {
+                      // 👇 handle tap here
+                      print("Tapped on voucher id: ${voucher_list[index].id}");
+
+                      Get.back(result: {
+                        'v_code': voucher_list[index].code.toString(),
+                      });
+
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "USE PROMOCODE ${voucher_list[index].id.toString()}",
+                                  style: TextStyle(
+                                    fontFamily: 'GothamPro',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                               formatDate(voucher_list[index].created_at.toString()),
+                                style: TextStyle(
+                                  fontFamily: 'GothamPro',
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Text(
-                          "test44553",
-                          style: TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
+
+
+                            ],
                           ),
-                        ),
-                      ],
+                          Text(
+                            voucher_list[index].title.toString(),
+                            style: const TextStyle(
+                              fontFamily: 'GothamPro',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -123,6 +157,18 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
     );
   }
 
+
+  String formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    try {
+      DateTime dateTime = DateTime.parse(dateStr).toLocal();
+      return DateFormat('dd MMM yyyy, h:mm a').format(dateTime);
+    } catch (e) {
+      return '';
+    }
+  }
+  
+  
   Future<void> getVoucherList() async {
     setState(() {
       isLoading = true;
@@ -153,14 +199,10 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
       final model = GetVoucherlistResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+         if(model.data!.vouchers!.length >0){
+           voucher_list.clear();
+           voucher_list.addAll(model.data!.vouchers as Iterable<Voucherr>);
+         }
         });
       } else if (model.status == 0) {
         Get.snackbar(

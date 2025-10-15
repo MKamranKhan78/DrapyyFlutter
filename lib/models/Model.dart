@@ -1357,13 +1357,13 @@ class GetWishlistResponse {
 }
 
 class DataWishlist {
-  List<ProductWish>? products;
+  List<ProductHomee>? products;
 
   DataWishlist({this.products});
 
   factory DataWishlist.fromJson(Map<String, dynamic> json) => DataWishlist(
     products: (json['products'] as List?)
-        ?.map((e) => ProductWish.fromJson(e))
+        ?.map((e) => ProductHomee.fromJson(e))
         .toList(),
   );
 
@@ -1372,13 +1372,6 @@ class DataWishlist {
   };
 }
 
-class ProductWish {
-  ProductWish();
-
-  factory ProductWish.fromJson(Map<String, dynamic> json) => ProductWish();
-
-  Map<String, dynamic> toJson() => {};
-}
 
 class GetVoucherlistResponse {
   int? status;
@@ -1875,7 +1868,7 @@ class MerchantProfile {
   };
 }
 
-//--------------------------Get Checkout---------------------------------
+//-------------------------- Safe Get Checkout Model --------------------------
 
 class GetCheckoutResponse {
   int? status;
@@ -1886,8 +1879,8 @@ class GetCheckoutResponse {
 
   factory GetCheckoutResponse.fromJson(Map<String, dynamic> json) {
     return GetCheckoutResponse(
-      status: json['status'] as int?,
-      message: json['message'] as String?,
+      status: _toInt(json['status']),
+      message: json['message']?.toString(),
       data: json['data'] != null
           ? DataCheckout.fromJson(json['data'])
           : null,
@@ -1922,7 +1915,7 @@ class DataCheckout {
 
   factory DataCheckout.fromJson(Map<String, dynamic> json) {
     return DataCheckout(
-      total: json['total'] as String?,
+      total: json['total']?.toString(),
       cities: (json['cities'] as List?)
           ?.map((e) => Cities.fromJson(e))
           .toList(),
@@ -1981,16 +1974,16 @@ class Cities {
 
   factory Cities.fromJson(Map<String, dynamic> json) {
     return Cities(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      tHubId: json['t_hub_id'] as int?,
-      tHubName: json['t_hub_name'] as String?,
-      tId: json['t_id'] as int?,
-      tZoneId: json['t_zone_id'] as int?,
-      tZoneName: json['t_zone_name'] as String?,
-      tPickup: json['t_pickup'] as int?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
+      id: _toInt(json['id']),
+      name: json['name']?.toString(),
+      tHubId: _toInt(json['t_hub_id']),
+      tHubName: json['t_hub_name']?.toString(),
+      tId: _toInt(json['t_id']),
+      tZoneId: _toInt(json['t_zone_id']),
+      tZoneName: json['t_zone_name']?.toString(),
+      tPickup: _toInt(json['t_pickup']),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
     );
   }
 
@@ -2043,20 +2036,20 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
-      id: json['id'] as int?,
-      userId: json['user_id'] as int?,
-      name: json['name'] as String?,
-      email: json['email'] as String?,
-      phoneNo: json['phone_no'] as String?,
-      address: json['address'] as String?,
-      billingAddress: json['billing_address'] as String?,
-      city: json['city'] as String?,
-      status: json['status'] as int?,
-      isDefault: json['is_default'] as int?,
-      deletedAt: json['deleted_at'] as String?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
-      cityName: json['city_name'] as String?,
+      id: _toInt(json['id']),
+      userId: _toInt(json['user_id']),
+      name: json['name']?.toString(),
+      email: json['email']?.toString(),
+      phoneNo: json['phone_no']?.toString(),
+      address: json['address']?.toString(),
+      billingAddress: json['billing_address']?.toString(),
+      city: json['city']?.toString(),
+      status: _toInt(json['status']),
+      isDefault: _toInt(json['is_default']),
+      deletedAt: json['deleted_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      cityName: json['city_name']?.toString(),
     );
   }
 
@@ -2113,20 +2106,20 @@ class Addresses {
 
   factory Addresses.fromJson(Map<String, dynamic> json) {
     return Addresses(
-      id: json['id'] as int?,
-      userId: json['user_id'] as int?,
-      name: json['name'] as String?,
-      email: json['email'] as String?,
-      phoneNo: json['phone_no'] as String?,
-      address: json['address'] as String?,
-      billingAddress: json['billing_address'] as String?,
-      city: json['city'] as String?,
-      status: json['status'] as int?,
-      isDefault: json['is_default'] as int?,
-      deletedAt: json['deleted_at'] as String?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
-      cityName: json['city_name'] as String?,
+      id: _toInt(json['id']),
+      userId: _toInt(json['user_id']),
+      name: json['name']?.toString(),
+      email: json['email']?.toString(),
+      phoneNo: json['phone_no']?.toString(),
+      address: json['address']?.toString(),
+      billingAddress: json['billing_address']?.toString(),
+      city: json['city']?.toString(),
+      status: _toInt(json['status']),
+      isDefault: _toInt(json['is_default']),
+      deletedAt: json['deleted_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      cityName: json['city_name']?.toString(),
     );
   }
 
@@ -2158,10 +2151,10 @@ class ShippingMethod {
 
   factory ShippingMethod.fromJson(Map<String, dynamic> json) {
     return ShippingMethod(
-      id: json['id'] as int?,
-      name: json['name'] as String?,
-      isFree: json['is_free'] as int?,
-      amount: json['amount'] as int?,
+      id: _toInt(json['id']),
+      name: json['name']?.toString(),
+      isFree: _toInt(json['is_free']),
+      amount: _toInt(json['amount']),
     );
   }
 
@@ -2192,12 +2185,12 @@ class Points {
 
   factory Points.fromJson(Map<String, dynamic> json) {
     return Points(
-      id: json['id'] as int?,
-      userId: json['user_id'] as int?,
-      points: json['points'] as int?,
-      tempPoints: json['temp_points'] as int?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
+      id: _toInt(json['id']),
+      userId: _toInt(json['user_id']),
+      points: _toInt(json['points']),
+      tempPoints: _toInt(json['temp_points']),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
     );
   }
 
@@ -2210,6 +2203,8 @@ class Points {
     'updated_at': updatedAt,
   };
 }
+
+
 
 //------------------------ Get Notifications --------------------------------
 
@@ -3574,7 +3569,7 @@ class Voucherr {
   String? endAt;
   int? customerId;
   int? status;
-  String? createdAt;
+  String? created_at;
   String? updatedAt;
 
   Voucherr({
@@ -3587,7 +3582,7 @@ class Voucherr {
     this.endAt,
     this.customerId,
     this.status,
-    this.createdAt,
+    this.created_at,
     this.updatedAt,
   });
 
@@ -3610,7 +3605,7 @@ class Voucherr {
       status: json['status'] is String
           ? int.tryParse(json['status'])
           : json['status'],
-      createdAt: json['createdAt'],
+      created_at: json['created_at'],
       updatedAt: json['updatedAt'],
     );
   }
@@ -3625,7 +3620,7 @@ class Voucherr {
     'endAt': endAt,
     'customerId': customerId,
     'status': status,
-    'createdAt': createdAt,
+    'createdAt': created_at,
     'updatedAt': updatedAt,
   };
 }
@@ -4104,7 +4099,7 @@ class DetailProductt {
   String? deletedAt;
   String? createdAt;
   String? updatedAt;
-  DetailVariant? variant;
+  VariantHomee? variant;
   String? brandName;
   DetailMerchant? merchant;
   List<String>? reviews;
@@ -4185,7 +4180,7 @@ class DetailProductt {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     variant =
-    json['variant'] != null ? DetailVariant.fromJson(json['variant']) : null;
+    json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
     brandName = json['brand_name'];
     merchant = json['merchant'] != null
         ? DetailMerchant.fromJson(json['merchant'])
@@ -4404,14 +4399,6 @@ class DetailSizes {
   }
 }
 
-class DetailVariant {
-  // Define this if you have a variant structure in your API.
-  DetailVariant();
-
-  DetailVariant.fromJson(Map<String, dynamic> json);
-
-  Map<String, dynamic> toJson() => {};
-}
 
 // ---------------------- Privacy Policy Models ----------------------
 

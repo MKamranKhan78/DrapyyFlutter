@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:drapyy/activities/products_items/DetailProductItem.dart';
+import 'package:drapyy/activities/products_items/HomeCategoryProductItem.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,54 +17,66 @@ import '../helper/drawables.dart';
 import '../helper/preference_manager.dart';
 import '../models/Model.dart';
 import '../network/Network.dart';
+import 'LoginScreen.dart';
 import 'PrivacyPolicyScreen.dart';
 import 'TermsAndConditionScreen.dart';
 import 'products_items/ProductItemAlt.dart';
 
 class ProductDetailsSccreen extends StatefulWidget {
-  const ProductDetailsSccreen({Key? key}) : super(key: key);
+  final String productId; // 👈 parameter
+
+  ProductDetailsSccreen({
+    Key? key,
+    required this.productId,
+  }) : super(key: key);
 
   @override
   State<ProductDetailsSccreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
-  String? _selectedSize;
-  String? _selectedColor;
+  // String? _selectedSize;
+  // final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
-  final List<String> sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+  List<ProductHomee> product_list = [];
+
+  String? _selectedSize; // keep as-is (this will store sizeName)
+  List<DetailSizes> size_list = []; // your API-loaded list
+
+  String? _selectedColor; // store selected color id or index
+  List<DetailColors> color_list = []; // populated from API
+  String variation_iddd = "";
+
+
+
+ /* String? _selectedColor;
   final List<Color> colors = [
     const Color(0xFF964B00),
     const Color(0xFFFF0000),
     const Color(0xFF0000FF),
     const Color(0xFF008000),
   ];
+*/
   bool isLoading = false;
 
+  final PageController _pageController = PageController();
+  List<String> banners_list = [];
+  int _currentPage = 0;
+  Timer? _timer;
 
-  final List<Product> products = [
-    Product(
-      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
-      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
+  String product_offer_price = "";
+  String product_price = "";
+  String product_name = "";
+  String product_description = "";
+  String product_summary = "";
 
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    // Add more products as needed
-  ];
 
+
+  @override
+  void initState() {
+    super.initState();
+    getProductDetails(widget.productId.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,17 +90,21 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
               // Product Image Section
               Stack(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 400,
-                    color: const Color(0xFFF5F5F5),
-                    child: Image.network(
-                      "https://picsum.photos/id/1011/800/400",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: Colors.grey),
+                  SizedBox(
+                    height: 350,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: banners_list.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Image.network(
+                          banners_list[index].toString(),
+                          fit: BoxFit.contain,
+                          width: double.infinity,
                         );
                       },
                     ),
@@ -116,9 +135,10 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                       padding: const EdgeInsets.only(left: 15.0,top: 25),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'HOODIE',
+                            product_name.toString(),
                             style: TextStyle(
                               fontFamily: FontConstants.gothamPro,
                               fontSize: 14,
@@ -126,14 +146,49 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                               color: grey,
                             ),
                           ),
-                          Text(
-                            '\$120.00',
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // ✅ If offerPrice exists — show discounted and struck-out price
+                              if (product_offer_price.isNotEmpty && product_offer_price != "null")
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "PKR ${product_offer_price}",
+                                      style: const TextStyle(
+                                        fontFamily: FontConstants.gothamPro,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      "PKR ${product_price}",
+                                      style: const TextStyle(
+                                        fontFamily: FontConstants.gothamPro,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                        decorationThickness: 1.5,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              else
+                              // ✅ Show only the actual price when no offer
+                                Text(
+                                  "PKR ${product_price ?? ''}",
+                                  style: const TextStyle(
+                                    fontFamily: FontConstants.gothamPro,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                            ],
                           ),
                         ],
                       ),
@@ -161,36 +216,38 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                           Wrap(
                             spacing: 6,
                             runSpacing: 12,
-                            children: sizes.asMap().entries.map((entry) {
+                            children: size_list.asMap().entries.map((entry) {
                               final index = entry.key;
-                              final size = entry.value;
+                              final detailSize = entry.value;
+
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    _selectedSize = size;
+                                    _selectedSize = detailSize.sizeName;
+                                    getColorBySize(detailSize.productId.toString(), detailSize.id.toString());
                                   });
                                 },
                                 child: Container(
-                                  width: 25,
-                                  height: 25,
+                                  width: 24, // slightly smaller for tighter spacing
+                                  height: 24,
                                   decoration: BoxDecoration(
-                                    color: _selectedSize == size
+                                    color: _selectedSize == detailSize.sizeName
                                         ? Colors.black
                                         : Colors.white,
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: Colors.black,
-                                      width: 1,
+                                      width: 0.6, // thinner border line
                                     ),
                                   ),
                                   child: Center(
                                     child: Text(
-                                      size,
+                                      detailSize.sizeName ?? '',
                                       style: TextStyle(
                                         fontFamily: FontConstants.gothamPro,
-                                        fontSize: 8,
+                                        fontSize: 10, // increased text size
                                         fontWeight: FontWeight.bold,
-                                        color: _selectedSize == size
+                                        color: _selectedSize == detailSize.sizeName
                                             ? Colors.white
                                             : Colors.black,
                                       ),
@@ -216,30 +273,47 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                           ),
                           Container(width: 10,),
                           Row(
-                            children: colors.asMap().entries.map((entry) {
+                            children: color_list.asMap().entries.map((entry) {
                               final index = entry.key;
-                              final color = entry.value;
+                              final colorItem = entry.value;
+
+                              // Parse hex color safely
+                              Color parsedColor = Colors.grey; // fallback
+                              try {
+                                if (colorItem.hexCode != null && colorItem.hexCode!.isNotEmpty) {
+                                  parsedColor = Color(int.parse(colorItem.hexCode!.replaceAll('#', '0xFF')));
+                                }
+                              } catch (_) {
+
+                              }
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    _selectedColor = index.toString();
+                                    _selectedColor = colorItem.id?.toString();
+                                    variation_iddd = colorItem.id.toString();
                                   });
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(right: 6),
-                                  width: 15,
-                                  height: 15,
+                                  padding: const EdgeInsets.all(2), // 👈 space between border and circle
                                   decoration: BoxDecoration(
-                                    color: color,
                                     shape: BoxShape.circle,
-                                    border: _selectedColor == index.toString()
-                                        ? Border.all(color: Colors.black, width: 2)
+                                    border: _selectedColor == colorItem.id.toString()
+                                        ? Border.all(color: searchtxtcolor, width: 2)
                                         : null,
+                                  ),
+                                  child: Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: parsedColor,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
                                 ),
                               );
                             }).toList(),
-                          ),
+                          )
 
 
                         ],
@@ -251,21 +325,27 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                     const SizedBox(height: 30),
 
                     // Add to Cart Button
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'ADD TO CART',
-                          style: TextStyle(
-                            fontFamily: FontConstants.gothamPro,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    InkWell(
+                      onTap: (){
+                        print("VERIATION_ID------>"+variation_iddd.toString());
+                        addToCart(variation_iddd.toString());
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'ADD TO CART',
+                            style: TextStyle(
+                              fontFamily: FontConstants.gothamPro,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -291,7 +371,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0,top: 10,right: 15),
                       child: Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+                      product_description.toString(),
                       style: TextStyle(
                         fontFamily: FontConstants.gothamPro,
                         fontSize: 14,
@@ -324,7 +404,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                       padding: const EdgeInsets.only(left: 15.0,top: 10,right: 15),
                       child:
                       Text(
-                      'High-quality waistcoat with contrasting details. Perfect for formal occasions and business events.',
+                        product_summary.toString(),
                       style: TextStyle(
                         fontFamily: FontConstants.gothamPro,
                         fontSize: 14,
@@ -354,7 +434,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                     const SizedBox(height: 30),
 
                     // GridView - Fixed height based on content
-                    Padding(
+                   /* Padding(
                       padding: const EdgeInsets.only(left: 10.0,right: 10),
                       child: GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),
@@ -372,7 +452,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                             onItemClick: () {
                               // Handle complete item click
                               //print('Product clicked: ${products[index].name}');
-                              Get.to(() => const ProductDetailsSccreen());
+                              //Get.to(() => const ProductDetailsSccreen());
 
                               // Add your navigation logic here
                             },
@@ -382,6 +462,38 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                                 //products[index].isFavorite = !products[index].isFavorite;
                               });
                               print('Favorite toggled for: ${products[index].name}');
+                            },
+                          );
+                        },
+                      ),
+                    ),
+*/
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0,right: 10),
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16.0,
+                          mainAxisSpacing: 16.0,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemCount: product_list.length,
+                        itemBuilder: (context, index) {
+                          return DetailProductItem(
+                            product: product_list[index],
+                            onItemClick: () {
+                              Get.to(() => ProductDetailsSccreen(productId: product_list[index].id.toString()));
+                            },
+                            onFavoriteClick: (newWishlistValue) async {
+                              final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                              if (skipValue == "1") {
+                                Get.to(() => const LoginScreen());
+                              } else {
+                                addRemoveWishlist(product_list[index].id.toString());
+                              }
                             },
                           );
                         },
@@ -538,6 +650,104 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
       ),
     );
   }
+  Future<void> addRemoveWishlist(String id) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.syncWishlist);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "id": id.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      AddWishlistModell.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Wishlist",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+        getProductDetails(widget.productId.toString());
+      }else if (model.status == 2) {
+        Get.snackbar(
+          "Wishlist",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+        getProductDetails(widget.productId.toString());
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
 
 
@@ -571,27 +781,21 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-  Widget _buildMatchingItem(String title) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Text(
-          title,
-          style: TextStyle(
-            fontFamily: FontConstants.gothamPro,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+
+
+  void _startAutoSlide() {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < banners_list.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
 
@@ -636,14 +840,45 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
       DetailProductDetailsModel.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        setState(() {
+
+          banners_list.clear();
+          banners_list.addAll(model.data!.product!.imagesUrl as Iterable<String>);
+          _startAutoSlide();
+
+          product_price = model.data!.product!.variant!.price.toString();
+          product_offer_price = model.data!.product!.variant!.offerPrice.toString();
+
+          product_name = model.data!.product!.name.toString();
+          product_description = model.data!.product!.description.toString();
+          product_summary = model.data!.product!.summary.toString();
+
+          product_list.clear();
+          product_list.addAll(model.data!.similarProducts as Iterable<ProductHomee>);
+
+          if(model.data!.sizes!.length > 0){
+            variation_iddd = model.data!.colors![0].id.toString();
+            size_list.clear();
+            size_list.addAll(model.data!.sizes as Iterable<DetailSizes>);
+          }
+
+          if(model.data!.colors!.length > 0){
+            color_list.clear();
+            color_list.addAll(model.data!.colors as Iterable<DetailColors>);
+            _selectedColor = color_list.first.id?.toString();
+          }
+
+
+          if (model.data!.sizes!.length == 0 && model.data!.colors!.length ==0){
+            variation_iddd = model.data!.product!.variant!.id.toString();
+          }
+
+
+
+
+
+
+        });
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {
@@ -666,6 +901,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
         );
       }
     } catch (e) {
+      print("ERROR-------------->"+e.toString());
       Get.snackbar(
         "Error",
         e.toString(),
@@ -730,8 +966,98 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
       ColorsResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        setState(() {
+
+          if(model.data!.colors!.length > 0){
+            variation_iddd = model.data!.colors![0].id.toString();
+            color_list.clear();
+            color_list.addAll(model.data!.colors as Iterable<DetailColors>);
+          }
+
+        });
+
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
         Get.snackbar(
           "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> addToCart(String variation_id) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.addCart);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "variation_id": variation_id.toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      BrandGetProductByBrand.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        Get.snackbar(
+          "Cart",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -742,7 +1068,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Cart",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,

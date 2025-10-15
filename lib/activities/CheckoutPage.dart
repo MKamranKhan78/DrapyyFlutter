@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:drapyy/activities/MyVoucherListingScreen.dart';
 import 'package:drapyy/activities/SuccessScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import '../helper/customHttpClient.dart';
 import '../helper/preference_manager.dart';
 import '../models/Model.dart';
 import '../network/Network.dart';
+import 'AddressListScreen.dart';
 
 
 class CheckoutPage extends StatefulWidget {
@@ -23,26 +25,27 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _MyOrdersPageState extends State<CheckoutPage> {
-  String? selectedShipping;
+  ShippingMethod? selectedShipping;
+  String? shipping_id;
   String? selectedPayment;
+  String? address_id;
+  String voucher = "";
+  String is_voucher = "0";
   bool isLoading = false;
-
-  final List<String> shippingMethods = [
-    "Standard Delivery",
-    "Express Delivery",
-    "Pickup"
-  ];
-  final List<String> paymentMethods = [
-    "Credit Card",
-    "Cash on Delivery",
-    "Bank Transfer"
-  ];
+  String address_name = "";
+  String shipping_add = "";
+  String total = "";
+  String discount = "";
+  final List<ShippingMethod> shippingMethods_list = [];
+  List<String> paymentMethods_list = [];
 
   @override
   void initState() {
      super.initState();
     getCheckout();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         elevation: 0,
         leading: const Icon(Icons.arrow_back_ios, color: Colors.black),
         title: const Text(
-          "MY ORDER",
+          "CHECKOUT",
           style: TextStyle(
             fontFamily: "Gotham Pro",
             fontWeight: FontWeight.w500,
@@ -63,7 +66,9 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+          : SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: Column(
@@ -72,46 +77,104 @@ class _MyOrdersPageState extends State<CheckoutPage> {
               Expanded(
                 child: ListView(
                   children: [
-                    // SHIPPING ADDRESS
-                    const Text(
+                    Text(
                       "SHIPPING ADDRESS",
                       style: TextStyle(
                         fontFamily: "Gotham Pro",
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    ListTile(
-                      title: const Text(
-                        "dummy text",
-                        style: TextStyle(fontFamily: "Gotham Pro"),
+                   /* InkWell(
+                      onTap: () async {
+                        var result = await Get.to(() => AddressListScreen());
+                        if (result != null) {
+                          print("Returned data: $result"); // prints: {id: 123, name: Kamran}
+                           setState(() {
+                             address_id = result['id']; // 👈 extract specific field
+                             address_name = result['address_name']; // 👈 extract specific field
+                             shipping_add = result['shipping_address']; // 👈 extract specific field
+                           });
+                        }
+                      },
+                      child: ListTile(
+                        title: Text(
+                          address_name.isEmpty ? "ADD ADDRESS" : address_name.toString(),
+                          style: TextStyle(fontFamily: "Gotham Pro"),
+                        ),
+                        trailing:
+                        Icon(Icons.add, size: 20, color: Colors.black),
+                        subtitle: Text(
+                          shipping_add.isEmpty ? "ADD SHIPPING ADDRESS" : shipping_add.toString(),
+                          style: TextStyle(
+                            fontFamily: "Gotham Pro",
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios,
-                          size: 16, color: Colors.black),
-                      contentPadding: EdgeInsets.zero,
                     ),
-                    ListTile(
-                      title: const Text(
-                        "dummy text",
-                        style: TextStyle(fontFamily: "Gotham Pro"),
-                      ),
-                      trailing:
-                      const Icon(Icons.add, size: 20, color: Colors.black),
-                      subtitle: const Text(
-                        "ADD SHIPPING ADDRESS",
-                        style: TextStyle(
-                          fontFamily: "Gotham Pro",
-                          fontSize: 12,
-                          color: Colors.grey,
+                    const Divider(),*/
+
+                    InkWell(
+                      onTap: () async {
+                        var result = await Get.to(() => AddressListScreen());
+                        if (result != null) {
+                          print("Returned data: $result"); // prints: {id: 123, name: Kamran}
+                          setState(() {
+                            address_id = result['id'];
+                            address_name = result['address_name'];
+                            shipping_add = result['shipping_address'];
+                          });
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6), // 👈 reduced space
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    address_name.isEmpty ? "ADD ADDRESS" : address_name.toString(),
+                                    style: const TextStyle(
+                                      fontFamily: "Gotham Pro",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2), // 👈 minimal gap between title & subtitle
+                                  Text(
+                                    shipping_add.isEmpty
+                                        ? "ADD SHIPPING ADDRESS"
+                                        : shipping_add.toString(),
+                                    style: const TextStyle(
+                                      fontFamily: "Gotham Pro",
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.add, size: 20, color: Colors.black),
+                          ],
                         ),
                       ),
-                      contentPadding: EdgeInsets.zero,
                     ),
-                    const Divider(),
+                    const Divider(height: 1),
 
+
+                    Container(height: 20,),
                     // SHIPPING METHOD DROPDOWN
-                    const Text(
+                    Text(
                       "SHIPPING METHOD",
                       style: TextStyle(
                         fontFamily: "Gotham Pro",
@@ -120,18 +183,18 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                       ),
                     ),
                     DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
+                      child: DropdownButton<ShippingMethod>(
                         value: selectedShipping,
                         hint: const Text(
                           "SELECT SHIPPING METHOD",
                           style: TextStyle(fontFamily: "Gotham Pro"),
                         ),
                         isExpanded: true,
-                        items: shippingMethods
+                        items: shippingMethods_list
                             .map((e) => DropdownMenuItem(
                           value: e,
                           child: Text(
-                            e,
+                            e.name.toString(),
                             style: const TextStyle(
                                 fontFamily: "Gotham Pro"),
                           ),
@@ -140,14 +203,15 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                         onChanged: (val) {
                           setState(() {
                             selectedShipping = val;
+                            shipping_id = val!.id.toString();
                           });
                         },
                       ),
                     ),
-                    const Divider(),
+                    Divider(),
 
                     // PAYMENT METHOD DROPDOWN
-                    const Text(
+                    Text(
                       "PAYMENT METHOD",
                       style: TextStyle(
                         fontFamily: "Gotham Pro",
@@ -163,7 +227,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                           style: TextStyle(fontFamily: "Gotham Pro"),
                         ),
                         isExpanded: true,
-                        items: paymentMethods
+                        items: paymentMethods_list
                             .map((e) => DropdownMenuItem(
                           value: e,
                           child: Text(
@@ -191,17 +255,29 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                         color: Colors.black,
                       ),
                     ),
-                    ListTile(
-                      title: const Text(
-                        "Select voucher",
-                        style: TextStyle(
-                          fontFamily: "Gotham Pro",
-                          color: Colors.grey,
+                    InkWell(
+                      onTap: () async {
+                        var result = await Get.to(() => MyVoucherListingScreen());
+                        if (result != null) {
+                          print("Returned data: $result"); // prints: {id: 123, name: Kamran}
+                          setState(() {
+                            voucher = result['v_code'];
+                            applyCouponCode(voucher);
+                            });
+                        }
+                      },
+                      child: ListTile(
+                        title: const Text(
+                          "Select voucher",
+                          style: TextStyle(
+                            fontFamily: "Gotham Pro",
+                            color: Colors.grey,
+                          ),
                         ),
+                        trailing:
+                        const Icon(Icons.add, size: 20, color: Colors.black),
+                        contentPadding: EdgeInsets.zero,
                       ),
-                      trailing:
-                      const Icon(Icons.add, size: 20, color: Colors.black),
-                      contentPadding: EdgeInsets.zero,
                     ),
                     const Divider(),
 
@@ -217,7 +293,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           "TOTAL",
                           style: TextStyle(
@@ -227,7 +303,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                           ),
                         ),
                         Text(
-                          "2999",
+                          "PKR "+total.toString(),
                           style: TextStyle(
                             fontFamily: "Gotham Pro",
                             fontSize: 16,
@@ -237,13 +313,26 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      "Discount",
-                      style: TextStyle(
-                        fontFamily: "Gotham Pro",
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Discount",
+                          style: TextStyle(
+                            fontFamily: "Gotham Pro",
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          discount.toString().isEmpty ? "No Discount Applied" : discount.toString(),
+                          style: TextStyle(
+                            fontFamily: "Gotham Pro",
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
@@ -255,10 +344,42 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                           shape: const RoundedRectangleBorder(),
                         ),
                         onPressed: () {
-                          Get.to(() => SuccessScreen());
 
+                          if(selectedPayment == null){
+                            Get.snackbar(
+                              "Checkout",
+                              "Please select payment method.",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          } else if(shipping_id == null){
+                            Get.snackbar(
+                              "Checkout",
+                              "Please select shipping method.",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          } else if(address_id == null || address_id == "null" || address_id.toString().isEmpty){
+                            Get.snackbar(
+                              "Checkout",
+                              "Please select shipping address.",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else{
+
+                            print("ADDRESS_ID"+address_id.toString());
+                            placeOrder(shipping_id!, selectedPayment!, voucher, is_voucher, address_id!);
+
+                          }
                         },
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -270,7 +391,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                               ),
                             ),
                             Text(
-                              "2999",
+                              "PKR "+total.toString(),
                               style: TextStyle(
                                 fontFamily: "Gotham Pro",
                                 fontSize: 14,
@@ -284,12 +405,15 @@ class _MyOrdersPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
+
             ],
           ),
         ),
       ),
     );
   }
+
+
 
   Future<void> getCheckout() async {
     setState(() {
@@ -320,15 +444,34 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       print("-------------------------------------------------------------------------------------");
       final model = GetCheckoutResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
+        print("MESSAGE---------->"+model.message.toString());
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+
+
+          if (model.data?.paymentMethods != null && model.data!.paymentMethods!.isNotEmpty) {
+            paymentMethods_list
+              ..clear()
+              ..addAll(model.data!.paymentMethods!);
+          }
+
+          if (model.data?.shippingMethod != null && model.data!.shippingMethod!.isNotEmpty) {
+            shippingMethods_list
+              ..clear()
+              ..addAll(model.data!.shippingMethod!);
+          }
+
+          if (model.data?.address?.id != null) {
+            address_id = model.data!.address!.id.toString();
+            address_name = model.data!.address!.name.toString();
+            shipping_add = model.data!.address!.address.toString();
+          }
+
+          if (model.data?.total != null) {
+            total = model.data!.total.toString();
+          }
+
+
+
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -437,6 +580,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        Get.to(() => SuccessScreen());
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {
@@ -515,21 +659,28 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       print(
           "-------------------------------------FULL RESPONSE-------------------------------------");
       Toastutils.printFullText(response.body.toString());
-      print(
-          "-------------------------------------------------------------------------------------");
+      print("-------------------------------------------------------------------------------------");
 
       final model =
       VoucherResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        setState(() {
+          is_voucher = "1";
+
+          if (model.data?.total != null) {
+            total = model.data!.total.toString();
+            discount = model.data!.discountAmount.toString();
+          }
+          Get.snackbar(
+            "Coupon",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+        });
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {

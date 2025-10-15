@@ -15,38 +15,31 @@ class NetworkManager {
 
 
     static const String search ="search";
-    static const String productColor ="product-colors";
     static const String avail_Points ="customer/avail-points";
     static const String avail_points_list ="customer/avail-points-list";
     static const String my_follows_sync ="customer/my-follows/sync";
-    static const String applyCoupon ="checkout/apply-coupon";
-    static const String placeOrder ="checkout/place-order";
     static const String sync_my_follows ="customer/my-follows/sync";
-    static const String addressUpdate ="customer/address/update";
-    static const String addAddress ="customer/address/add";
     static const String notifications ="customer/notifications";
-    static const String address ="customer/address";
-    static const String termsAndCondition ="page/terms_and_condition";
-    static const String privacy_policy ="page/privacy-policy";
-    static const String voucher ="customer/vouchers";
-    static const String product_details ="product-detail";
-    static const String profile ="customer/profile";
+
+
+
+
+
+
+
     static const String orders ="customer/orders";
     static const String becomeSeller ="become-seller";
-    static const String syncWishlist ="sync-wishlist";
-    static const String cartUpdate ="cart/update";
-    static const String cartRemove ="cart/remove";
-    static const String addCart ="cart/add";
     static const String become_seller_data ="become-seller-data";
-    static const String logout ="log-out";
-    static const String checkout ="checkout";
-    static const String wishlist ="customer/wishlist";
-    static const String cart ="cart";
-    static const String forgot_pass ="forgot-password";
 
 
-    //------------DONE fully on add fb token---------------------
+
+
+
+    //---------------------ERROR API----------------------------
+    static const String addressUpdate ="customer/address/update"; // giving 500 internal sever error
+    //------------DONE fully on add fb token and flow setting after logout---------------------
     static const String guest_api ="guest-user";
+    static const String logout ="log-out";
     //---------------------DONE API---------------------------------
     static const String register ="register";
     static const String login ="login";
@@ -54,6 +47,29 @@ class NetworkManager {
     static const String home ="home";
     static const String getMenu ="get-menu";
     static const String config_data ="config-data";
+    static const String cart ="cart";
+    static const String cartUpdate ="cart/update";
+    static const String cartRemove ="cart/remove";
+    static const String addCart ="cart/add";
+    static const String product_details ="product-detail";
+    static const String productColor ="product-colors";
+    static const String syncWishlist ="sync-wishlist";
+    static const String wishlist ="customer/wishlist";
+    static const String termsAndCondition ="page/terms_and_condition";
+    static const String privacy_policy ="page/privacy-policy";
+    static const String placeOrder ="checkout/place-order";
+    static const String applyCoupon ="checkout/apply-coupon";
+    static const String voucher ="customer/vouchers";
+    static const String checkout ="checkout";
+    static const String address ="customer/address";
+    static const String addAddress ="customer/address/add";
+    static const String deleteAddress ="customer/address/delete";
+    static const String forgot_pass ="forgot-password";
+    static const String profile ="customer/profile";
+    static const String update_profile ="customer/profile-update";
+    static const String update_password ="customer/password-update";
+
+
 
 
 

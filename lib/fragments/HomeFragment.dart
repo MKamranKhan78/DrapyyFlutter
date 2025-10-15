@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return HomeCategoryProductItem(
                           product: category_product_list[index],
                           onItemClick: () {
-                            Get.to(() => const ProductDetailsSccreen());
+                            Get.to(() => ProductDetailsSccreen(productId: category_product_list[index].id.toString()));
                           },
                           onFavoriteClick: (newWishlistValue) async {
                             final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
@@ -335,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: HomeProductItem(
                                 product: product_list[index],
                                 onItemClick: () {
-                                  Get.to(() => const ProductDetailsSccreen());
+                                  Get.to(() => ProductDetailsSccreen(productId: category_product_list[index].id.toString()));
                                 },
                                 onFavoriteClick: (newWishlistValue) async {
                                   final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
@@ -542,12 +542,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (isLoading)
             Container(
               child: const Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+                child: CircularProgressIndicator(), // ✅ Centered progress bar
+              )
             ),
         ]
       ),

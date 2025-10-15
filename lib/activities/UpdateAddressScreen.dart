@@ -18,14 +18,14 @@ import '../network/Network.dart';
 
 
 
-class AddAddressScreen extends StatefulWidget {
-  const AddAddressScreen({super.key});
+class UpdateAddressScreen extends StatefulWidget {
+  const UpdateAddressScreen({super.key});
 
   @override
-  State<AddAddressScreen> createState() => _AddAddressScreenState();
+  State<UpdateAddressScreen> createState() => _AddAddressScreenState();
 }
 
-class _AddAddressScreenState extends State<AddAddressScreen> {
+class _AddAddressScreenState extends State<UpdateAddressScreen> {
   bool isLoading = false;
   String? selectedValueCity_id;
 
@@ -68,7 +68,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   const SizedBox(height: 30),
 
                   Text(
-                    "Add Address",
+                    "Update Address",
                     style: TextStyle(
                       fontFamily: "Gotham Pro",
                       fontSize: 18,
@@ -190,7 +190,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       onChanged: (newValue) {
                         setState(() {
                           selectedValueCity_id = newValue;
-                         });
+                        });
                       },
                     ),
                   ),
@@ -215,7 +215,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             margin: const EdgeInsets.all(10),
                             duration: const Duration(seconds: 2),
                           );
-                         } else if (mobileController.text.trim().isEmpty) {
+                        } else if (mobileController.text.trim().isEmpty) {
                           Get.snackbar(
                             "Address",
                             "Enter your mobile no",
@@ -224,7 +224,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             margin: const EdgeInsets.all(10),
                             duration: const Duration(seconds: 2),
                           );
-                         } else if (addressController.text.trim().isEmpty) {
+                        } else if (addressController.text.trim().isEmpty) {
                           Get.snackbar(
                             "Address",
                             "Enter your address",
@@ -233,7 +233,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             margin: const EdgeInsets.all(10),
                             duration: const Duration(seconds: 2),
                           );
-                         } else if (bilingAddressController.text.trim().isEmpty) {
+                        } else if (bilingAddressController.text.trim().isEmpty) {
                           Get.snackbar(
                             "Address",
                             "Enter your billing address",
@@ -242,7 +242,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             margin: const EdgeInsets.all(10),
                             duration: const Duration(seconds: 2),
                           );
-                         }else if (selectedValueCity_id == null || selectedValueCity_id == "null") {
+                        }else if (selectedValueCity_id == null || selectedValueCity_id == "null") {
                           Get.snackbar(
                             "Address",
                             "Please select your city",
@@ -251,8 +251,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             margin: const EdgeInsets.all(10),
                             duration: const Duration(seconds: 2),
                           );
-                         }else{
-                          addAddress(
+                        }else{
+                          updateAddress(
                               nameController.text.toString(),
                               mobileController.text.toString(),
                               addressController.text.toString(),
@@ -273,7 +273,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         ),
                       ),
                       child: const Text(
-                        "ADD ADDRESS",
+                        "Update ADDRESS",
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -283,7 +283,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-
                 ],
               ),
             ),
@@ -292,116 +291,15 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           /// Loading Overlay
           if (isLoading)
             Center(
-                child: CircularProgressIndicator(color: Colors.black),
-              ),
+              child: CircularProgressIndicator(color: Colors.black),
+            ),
         ],
       ),
     );
   }
 
 
-  Future<void> addAddress(
-      String name,
-      String phone_no,
-      String address,
-      String billing_address,
-      String city,
-      String is_default,
-      ) async {
-    setState(() {
-      isLoading = true;
-    });
 
-    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.addAddress);
-    final headers = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Authorization":
-      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
-    };
-
-
-
-    // ✅ Request body changed to match Kotlin version
-    final requestBody = {
-      "name": name.toString(),
-      "phone_no": phone_no.toString(),
-      "address": address.toString(),
-      "billing_address": billing_address.toString(),
-      "city": city.toString(),
-      "is_default": is_default.toString(),
-    };
-
-    final client = CustomHttpClient(http.Client());
-
-    try {
-      final response = await client.post(
-        url,
-        headers: headers,
-        body: jsonEncode(requestBody),
-      );
-
-      print('POST URL: $url');
-      print('Request Headers: $headers');
-      print('Request Body: ${jsonEncode(requestBody)}');
-      print('Response Code: ${response.statusCode}');
-      print(
-          "-------------------------------------FULL RESPONSE-------------------------------------");
-      Toastutils.printFullText(response.body.toString());
-      print(
-          "-------------------------------------------------------------------------------------");
-
-      final model =
-      PlaceOrderResponsee.fromJson(json.decode(response.body));
-
-      if (model.status == 1) {
-        Get.back(result: "Reload Address");
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
-       } else if (model.status == 0 ||
-          model.status == 401 ||
-          model.status != null) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
-      } else {
-        Get.snackbar(
-          "Error",
-          "Unexpected response from server.",
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        duration: const Duration(seconds: 2),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
 
 
   Future<void> updateAddress(
@@ -459,6 +357,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       PlaceOrderResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        Get.back();
         Get.snackbar(
           "Status ${model.status}",
           model.message.toString(),
@@ -535,10 +434,30 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       print("-------------------------------------------------------------------------------------");
       final model = GetCheckoutResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
-        print("MESSAGE---------->"+model.message.toString());
+        print("CITY_ID---------->"+model.data!.address!.city.toString());
         setState(() {
           city_List.clear();
           city_List.addAll(model.data!.cities as Iterable<Cities>);
+
+
+          if(model.data!.address != null){
+            if(model.data!.address!.id != null){
+              selectedValueCity_id = model.data!.address!.id.toString();
+            }
+            if(model.data!.address!.name != null){
+              nameController.text = model.data!.address!.name.toString();
+            }
+            if(model.data!.address!.phoneNo != null){
+              mobileController.text = model.data!.address!.phoneNo.toString();
+            }
+            if(model.data!.address!.address != null){
+              addressController.text = model.data!.address!.address.toString();
+            }
+            if(model.data!.address!.billingAddress != null){
+              bilingAddressController.text = model.data!.address!.billingAddress.toString();
+            }
+
+          }
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -587,7 +506,34 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
 
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

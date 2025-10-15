@@ -31,9 +31,12 @@ class _OrderScreenState extends State<CurrentOrdersFragment> {
 
   bool isLoading = false;
 
-/*
-class CurrentOrdersFragment extends StatelessWidget {
-  const CurrentOrdersFragment({Key? key}) : super(key: key);*/
+  @override
+  void initState() {
+     super.initState();
+    getOrders();
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -254,15 +254,9 @@ class _MenuFragmentState extends State<MenuFragment> {
 
           /// --- Loader Overlay ---
           if (isLoading)
-            Container(
-               child: const Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
+            Center(
+              child: CircularProgressIndicator(), // ✅ Centered progress bar
+            )
         ],
       ),
     );

@@ -1,7 +1,9 @@
 
 
+import 'package:drapyy/fragments/HomeFragment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../helper/FontsConstants.dart';
 
@@ -50,8 +52,8 @@ class SuccessScreen extends StatelessWidget {
 
             // Subtitle
             Text(
-              "YOU SUCCESSFULLY REDEEMED",
-              style: const TextStyle(
+              "YOUR ORDER PLACED SUCCESSFULLY",
+              style: TextStyle(
                 fontFamily: FontConstants.gothamPro,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -63,7 +65,7 @@ class SuccessScreen extends StatelessWidget {
 
             // Points
             Text(
-              "77 Points!",
+              "Congrats you have got points!",
               style: const TextStyle(
                 fontFamily: FontConstants.gothamPro,
                 fontSize: 14,
@@ -86,7 +88,7 @@ class SuccessScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Get.offAll(HomeScreen());
                 },
                 child: const Text(
                   "CONTINUE",

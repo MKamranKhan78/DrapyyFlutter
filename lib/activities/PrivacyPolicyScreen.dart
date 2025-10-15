@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:drapyy/models/Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +25,14 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
 
   bool isLoading = false;
 
+  String content = "";
+
+  @override
+  void initState() {
+     super.initState();
+    getPrivacyPolicy();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +40,7 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context); // go back
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Privacy Policy",
@@ -44,19 +51,29 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Here are the privacy policy. "
-              "You can replace this text with your actual content.",
-          style: const TextStyle(
-            fontSize: 16,
-            fontFamily: "GothamPro",
+      body: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Html(
+            data: content ?? "<p>No data available.</p>",
+            style: {
+              "body": Style(
+                fontSize: FontSize(14),
+                fontFamily: "GothamPro",
+                lineHeight: LineHeight(1.6),
+              ),
+              "p": Style(
+                margin: Margins.symmetric(vertical: 8),
+              ),
+            },
           ),
         ),
       ),
     );
   }
+
 
 
   Future<void> getPrivacyPolicy() async {
@@ -89,14 +106,10 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
       final model = PrivacyPolicyResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+          print(model.data!.content.toString());
+          if(model.data!.content!.description != null){
+            content = model.data!.content!.description.toString();
+          }
         });
       } else if (model.status == 0) {
         Get.snackbar(

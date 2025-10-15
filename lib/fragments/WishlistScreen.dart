@@ -7,6 +7,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
+import '../activities/LoginScreen.dart';
+import '../activities/ProductDetailsSccreen.dart';
+import '../activities/products_items/HomeCategoryProductItem.dart';
+import '../activities/products_items/HomeProductItem.dart';
 import '../activities/products_items/ProductItemAlt.dart';
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
@@ -26,45 +30,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   bool isLoading = false;
 
-  final List<Product> products = [
-    Product(
-      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
-      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET hsdhjsdh djshdjhs',
-      description: 'SHIRT DRESS WHITE shdjhdsjhds s',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET',
-      description: 'SHIRT DRESS WHITE',
-      code: '77147',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    Product(
-      name: 'CLAUDETTE CORSET2',
-      description: 'SHIRT DRESS WHITE2',
-      code: '771472',
-      imageUrl: 'https://picsum.photos/id/1011/800/400', // Replace with your image path
-    ),
-    // Add more products as needed
-  ];
+  List<ProductHomee> products = [];
 
 
   @override
@@ -75,33 +41,49 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 20),
-        child: GridView.builder(
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16.0,
-            mainAxisSpacing: 16.0,
-            childAspectRatio: 0.7,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                childAspectRatio: 0.7,
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return HomeProductItem(
+                  product: products[index],
+                  onItemClick: () {
+                    Get.to(() => ProductDetailsSccreen(productId: products[index].id.toString()));
+                  },
+                  onFavoriteClick: (newWishlistValue) async {
+                    final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                    if (skipValue == "1") {
+                      Get.to(() => const LoginScreen());
+                    } else {
+                      addRemoveWishlist(products[index].id.toString());
+                    }
+                  },
+                );
+              },
+            ),
           ),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            return ProductItemAlt(
-              product: products[index],
-              onItemClick: () {
-                 print('Product clicked: ${products[index].name}');
-              },
-              onFavoriteClick: () {
-                 setState(() {
-                   //products[index].isFavorite = !products[index].isFavorite;
-                });
-                print('Favorite toggled for: ${products[index].name}');
-              },
-            );
-          },
-        ),
-      ),
+          if (isLoading)
+            Container(
+              child: const Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+        ],
+      )
     );
   }
 
@@ -136,14 +118,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
       final model = GetWishlistResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+          products.clear();
+          products.addAll(model.data!.products as Iterable<ProductHomee>);
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -240,6 +216,17 @@ class _WishlistScreenState extends State<WishlistScreen> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        getWishlist();
+      }else if (model.status == 2) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+        getWishlist();
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {

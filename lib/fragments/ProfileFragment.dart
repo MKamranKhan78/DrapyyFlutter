@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/BecomePartnerScreen.dart';
 import 'package:drapyy/activities/FilterScreen.dart';
+import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/activities/MyVoucherListingScreen.dart';
 import 'package:drapyy/activities/NotificationsScreen.dart';
 import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
 import 'package:drapyy/activities/RedeemScreen.dart';
 import 'package:drapyy/activities/TermsAndConditionScreen.dart';
+import 'package:drapyy/fragments/HomeFragment.dart';
 import 'package:drapyy/helper/FontsConstants.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +40,20 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
   bool isLoading = false;
 
+  String wallet = "";
+  String points = "";
+  String orders = "";
+  String following = "";
+  String name = "";
+  String image = "";
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    getProfile();
+  }
 
 
   @override
@@ -45,9 +61,15 @@ class _ProfileScreenState extends State<ProfileFragment> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: isLoading
+            ? const Center(
+          child: CircularProgressIndicator(), // ✅ Centered progress bar
+        )
+            : SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
+
             children: [
 
               Row(
@@ -100,7 +122,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text(
-                  "MAX CONVERSION",
+                  name.toString(),
                   style: TextStyle(
                     fontFamily: FontConstants.gothamPro,
                     fontSize: 16,
@@ -116,7 +138,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // WALLET
-                  const Column(
+                  Column(
                     children: [
 
                       Text(
@@ -130,7 +152,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       SizedBox(height: 5),
 
                       Text(
-                        "120", // value
+                        wallet.toString(), // value
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -143,7 +165,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ),
 
                   // POINTS
-                  const Column(
+                  Column(
                     children: [
 
                       Text(
@@ -159,7 +181,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       SizedBox(height: 5),
 
                       Text(
-                        "80",
+                        points.toString(), // value
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -178,7 +200,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       Get.to(() =>  Myordersscreen());
 
                     },
-                    child: const Column(
+                    child: Column(
                       children: [
 
                         Text(
@@ -191,7 +213,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "25",
+                          orders.toString(), // value
                           style: TextStyle(
                             fontFamily: FontConstants.gothamPro,
                             fontSize: 14,
@@ -205,7 +227,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ),
 
                   // FOLLOWING
-                  const Column(
+
+                  Column(
                     children: [
 
                       Text(
@@ -218,7 +241,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "10",
+                        following.toString(),
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -237,8 +260,17 @@ class _ProfileScreenState extends State<ProfileFragment> {
               const Divider(color: Colors.black, thickness: 0.5),
 
               // Menu Items (inline, no extra widget class)
-              buildMenuRow("ACCOUNT INFORMATION", () {
-                 Get.to(() => const AccountInformationScreen());
+              buildMenuRow("ACCOUNT INFORMATION", () async {
+                //Get.to(() => const AccountInformationScreen());
+
+                var result = await Get.to(() => AccountInformationScreen());
+                if (result != null) {
+                  print("Received from B: $result");
+                  setState(() {
+                    getProfile();
+                  });
+                }
+
               }),
               buildMenuRow("DELIVERY ADDRESS", () {
                 print("DELIVERY Clicked");
@@ -446,11 +478,14 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
 
             ],
+
+
           ),
         ),
       ),
     );
   }
+
 
   Future<void> _launchSocialLink(String url) async {
     Uri uri = Uri.parse(url);
@@ -580,7 +615,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.get(
+      final response = await client.post(
         url,
         headers: headers,
       );
@@ -594,14 +629,18 @@ class _ProfileScreenState extends State<ProfileFragment> {
       final model = GetNotificationsResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
+
+          PreferenceManager.clearAll();
+          Get.offAll(MainActivity());
           Get.snackbar(
-            "Status ${model.status}",
+            "Logout",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
             margin: const EdgeInsets.all(10),
             duration: const Duration(seconds: 2),
           );
+
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -679,15 +718,13 @@ class _ProfileScreenState extends State<ProfileFragment> {
       final model = GetProfileResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
-        });
+           wallet = model.data!.wallet.toString();
+           points = model.data!.points.toString();
+           orders = model.data!.orders.toString();
+           following = model.data!.following.toString();
+           name = model.data!.user!.name.toString();
+           image = model.data!.user!.image.toString();
+         });
       } else if (model.status == 0) {
         Get.snackbar(
           "Status ${model.status}",
