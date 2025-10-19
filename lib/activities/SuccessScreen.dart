@@ -1,5 +1,6 @@
 
 
+import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/fragments/HomeFragment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class SuccessScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Get.offAll(HomeScreen());
+                  Get.offAll(MainActivity());
                 },
                 child: const Text(
                   "CONTINUE",

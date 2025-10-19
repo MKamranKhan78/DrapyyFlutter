@@ -7,29 +7,9 @@ import 'package:http/http.dart' as http;
 class NetworkManager {
     static const String BASE_URL ="https://app.drapyy.com/api/v1/";
 
-   //internet check added apis.
-   static const String productByBroand ="products-by-brand";
-   static const String my_follow ="customer/my-follows"; //screen missed not used in any screen
 
 
 
-
-    static const String search ="search";
-    static const String avail_Points ="customer/avail-points";
-    static const String avail_points_list ="customer/avail-points-list";
-    static const String my_follows_sync ="customer/my-follows/sync";
-    static const String sync_my_follows ="customer/my-follows/sync";
-    static const String notifications ="customer/notifications";
-
-
-
-
-
-
-
-    static const String orders ="customer/orders";
-    static const String becomeSeller ="become-seller";
-    static const String become_seller_data ="become-seller-data";
 
 
 
@@ -38,9 +18,9 @@ class NetworkManager {
     //---------------------ERROR API----------------------------
     static const String addressUpdate ="customer/address/update"; // giving 500 internal sever error
     //------------DONE fully on add fb token and flow setting after logout---------------------
-    static const String guest_api ="guest-user";
-    static const String logout ="log-out";
     //---------------------DONE API---------------------------------
+
+
     static const String register ="register";
     static const String login ="login";
     static const String home_cat_products ="home-category-products";
@@ -68,6 +48,20 @@ class NetworkManager {
     static const String profile ="customer/profile";
     static const String update_profile ="customer/profile-update";
     static const String update_password ="customer/password-update";
+    static const String orders ="customer/orders";
+    static const String becomeSeller ="become-seller";
+    static const String become_seller_data ="become-seller-data";
+    static const String notifications ="customer/notifications";
+    static const String avail_Points ="customer/avail-points";
+    static const String avail_points_list ="customer/avail-points-list";
+    static const String my_follow ="customer/my-follows";
+    static const String my_follows_sync ="customer/my-follows/sync";
+    static const String sync_my_follows ="customer/my-follows/sync";
+    static const String search ="search";
+    static const String productByBroand ="products-by-brand";
+    static const String logout ="log-out";
+    static const String guest_api ="guest-user";
+
 
 
 

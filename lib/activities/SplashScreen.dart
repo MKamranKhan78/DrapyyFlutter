@@ -130,14 +130,6 @@ class SplashScreenState extends State<SplashScreen> {
            Get.offAll(() => MainActivity());
 
 
-           Get.snackbar(
-            "Guest",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: EdgeInsets.all(10),
-            duration: Duration(seconds: 2),
-          );
         });
       } else if (model.status == 0) {
         Get.snackbar(

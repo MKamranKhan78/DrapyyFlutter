@@ -136,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     style: const TextStyle(fontFamily: FontConstants.gothamPro),
                     controller: emailController,
+                    keyboardType: TextInputType.emailAddress, // ✅ email input
                     decoration: const InputDecoration(
                       labelText: "ENTER YOUR EMAIL ADDRESS",
                       labelStyle: TextStyle(

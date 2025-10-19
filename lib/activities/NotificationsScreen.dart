@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
@@ -33,19 +34,18 @@ class _NotificationsPageState extends State<NotificationsScreen> {
 
 
 
-  final List<String> notificationList = [
-    "ORDER #6181c55d-1933-44eb-b5ab-bea8a062c308",
-    "ORDER #6181c55d-1933-44eb-b5ab-bea8a062c308",
-    "ORDER #6181c55d-1933-44eb-b5ab-bea8a062c308",
-    "ORDER #6181c55d-1933-44eb-b5ab-bea8a062c308",
-  ];
+  List<Notifications> notificationListt = [];
 
+  @override
+  void initState() {
+    super.initState();
+    getNotifications();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // AppBar
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -57,7 +57,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
         title: const Text(
           "Notifications",
           style: TextStyle(
-            fontFamily: FontConstants.gothamPro, // 👈 your font
+            fontFamily: FontConstants.gothamPro,
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.black,
@@ -65,36 +65,47 @@ class _NotificationsPageState extends State<NotificationsScreen> {
         ),
       ),
 
-      body: ListView.separated(
-        itemCount: notificationList.length, // 👈 change this to your notifications length
+      // 👇 show loading spinner if isLoading == true
+      body: isLoading
+          ? const Center(
+        child: CircularProgressIndicator(
+          color: Colors.black,
+        ),
+      )
+          : notificationListt.isEmpty
+          ? const Center(
+        child: Text(
+          "No notifications found",
+          style: TextStyle(color: Colors.grey),
+        ),
+      )
+          : ListView.separated(
+        itemCount: notificationListt.length,
         separatorBuilder: (context, index) => const Divider(
           height: 1,
           color: Colors.black12,
         ),
         itemBuilder: (context, index) {
+          final item = notificationListt[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            padding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                // Notification bell icon
-                const Icon(Icons.notifications_none, color: Colors.black, size: 26),
-
+                const Icon(Icons.notifications_none,
+                    color: Colors.black, size: 26),
                 const SizedBox(width: 12),
-
-                // Notification Texts
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title + Time
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Text(
-                              notificationList[index].toString(),
+                              "ORDER # "+notificationListt[index].id.toString(),
                               style: const TextStyle(
                                 fontFamily: FontConstants.gothamPro,
                                 fontSize: 14,
@@ -104,9 +115,9 @@ class _NotificationsPageState extends State<NotificationsScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Text(
-                            "04:38 am",
-                            style: TextStyle(
+                          Text(
+                            _formatTime(notificationListt[index].createdAt.toString()),
+                            style: const TextStyle(
                               fontFamily: FontConstants.gothamPro,
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -115,13 +126,10 @@ class _NotificationsPageState extends State<NotificationsScreen> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 6),
-
-                      // Subtitle
-                      const Text(
-                        "Order DRPY7MRT000053 Has been placed successfully",
-                        style: TextStyle(
+                      Text(
+                        notificationListt[index].data!.body.toString(),
+                        style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -138,6 +146,16 @@ class _NotificationsPageState extends State<NotificationsScreen> {
       ),
     );
   }
+
+  String _formatTime(String dateTimeStr) {
+    try {
+      final dateTime = DateTime.parse(dateTimeStr).toLocal(); // convert to local time
+      return DateFormat('hh:mm a').format(dateTime); // e.g., 10:13 AM
+    } catch (e) {
+      return ''; // return empty if parsing fails
+    }
+  }
+
 
   Future<void> getNotifications() async {
     setState(() {
@@ -177,6 +195,11 @@ class _NotificationsPageState extends State<NotificationsScreen> {
             margin: const EdgeInsets.all(10),
             duration: const Duration(seconds: 2),
           );
+
+          if(model.data!.notifications!.length > 0){
+            notificationListt.clear();
+            notificationListt.addAll(model.data!.notifications as Iterable<Notifications>);
+          }
         });
       } else if (model.status == 0) {
         Get.snackbar(

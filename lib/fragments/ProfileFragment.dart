@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/BecomePartnerScreen.dart';
+import 'package:drapyy/activities/ContactUsScreen.dart';
 import 'package:drapyy/activities/FilterScreen.dart';
 import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/activities/MyVoucherListingScreen.dart';
@@ -10,6 +11,7 @@ import 'package:drapyy/activities/NotificationsScreen.dart';
 import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
 import 'package:drapyy/activities/RedeemScreen.dart';
 import 'package:drapyy/activities/TermsAndConditionScreen.dart';
+import 'package:drapyy/fragments/CurrentOrdersFragment.dart';
 import 'package:drapyy/fragments/HomeFragment.dart';
 import 'package:drapyy/helper/FontsConstants.dart';
 import 'package:drapyy/helper/drawables.dart';
@@ -21,6 +23,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../activities/AddressListScreen.dart';
+import '../activities/FollowingListScreen.dart';
 import '../activities/MyOrdersScreen.dart';
 import '../helper/NavigationHelper.dart';
 import '../helper/ToastUtils.dart';
@@ -105,18 +108,35 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
               // Profile Image
               Padding(
-                padding: const EdgeInsets.only(left: 20.0,top: 30),
-                child: const CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.black12,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                    size: 50,
+                padding: const EdgeInsets.only(left: 20.0, top: 30),
+                child: Container(
+                  width: 80, // same as diameter (2 * radius)
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.black, // black circular border
+                      width: 1, // border thickness
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: Container(
+                      color: Colors.black12,
+                      child: Image.network(
+                        image.toString(),
+                        fit: BoxFit.cover, // same as "centerInside"
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: Colors.grey),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
 
               // Name
               Padding(
@@ -197,7 +217,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   InkWell(
                     onTap: (){
 
-                      Get.to(() =>  Myordersscreen());
+                      Get.to(() =>  CurrentOrdersFragment());
 
                     },
                     child: Column(
@@ -228,28 +248,32 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
                   // FOLLOWING
 
-                  Column(
-                    children: [
-
-                      Text(
-                        "FOLLOWING",
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 14,
-                          color: Colors.black,
+                  InkWell(
+                    onTap: (){
+                      Get.to(FollowingListScreen());
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          "FOLLOWING",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        following.toString(),
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      )
-                    ],
+                        SizedBox(height: 5),
+                        Text(
+                          following.toString(),
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -279,7 +303,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
               }),
               buildMenuRow("WALLET", () {
                 print("WALLET Clicked");
-                Get.to(() => FilterScreen());
 
               }),
               buildMenuRow("VOCHERS", () {
@@ -290,7 +313,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
               }),
               buildMenuRow("REDEEM POINTS", () {
                 print("REDEEM Clicked");
-                Get.to(() => const RedeemScreen());
+                 Get.to(() => RedeemScreen(points: points.toString()));
+
               }),
               buildMenuRow("PAYMENT METHODS", () {
                 print("PAYMENT Clicked");
@@ -304,6 +328,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
               }),
               buildMenuRow("HELPS FAQS", () {
                 print("HELPS FAQS Clicked");
+                Get.to(() => const ContactUsScreen());
               }),
 
               const SizedBox(height: 30),
@@ -632,14 +657,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
           PreferenceManager.clearAll();
           Get.offAll(MainActivity());
-          Get.snackbar(
-            "Logout",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
 
         });
       } else if (model.status == 0) {

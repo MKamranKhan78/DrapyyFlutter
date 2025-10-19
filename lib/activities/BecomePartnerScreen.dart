@@ -24,65 +24,50 @@ class BecomePartnerScreen extends StatefulWidget {
 class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
 
   String? selectedValueCity;
-
-  final List<String> cityList = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
-  String? selectedValueOption;
-
-  final List<String> listOption = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
-
-  String? selectedValueOption1;
-
-  final List<String> listOption1 = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
-
-  String? selectedSupplyChain;
-
-  final List<String> listSupplyChain = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
-
-  String? selectedProduceInventory;
-
-  final List<String> listInventory = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
+  List<Cities> cities_list = [];
 
   String? selectedValueStoreType;
+  List<StoreType> storeList = [];
 
-  final List<String> storeList = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
+  String? selectedCatalog;
+  List<String> list_catalog = [];
+
+  String? selectedHasWeb;
+  List<String> list_has_web = [];
+
+  String? selectedSupplyChainn;
+  List<String> listSupplyChainn = [];
+
+  String? selectedProduceInventoryy;
+  List<String> listInventoryy = [];
+
   bool isLoading = false;
+
+
+  final TextEditingController brandNameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController websiteController = TextEditingController();
+  final TextEditingController socialController = TextEditingController();
+
+
 
 
   @override
   void initState() {
     super.initState();
-    becomeSellerData();
+    getCheckout();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView( // 👈 scrollable if content grows
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
           child: Column(
             children: [
               // Header Section
@@ -127,19 +112,20 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: brandNameController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
                   keyboardType: TextInputType.text, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "ENTER YOUR BRAND NAME",
                     labelStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
                         color: grey
                     ),
                     hintStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
-                      color: grey
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
+                        color: grey
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -149,19 +135,20 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: nameController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
                   keyboardType: TextInputType.text, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "ENTER YOUR NAME",
                     labelStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
                         color: grey
                     ),
                     hintStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
-                      color: grey
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
+                        color: grey
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -171,19 +158,20 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: emailController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
-                  keyboardType: TextInputType.text, // ✅ email input
+                  keyboardType: TextInputType.emailAddress, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "ENTER YOUR EAMIL",
                     labelStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
                         color: grey
                     ),
                     hintStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
-                      color: grey
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
+                        color: grey
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -193,19 +181,20 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: mobileController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
-                  keyboardType: TextInputType.text, // ✅ email input
+                  keyboardType: TextInputType.phone, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "ENTER YOUR PHONE",
                     labelStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
                         color: grey
                     ),
                     hintStyle: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 12,
-                      color: grey
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 12,
+                        color: grey
                     ),
                     border: UnderlineInputBorder(),
                   ),
@@ -224,18 +213,18 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select City",
+                    "SELECT CITY",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: cityList.map((String value) {
+                  items: cities_list.map((Cities value) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: value.name.toString(),
                       child: Text(
-                        value,
+                        value.name.toString(),
                         style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -255,25 +244,25 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: DropdownButtonFormField<String>(
-                  value: selectedValueOption,
+                  value: selectedCatalog,
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select option",
+                    "SELECT CATALOG",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: listOption.map((String value) {
+                  items: list_catalog.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
-                        value,
+                        value.toString(),
                         style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -284,7 +273,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   }).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedValueOption = newValue;
+                      selectedCatalog = newValue;
                     });
                   },
                 ),
@@ -300,19 +289,19 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select Store Type",
+                    "SELECT STORE TYPE",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: storeList.map((String value) {
+                  items: storeList.map((StoreType value) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: value.name,
                       child: Text(
-                        value,
-                        style: const TextStyle(
+                        value.name.toString(),
+                        style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
                           color: Colors.black,
@@ -331,21 +320,21 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: DropdownButtonFormField<String>(
-                  value: selectedValueOption1,
+                  value: selectedHasWeb,
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select Option",
+                    "SELECT OPTION FOR WEBSITE",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: listOption1.map((String value) {
+                  items: list_has_web.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -360,7 +349,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   }).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedValueOption1 = newValue;
+                      selectedHasWeb = newValue;
                     });
                   },
                 ),
@@ -369,21 +358,21 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: DropdownButtonFormField<String>(
-                  value: selectedSupplyChain,
+                  value: selectedSupplyChainn,
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select Supply Chain",
+                    "SELECT SUPPLY CHAIN",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: listSupplyChain.map((String value) {
+                  items: listSupplyChainn.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -398,7 +387,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   }).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedSupplyChain = newValue;
+                      selectedSupplyChainn = newValue;
                     });
                   },
                 ),
@@ -407,21 +396,21 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: DropdownButtonFormField<String>(
-                  value: selectedProduceInventory,
+                  value: selectedProduceInventoryy,
                   decoration: const InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
                   ),
                   icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
                   hint: const Text(
-                    "Select PRODUCE INVENTORY",
+                    "SELECT PRODUCE INVENTORY",
                     style: TextStyle(
                       fontFamily: FontConstants.gothamPro,
                       fontSize: 16,
                       color: Colors.black54,
                     ),
                   ),
-                  items: listInventory.map((String value) {
+                  items: listInventoryy.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -436,7 +425,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                   }).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedProduceInventory = newValue;
+                      selectedProduceInventoryy = newValue;
                     });
                   },
                 ),
@@ -448,8 +437,9 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: websiteController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
-                  keyboardType: TextInputType.text, // ✅ email input
+                  keyboardType: TextInputType.webSearch, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "WEBSITE LINK",
                     labelStyle: TextStyle(
@@ -470,8 +460,9 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: TextField(
+                  controller: socialController,
                   style: const TextStyle(fontFamily: FontConstants.gothamPro),
-                  keyboardType: TextInputType.text, // ✅ email input
+                  keyboardType: TextInputType.webSearch, // ✅ email input
                   decoration: const InputDecoration(
                     labelText: "SOCIAL LINK",
                     labelStyle: TextStyle(
@@ -507,7 +498,89 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
 
-                         },
+                          if(selectedValueCity == null || selectedValueCity == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please select city",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else if(selectedValueStoreType == null || selectedValueStoreType == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please Store Type",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else if(selectedCatalog == null || selectedCatalog == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please Select Catalog",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else if(selectedHasWeb == null || selectedHasWeb == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please Select Website",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else if(selectedSupplyChainn == null || selectedSupplyChainn == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please Select Supply Chain",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else if(selectedProduceInventoryy == null || selectedProduceInventoryy == "null"){
+                            Get.snackbar(
+                              "Validation",
+                              "Please Select Inventory",
+                              backgroundColor: Colors.black,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              duration: const Duration(seconds: 2),
+                            );
+                          }else {
+
+                            print("selectedValueCity------>"+selectedValueCity.toString());
+                            print("selectedValueStoreType------>"+selectedValueStoreType.toString());
+                            print("selectedCatalog------>"+selectedCatalog.toString());
+                            print("selectedHasWeb------>"+selectedHasWeb.toString());
+                            print("selectedSupplyChainn------>"+selectedSupplyChainn.toString());
+                            print("selectedProduceInventoryy------>"+selectedProduceInventoryy.toString());
+
+                            if (_validateInputs()) {
+                              becomeSeller(
+                                  brandNameController.text.trim().toString(),
+                                  nameController.text.trim().toString(),
+                                  emailController.text.trim(),
+                                  mobileController.text.trim(),
+                                  selectedHasWeb.toString(),
+                                  selectedValueCity.toString(),
+                                  websiteController.text.trim().isEmpty ? "" : websiteController.text.trim(),
+                                  socialController.text.trim().toString(),
+                                  selectedProduceInventoryy.toString(),
+                                  selectedSupplyChainn.toString(),
+                                  selectedCatalog.toString(),
+                                  selectedValueStoreType.toString()
+                              );
+                            }
+
+
+                          }
+                        },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -532,21 +605,54 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               ),
 
               const SizedBox(height: 40),
-             ],
+            ],
           ),
         ),
       ),
     );
   }
 
+  bool _validateInputs() {
+    if (brandNameController.text.trim().isEmpty) {
+      _showError("Please enter brand name");
+      return false;
+    } else if (nameController.text.trim().isEmpty) {
+      _showError("Please enter your name");
+      return false;
+    } else if (emailController.text.trim().isEmpty ||
+        !RegExp(
+          r"^[\w\.-]+@[\w\.-]+\.\w+$",
+        ).hasMatch(emailController.text.trim())) {
+      _showError("Please enter a valid email address");
+      return false;
+    } else if (mobileController.text.trim().isEmpty) {
+      _showError("Please enter your mobile number");
+      return false;
+    }else if (socialController.text.trim().isEmpty) {
+      _showError("Please enter social url");
+      return false;
+    }
+    return true;
+  }
 
 
-  Future<void> becomeSellerData() async {
+  void _showError(String message) {
+    Get.snackbar(
+      "Validation Error",
+      message,
+      backgroundColor: Colors.black,
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  Future<void> getCheckout() async {
     setState(() {
       isLoading = true;
     });
 
-    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.become_seller_data);
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.checkout);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -568,17 +674,13 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       print("-------------------------------------FULL RESPONSE-------------------------------------");
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
-      final model = GetBecomeSellerResponse.fromJson(json.decode(response.body));
+      final model = GetCheckoutResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
+        print("CITY_ID---------->"+model.data!.address!.city.toString());
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+          cities_list.clear();
+          cities_list.addAll(model.data!.cities as Iterable<Cities>);
+          becomeSellerData();
         });
       } else if (model.status == 0) {
         Get.snackbar(
@@ -626,6 +728,122 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
     }
   }
 
+
+  Future<void> becomeSellerData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.become_seller_data);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.get(
+        url,
+        headers: headers,
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = GetBecomeSellerResponse.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+          Get.snackbar(
+            "Status ${model.status}",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+
+          if(model.data!.store_type!.length > 0){
+            storeList.clear();
+            storeList.addAll(model.data!.store_type as Iterable<StoreType>);
+          }
+
+          if(model.data!.catalogue_size!.length > 0){
+            list_catalog.clear();
+            list_catalog.addAll(model.data!.catalogue_size as Iterable<String>);
+          }
+
+          if(model.data!.has_website!.length > 0){
+            list_has_web.clear();
+            list_has_web.addAll(model.data!.has_website as Iterable<String>);
+          }
+
+          if(model.data!.supply_chain!.length > 0){
+            listSupplyChainn.clear();
+            listSupplyChainn.addAll(model.data!.supply_chain as Iterable<String>);
+          }
+
+          if(model.data!.production_inventory!.length > 0){
+            listInventoryy.clear();
+            listInventoryy.addAll(model.data!.production_inventory as Iterable<String>);
+          }
+
+
+
+
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+/*
 
   Future<void> becomeSeller(
       String brand_name,
@@ -691,17 +909,22 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
           "-------------------------------------------------------------------------------------");
 
       final model =
-      AddWishlistModell.fromJson(json.decode(response.body));
+      GeneralModel.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        setState(() {
+          isLoading = false;
+          Get.snackbar(
+            "Status ${model.status}",
+            model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+          Get.back();
+        });
+
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {
@@ -738,6 +961,161 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
           isLoading = false;
         });
       }
+    }
+  }
+
+*/
+
+
+  Future<void> becomeSeller(
+      String brand_name,
+      String name,
+      String email,
+      String phone_no,
+      String has_website,
+      String city,
+      String website_url,
+      String social_url,
+      String production_inventory,
+      String supply_chain,
+      String catalogue_size,
+      String business_operation,
+      ) async {
+    if (!mounted) return;
+    setState(() => isLoading = true);
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.becomeSeller);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    final requestBody = {
+      "brand_name": brand_name,
+      "name": name,
+      "email": email,
+      "phone_no": phone_no,
+      "has_website": has_website,
+      "city": city,
+      "website_url": website_url,
+      "social_url": social_url,
+      "production_inventory": production_inventory,
+      "supply_chain": supply_chain,
+      "catalogue_size": catalogue_size,
+      "business_operation": business_operation,
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      // Debug logs — inspect these in console
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      Toastutils.printFullText(response.body.toString());
+      print('RAW RESPONSE: ${response.body}');
+
+      // Parse response (ensure your model maps status/message fields)
+      final model = GeneralModel.fromJson(json.decode(response.body));
+      print('PARSED STATUS: ${model.status}, MESSAGE: ${model.message}');
+
+      // Stop loading first
+      if (mounted) setState(() => isLoading = false);
+
+      if (model.status == 1) {
+        // Show snack AFTER the current frame so overlays can attach cleanly
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Try Get.snackbar first
+          try {
+            Get.snackbar(
+              "Success",
+              model.message ?? "Successfully Registered",
+              backgroundColor: Colors.black,
+              colorText: Colors.white,
+              margin: const EdgeInsets.all(10),
+              duration: const Duration(seconds: 2),
+            );
+          } catch (e) {
+            // Fallback to ScaffoldMessenger if Get fails (e.g. not using GetMaterialApp)
+            final messenger = ScaffoldMessenger.maybeOf(context);
+            if (messenger != null) {
+              messenger.showSnackBar(SnackBar(
+                content: Text(model.message ?? "Successfully Registered"),
+                duration: const Duration(seconds: 2),
+              ));
+            } else {
+              print('Could not show snackbar: $e');
+            }
+          }
+
+          // Give the snackbar a short time to appear, then pop
+          Future.delayed(const Duration(milliseconds: 800), () {
+            // Prefer Get.back if Get is available, otherwise use Navigator
+            try {
+              if (Get.isOverlaysOpen != null) {
+                Get.back(); // safe if using GetMaterialApp
+              } else {
+                Navigator.of(context).maybePop();
+              }
+            } catch (e) {
+              // Final fallback
+              Navigator.of(context).maybePop();
+            }
+          });
+        });
+      } else {
+        // Non-success responses: show message immediately
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          try {
+            Get.snackbar(
+              "Status ${model.status}",
+              model.message ?? "Something went wrong",
+              backgroundColor: Colors.black,
+              colorText: Colors.white,
+              margin: const EdgeInsets.all(10),
+              duration: const Duration(seconds: 2),
+            );
+          } catch (e) {
+            final messenger = ScaffoldMessenger.maybeOf(context);
+            messenger?.showSnackBar(SnackBar(
+              content: Text(model.message ?? "Something went wrong"),
+              duration: const Duration(seconds: 2),
+            ));
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => isLoading = false);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        try {
+          Get.snackbar(
+            "Error",
+            e.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2),
+          );
+        } catch (_) {
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          messenger?.showSnackBar(SnackBar(
+            content: Text(e.toString()),
+            duration: const Duration(seconds: 2),
+          ));
+        }
+      });
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
   }
 

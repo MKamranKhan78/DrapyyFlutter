@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
+import '../activities/AllProductsScreen.dart';
 import '../helper/FontsConstants.dart';
 import '../helper/ToastUtils.dart';
 import '../helper/customHttpClient.dart';
@@ -229,7 +230,7 @@ class _MenuFragmentState extends State<MenuFragment> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Get.to(() => const ProductListingActivity());
+                        Get.to(() => AllProductsScreen(categoryId: product_name_list[index].id.toString(),));
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(

@@ -15,28 +15,27 @@ import '../models/Model.dart';
 import '../network/Network.dart';
 
 class RedeemScreen extends StatefulWidget {
-  const RedeemScreen({super.key});
+
+  final String points;
+
+  const RedeemScreen({super.key, required this.points});
+
 
   @override
   State<RedeemScreen> createState() => _RedeemScreenState();
 }
 
 class _RedeemScreenState extends State<RedeemScreen> {
-  final List<Map<String, String>> redeemOptions = [
-    {'points': '3000', 'currency': 'Rs.50'},
-    {'points': '5500', 'currency': 'Rs.100'},
-    {'points': '10000', 'currency': 'Rs.200'},
-    {'points': '15000', 'currency': 'Rs.300'}, // Added extra option for grid demo
-    {'points': '20000', 'currency': 'Rs.400'}, // Added extra option for grid demo
-    {'points': '25000', 'currency': 'Rs.500'}, // Added extra option for grid demo
-    {'points': '3000', 'currency': 'Rs.50'},
-    {'points': '5500', 'currency': 'Rs.100'},
-    {'points': '10000', 'currency': 'Rs.200'},
-    {'points': '15000', 'currency': 'Rs.300'}, // Added extra option for grid demo
-    {'points': '20000', 'currency': 'Rs.400'}, // Added extra option for grid demo
-    {'points': '25000', 'currency': 'Rs.500'}, // Added extra option for grid demo
-  ];
+
   bool isLoading = false;
+
+  List<AvailPointt> redeemList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAvailablePoints();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,16 +96,16 @@ class _RedeemScreenState extends State<RedeemScreen> {
                               'POINTS',
                               style: TextStyle(
                                 fontFamily: FontConstants.gothamPro,
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xFF666666),
                               ),
                             ),
                             Text(
-                              '345',
+                              widget.points.toString(),
                               style: TextStyle(
                                 fontFamily: FontConstants.gothamPro,
-                                fontSize: 26,
+                                fontSize: 30,
                                 fontWeight: FontWeight.w900,
                                 color: black_color,
                               ),
@@ -151,25 +150,49 @@ class _RedeemScreenState extends State<RedeemScreen> {
             ),
 
             // Redeem Options Grid
+
+            isLoading
+                ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            )
+                : redeemList.isEmpty
+                ? Center(
+              child: Column(
+                children: [
+                  Container(height: 50,),
+                  Text(
+                    "No Redeem list found",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
+              ),
+            )
+                :
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                 child: GridView.builder(
+                child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // 2 items per row
                     crossAxisSpacing: 15, // Horizontal spacing between items
                     mainAxisSpacing: 15, // Vertical spacing between items
-                   ),
-                  itemCount: redeemOptions.length,
+                  ),
+                  itemCount: redeemList.length,
                   itemBuilder: (context, index) {
+                    final item = redeemList[index];
                     return _buildRedeemOption(
-                      points: redeemOptions[index]['points']!,
-                      currency: redeemOptions[index]['currency']!,
+                      points: item.points.toString(),
+                      currency: item.amount.toString(),
+                      onTap: () {
+                        availPoints(item.points.toString(), item.amount.toString());
+                      },
                     );
                   },
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -179,100 +202,101 @@ class _RedeemScreenState extends State<RedeemScreen> {
   Widget _buildRedeemOption({
     required String points,
     required String currency,
+    VoidCallback? onTap, // 👈 Add this
   }) {
-    return Container(
-      height: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9),
-         border: Border.all(
-          color: Colors.black,
-          width: 1,
+    return InkWell(
+      onTap: onTap, // 👈 Handles item tap
+      child: Container(
+        height: 140,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF9F9F9),
+          border: Border.all(color: Colors.black, width: 1),
         ),
-      ),
-      child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Points Section
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                points,
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 20, // Slightly smaller for grid layout
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Points text
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  points,
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-               Text(
-                'PTS',
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 12, // Slightly smaller for grid layout
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF888888),
+                const SizedBox(width: 4),
+                Text(
+                  'PTS',
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF888888),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 4),
+              ],
+            ),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "For",
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 14, // Slightly smaller for grid layout
-                  fontWeight: FontWeight.w600,
-                  color: grey_color,
-                ),
-              ),
-              Container(width: 5,),
-              Text(
-                'Rs.50',
-                style: TextStyle(
-                  fontFamily: FontConstants.gothamPro,
-                  fontSize: 16, // Slightly smaller for grid layout
-                  fontWeight: FontWeight.w600,
-                  color: black_color,
-                ),
-              ),
-            ],
-          ),
+            const SizedBox(height: 4),
 
-          Container(height: 20,),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "For",
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: grey_color,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  "Rs.$currency",
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: black_color,
+                  ),
+                ),
+              ],
+            ),
 
-          // AVAIL Button
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black,
-               ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    _handleAvailTap(points, currency);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'AVAIL',
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 12, // Slightly smaller for grid layout
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
+            const SizedBox(height: 20),
+
+            // AVAIL button
+            SizedBox(
+              width: double.infinity,
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.black),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      availPoints(points, currency);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'AVAIL',
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -280,23 +304,13 @@ class _RedeemScreenState extends State<RedeemScreen> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  void _handleAvailTap(String points, String currency) {
-    // Handle the avail button tap
-    print('Avail tapped: $points points for $currency');
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Redeeming $points points for $currency'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
 
 
@@ -330,14 +344,10 @@ class _RedeemScreenState extends State<RedeemScreen> {
       final model = AvailPointsListResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-          Get.snackbar(
-            "Status ${model.status}",
-            model.message.toString(),
-            backgroundColor: Colors.black,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-            duration: const Duration(seconds: 2),
-          );
+           if(model.data!.availPoints!.length > 0){
+             redeemList.clear();
+             redeemList.addAll(model.data!.availPoints as Iterable<AvailPointt>);
+           }
         });
       } else if (model.status == 0) {
         Get.snackbar(

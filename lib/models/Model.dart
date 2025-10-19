@@ -696,7 +696,7 @@ class CategoryProductHomee {
     type = json['type']?.toString();
     isFeatured = _toInt(json['isFeatured']);
     price = _toInt(json['price']);
-    offerPrice = _toInt(json['offerPrice']);
+    offerPrice = _toInt(json['offer_price']);
     quantity = _toInt(json['quantity']);
     image = json['image']?.toString();
     sizeGuide = json['sizeGuide']?.toString();
@@ -738,7 +738,7 @@ class CategoryProductHomee {
     'type': type,
     'isFeatured': isFeatured,
     'price': price,
-    'offerPrice': offerPrice,
+    'offer_price': offerPrice,
     'quantity': quantity,
     'image': image,
     'sizeGuide': sizeGuide,
@@ -823,7 +823,7 @@ class ProductHomee {
     type = json['type']?.toString();
     isFeatured = _toInt(json['isFeatured']);
     price = _toInt(json['price']);
-    offerPrice = _toInt(json['offerPrice']);
+    offerPrice = _toInt(json['offer_price']);
     quantity = _toInt(json['quantity']);
     image = json['image']?.toString();
     sizeGuide = json['sizeGuide']?.toString();
@@ -865,7 +865,7 @@ class ProductHomee {
     'type': type,
     'isFeatured': isFeatured,
     'price': price,
-    'offerPrice': offerPrice,
+    'offer_price': offerPrice,
     'quantity': quantity,
     'image': image,
     'sizeGuide': sizeGuide,
@@ -916,7 +916,7 @@ class VariantHomee {
     size = _toInt(json['size']);
     color = _toInt(json['color']);
     price = _toInt(json['price']);
-    offerPrice = _toInt(json['offerPrice']);
+    offerPrice = _toInt(json['offer_price']);
     isAvailable = _toInt(json['isAvailable']);
     quantity = _toInt(json['quantity']);
   }
@@ -926,7 +926,7 @@ class VariantHomee {
     'size': size,
     'color': color,
     'price': price,
-    'offerPrice': offerPrice,
+    'offer_price': offerPrice,
     'isAvailable': isAvailable,
     'quantity': quantity,
   };
@@ -3093,6 +3093,36 @@ class AddWishlistModell {
   }
 }
 
+
+//-------------------General Model--------------------------------
+
+
+class GeneralModel {
+  int? status;
+  String? message;
+
+  GeneralModel({this.status, this.message});
+
+  factory GeneralModel.fromJson(Map<String, dynamic> json) {
+    return GeneralModel(
+      status: json['status'] is int
+          ? json['status']
+          : int.tryParse(json['status']?.toString() ?? ''),
+      message: json['message']?.toString(),
+
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+     };
+  }
+}
+
+
+
 //----------------------------Get Config -----------------------------------
 
 
@@ -5075,4 +5105,1136 @@ class ProductDataa {
     };
   }
 }
+
+//------------Get Followers----------------
+
+class FollowMyFollowersResponse {
+  int? status;
+  String? message;
+  FollowDataa? data;
+
+  FollowMyFollowersResponse({this.status, this.message, this.data});
+
+  FollowMyFollowersResponse.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    data = json['data'] != null ? FollowDataa.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['status'] = status;
+    data['message'] = message;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class FollowDataa {
+  List<FollowMyFollower>? myFollowes;
+
+  FollowDataa({this.myFollowes});
+
+  FollowDataa.fromJson(Map<String, dynamic> json) {
+    if (json['my_followes'] != null) {
+      myFollowes = <FollowMyFollower>[];
+      json['my_followes'].forEach((v) {
+        myFollowes!.add(FollowMyFollower.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (myFollowes != null) {
+      data['my_followes'] = myFollowes!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class FollowMyFollower {
+  int? id;
+  int? merchantId;
+  int? followerId;
+  String? createdAt;
+  String? updatedAt;
+  FollowMerchantt? merchant;
+
+  FollowMyFollower(
+      {this.id,
+        this.merchantId,
+        this.followerId,
+        this.createdAt,
+        this.updatedAt,
+        this.merchant});
+
+  FollowMyFollower.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    merchantId = json['merchant_id'];
+    followerId = json['follower_id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    merchant =
+    json['merchant'] != null ? FollowMerchantt.fromJson(json['merchant']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['merchant_id'] = merchantId;
+    data['follower_id'] = followerId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (merchant != null) {
+      data['merchant'] = merchant!.toJson();
+    }
+    return data;
+  }
+}
+
+class FollowMerchantt {
+  int? id;
+  String? name;
+  String? email;
+  String? username;
+  String? emailVerifiedAt;
+  int? type;
+  String? image;
+  String? phoneNo;
+  String? address;
+  String? city;
+  String? dateOfBirth;
+  String? postalCode;
+  int? merchantId;
+  String? cnic;
+  String? bankName;
+  String? bankAccountTitle;
+  String? bankAccountNumber;
+  String? facebookLink;
+  String? instagramLink;
+  String? tiktokLink;
+  int? newsletter;
+  int? official;
+  int? status;
+  int? isApproved;
+  String? guestToken;
+  int? isGuest;
+  String? createdAt;
+  String? updatedAt;
+  String? gUserId;
+  String? imagePath;
+  int? walletAmount;
+  FollowMerchantProfile? merchantProfile;
+  dynamic wallet;
+
+  FollowMerchantt(
+      {this.id,
+        this.name,
+        this.email,
+        this.username,
+        this.emailVerifiedAt,
+        this.type,
+        this.image,
+        this.phoneNo,
+        this.address,
+        this.city,
+        this.dateOfBirth,
+        this.postalCode,
+        this.merchantId,
+        this.cnic,
+        this.bankName,
+        this.bankAccountTitle,
+        this.bankAccountNumber,
+        this.facebookLink,
+        this.instagramLink,
+        this.tiktokLink,
+        this.newsletter,
+        this.official,
+        this.status,
+        this.isApproved,
+        this.guestToken,
+        this.isGuest,
+        this.createdAt,
+        this.updatedAt,
+        this.gUserId,
+        this.imagePath,
+        this.walletAmount,
+        this.merchantProfile,
+        this.wallet});
+
+  FollowMerchantt.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    username = json['username'];
+    emailVerifiedAt = json['email_verified_at'];
+    type = json['type'];
+    image = json['image'];
+    phoneNo = json['phone_no'];
+    address = json['address'];
+    city = json['city'];
+    dateOfBirth = json['date_of_birth'];
+    postalCode = json['postal_code'];
+    merchantId = json['merchant_id'];
+    cnic = json['cnic'];
+    bankName = json['bank_name'];
+    bankAccountTitle = json['bank_account_title'];
+    bankAccountNumber = json['bank_account_number'];
+    facebookLink = json['facebook_link'];
+    instagramLink = json['instagram_link'];
+    tiktokLink = json['tiktok_link'];
+    newsletter = json['newsletter'];
+    official = json['official'];
+    status = json['status'];
+    isApproved = json['is_approved'];
+    guestToken = json['guest_token'];
+    isGuest = json['is_guest'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    gUserId = json['g_user_id'];
+    imagePath = json['image_path'];
+    walletAmount = json['wallet_amount'];
+    merchantProfile = json['merchant_profile'] != null
+        ? FollowMerchantProfile.fromJson(json['merchant_profile'])
+        : null;
+    wallet = json['wallet'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['username'] = username;
+    data['email_verified_at'] = emailVerifiedAt;
+    data['type'] = type;
+    data['image'] = image;
+    data['phone_no'] = phoneNo;
+    data['address'] = address;
+    data['city'] = city;
+    data['date_of_birth'] = dateOfBirth;
+    data['postal_code'] = postalCode;
+    data['merchant_id'] = merchantId;
+    data['cnic'] = cnic;
+    data['bank_name'] = bankName;
+    data['bank_account_title'] = bankAccountTitle;
+    data['bank_account_number'] = bankAccountNumber;
+    data['facebook_link'] = facebookLink;
+    data['instagram_link'] = instagramLink;
+    data['tiktok_link'] = tiktokLink;
+    data['newsletter'] = newsletter;
+    data['official'] = official;
+    data['status'] = status;
+    data['is_approved'] = isApproved;
+    data['guest_token'] = guestToken;
+    data['is_guest'] = isGuest;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['g_user_id'] = gUserId;
+    data['image_path'] = imagePath;
+    data['wallet_amount'] = walletAmount;
+    if (merchantProfile != null) {
+      data['merchant_profile'] = merchantProfile!.toJson();
+    }
+    data['wallet'] = wallet;
+    return data;
+  }
+}
+
+class FollowMerchantProfile {
+  int? id;
+  int? userId;
+  String? brandName;
+  String? sellerType;
+  String? tax;
+  String? code;
+  String? city;
+  String? hasWebsite;
+  String? businessOperation;
+  String? catalogueSize;
+  String? supplyChain;
+  String? productionInventory;
+  String? rating;
+  String? feedback;
+  String? websiteUrl;
+  String? socialUrl;
+  int? commission;
+  String? warehouseAddress;
+  String? businessAddress;
+  int? isAffiliate;
+  String? affiliateCode;
+  int? affiliateRegistrationCommission;
+  int? registrationFees;
+  String? createdAt;
+  String? updatedAt;
+  int? tPickupId;
+  int? cityId;
+
+  FollowMerchantProfile(
+      {this.id,
+        this.userId,
+        this.brandName,
+        this.sellerType,
+        this.tax,
+        this.code,
+        this.city,
+        this.hasWebsite,
+        this.businessOperation,
+        this.catalogueSize,
+        this.supplyChain,
+        this.productionInventory,
+        this.rating,
+        this.feedback,
+        this.websiteUrl,
+        this.socialUrl,
+        this.commission,
+        this.warehouseAddress,
+        this.businessAddress,
+        this.isAffiliate,
+        this.affiliateCode,
+        this.affiliateRegistrationCommission,
+        this.registrationFees,
+        this.createdAt,
+        this.updatedAt,
+        this.tPickupId,
+        this.cityId});
+
+  FollowMerchantProfile.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    brandName = json['brand_name'];
+    sellerType = json['seller_type'];
+    tax = json['tax'];
+    code = json['code'];
+    city = json['city'];
+    hasWebsite = json['has_website'];
+    businessOperation = json['business_operation'];
+    catalogueSize = json['catalogue_size'];
+    supplyChain = json['supply_chain'];
+    productionInventory = json['production_inventory'];
+    rating = json['rating'];
+    feedback = json['feedback'];
+    websiteUrl = json['website_url'];
+    socialUrl = json['social_url'];
+    commission = json['commission'];
+    warehouseAddress = json['warehouse_address'];
+    businessAddress = json['business_address'];
+    isAffiliate = json['is_affiliate'];
+    affiliateCode = json['affiliate_code'];
+    affiliateRegistrationCommission = json['affiliate_registration_commission'];
+    registrationFees = json['registration_fees'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    tPickupId = json['t_pickup_id'];
+    cityId = json['city_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['id'] = id;
+    data['user_id'] = userId;
+    data['brand_name'] = brandName;
+    data['seller_type'] = sellerType;
+    data['tax'] = tax;
+    data['code'] = code;
+    data['city'] = city;
+    data['has_website'] = hasWebsite;
+    data['business_operation'] = businessOperation;
+    data['catalogue_size'] = catalogueSize;
+    data['supply_chain'] = supplyChain;
+    data['production_inventory'] = productionInventory;
+    data['rating'] = rating;
+    data['feedback'] = feedback;
+    data['website_url'] = websiteUrl;
+    data['social_url'] = socialUrl;
+    data['commission'] = commission;
+    data['warehouse_address'] = warehouseAddress;
+    data['business_address'] = businessAddress;
+    data['is_affiliate'] = isAffiliate;
+    data['affiliate_code'] = affiliateCode;
+    data['affiliate_registration_commission'] =
+        affiliateRegistrationCommission;
+    data['registration_fees'] = registrationFees;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['t_pickup_id'] = tPickupId;
+    data['city_id'] = cityId;
+    return data;
+  }
+}
+
+
+
+//------------------ProductByBrand for color and size------------------------------
+
+class PBBGetProductByBrand {
+  int? status;
+  String? message;
+  PBBData? data;
+
+  PBBGetProductByBrand({this.status, this.message, this.data});
+
+  factory PBBGetProductByBrand.fromJson(Map<String, dynamic> json) =>
+      PBBGetProductByBrand(
+        status: json["status"] is String
+            ? int.tryParse(json["status"])
+            : json["status"],
+        message: json["message"]?.toString(),
+        data: json["data"] != null ? PBBData.fromJson(json["data"]) : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class PBBData {
+  bool? hasMorePage;
+  int? currentPage;
+  int? followers;
+  String? brandName;
+  int? totalPages;
+  List<PBBSizes>? sizes;
+  List<PBBColors>? colors;
+
+  PBBData({
+    this.hasMorePage,
+    this.currentPage,
+    this.followers,
+    this.brandName,
+    this.totalPages,
+    this.sizes,
+    this.colors,
+  });
+
+  factory PBBData.fromJson(Map<String, dynamic> json) => PBBData(
+    hasMorePage: json["has_more_page"] == true ||
+        json["has_more_page"] == "true",
+    currentPage: json["current_page"] is String
+        ? int.tryParse(json["current_page"])
+        : json["current_page"],
+    followers: json["followers"] is String
+        ? int.tryParse(json["followers"])
+        : json["followers"],
+    brandName: json["brand_name"]?.toString(),
+    totalPages: json["totalPages"] is String
+        ? int.tryParse(json["totalPages"])
+        : json["totalPages"],
+    sizes: (json["sizes"] as List?)
+        ?.map((e) => PBBSizes.fromJson(e))
+        .toList(),
+    colors: (json["colors"] as List?)
+        ?.map((e) => PBBColors.fromJson(e))
+        .toList(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "has_more_page": hasMorePage,
+    "current_page": currentPage,
+    "followers": followers,
+    "brand_name": brandName,
+    "totalPages": totalPages,
+    "sizes": sizes?.map((e) => e.toJson()).toList(),
+    "colors": colors?.map((e) => e.toJson()).toList(),
+  };
+}
+
+class PBBSizes {
+  int? id;
+  String? size;
+  String? type;
+  String? updatedBy;
+  String? deletedBy;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+
+  PBBSizes({
+    this.id,
+    this.size,
+    this.type,
+    this.updatedBy,
+    this.deletedBy,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory PBBSizes.fromJson(Map<String, dynamic> json) => PBBSizes(
+    id: json["id"] is String ? int.tryParse(json["id"]) : json["id"],
+    size: json["size"]?.toString(),
+    type: json["type"]?.toString(),
+    updatedBy: json["updated_by"]?.toString(),
+    deletedBy: json["deleted_by"]?.toString(),
+    deletedAt: json["deleted_at"]?.toString(),
+    createdAt: json["created_at"]?.toString(),
+    updatedAt: json["updated_at"]?.toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "size": size,
+    "type": type,
+    "updated_by": updatedBy,
+    "deleted_by": deletedBy,
+    "deleted_at": deletedAt,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+  };
+}
+
+class PBBColors {
+  int? id;
+  String? color;
+  String? hexCode;
+  String? type;
+  int? updatedBy;
+  String? deletedBy;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+
+  PBBColors({
+    this.id,
+    this.color,
+    this.hexCode,
+    this.type,
+    this.updatedBy,
+    this.deletedBy,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory PBBColors.fromJson(Map<String, dynamic> json) => PBBColors(
+    id: json["id"] is String ? int.tryParse(json["id"]) : json["id"],
+    color: json["color"]?.toString(),
+    hexCode: json["hex_code"]?.toString(),
+    type: json["type"]?.toString(),
+    updatedBy: json["updated_by"] is String
+        ? int.tryParse(json["updated_by"])
+        : json["updated_by"],
+    deletedBy: json["deleted_by"]?.toString(),
+    deletedAt: json["deleted_at"]?.toString(),
+    createdAt: json["created_at"]?.toString(),
+    updatedAt: json["updated_at"]?.toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "color": color,
+    "hex_code": hexCode,
+    "type": type,
+    "updated_by": updatedBy,
+    "deleted_by": deletedBy,
+    "deleted_at": deletedAt,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+  };
+
+  @override
+  String toString() => color ?? "Unknown";
+}
+
+//----------------------Real Products by brand------------------------------------
+
+
+class BrandGetProductByBrandLast {
+  int? status;
+  String? message;
+  BrandDataLast? data;
+
+  BrandGetProductByBrandLast({this.status, this.message, this.data});
+
+  factory BrandGetProductByBrandLast.fromJson(Map<String, dynamic> json) {
+    return BrandGetProductByBrandLast(
+      status: int.tryParse(json['status']?.toString() ?? ''),
+      message: json['message']?.toString(),
+      data:
+      json['data'] != null ? BrandDataLast.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': data?.toJson(),
+  };
+}
+
+class BrandDataLast {
+  List<BrandProductsLast>? products;
+  bool? hasMorePage;
+  int? currentPage;
+  int? followers;
+  String? brandName;
+  int? totalPages;
+  BrandBrandLast? brand;
+  List<BrandCategoryLevel1Last>? categoryLevel1;
+  List<BrandSizesLast>? sizes;
+  List<BrandColorsLast>? colors;
+
+  BrandDataLast({
+    this.products,
+    this.hasMorePage,
+    this.currentPage,
+    this.followers,
+    this.brandName,
+    this.totalPages,
+    this.brand,
+    this.categoryLevel1,
+    this.sizes,
+    this.colors,
+  });
+
+  factory BrandDataLast.fromJson(Map<String, dynamic> json) {
+    return BrandDataLast(
+      products: (json['products'] as List?)
+          ?.map((e) => BrandProductsLast.fromJson(e))
+          .toList(),
+      hasMorePage: json['has_more_page'] == true ||
+          json['has_more_page']?.toString() == "1",
+      currentPage: int.tryParse(json['current_page']?.toString() ?? ''),
+      followers: int.tryParse(json['followers']?.toString() ?? ''),
+      brandName: json['brand_name']?.toString(),
+      totalPages: int.tryParse(json['totalPages']?.toString() ?? ''),
+      brand: json['brand'] != null
+          ? BrandBrandLast.fromJson(json['brand'])
+          : null,
+      categoryLevel1: (json['category_level1'] as List?)
+          ?.map((e) => BrandCategoryLevel1Last.fromJson(e))
+          .toList(),
+      sizes: (json['sizes'] as List?)
+          ?.map((e) => BrandSizesLast.fromJson(e))
+          .toList(),
+      colors: (json['colors'] as List?)
+          ?.map((e) => BrandColorsLast.fromJson(e))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'products': products?.map((e) => e.toJson()).toList(),
+    'has_more_page': hasMorePage,
+    'current_page': currentPage,
+    'followers': followers,
+    'brand_name': brandName,
+    'totalPages': totalPages,
+    'brand': brand?.toJson(),
+    'category_level1': categoryLevel1?.map((e) => e.toJson()).toList(),
+    'sizes': sizes?.map((e) => e.toJson()).toList(),
+    'colors': colors?.map((e) => e.toJson()).toList(),
+  };
+}
+
+class BrandProductsLast {
+  int? id;
+  String? barcode;
+  int? merchantId;
+  String? name;
+  String? slug;
+  String? brand;
+  String? productType;
+  int? isVariant;
+  String? keyWords;
+  String? description;
+  String? summary;
+  String? sizes;
+  String? colors;
+  String? type;
+  int? isFeatured;
+  double? price;
+  double? offerPrice;
+  double? quantity;
+  String? image;
+  String? sizeGuide;
+  double? weight;
+  List<String>? images;
+  String? brandId;
+  int? categoryLevel1Id;
+  int? categoryLevel2Id;
+  int? categoryLevel3Id;
+  String? categoryLevel4Id;
+  String? updatedBy;
+  String? deletedBy;
+  int? isApproved;
+  int? noOfOrders;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  BrandVariantLast? variant;
+  String? imageUrl;
+  List<String>? imagesUrl;
+  int? isWishlist;
+  String? brandName;
+
+  BrandProductsLast({
+    this.id,
+    this.barcode,
+    this.merchantId,
+    this.name,
+    this.slug,
+    this.brand,
+    this.productType,
+    this.isVariant,
+    this.keyWords,
+    this.description,
+    this.summary,
+    this.sizes,
+    this.colors,
+    this.type,
+    this.isFeatured,
+    this.price,
+    this.offerPrice,
+    this.quantity,
+    this.image,
+    this.sizeGuide,
+    this.weight,
+    this.images,
+    this.brandId,
+    this.categoryLevel1Id,
+    this.categoryLevel2Id,
+    this.categoryLevel3Id,
+    this.categoryLevel4Id,
+    this.updatedBy,
+    this.deletedBy,
+    this.isApproved,
+    this.noOfOrders,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.variant,
+    this.imageUrl,
+    this.imagesUrl,
+    this.isWishlist,
+    this.brandName,
+  });
+
+  factory BrandProductsLast.fromJson(Map<String, dynamic> json) {
+    return BrandProductsLast(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      barcode: json['barcode']?.toString(),
+      merchantId: int.tryParse(json['merchant_id']?.toString() ?? ''),
+      name: json['name']?.toString(),
+      slug: json['slug']?.toString(),
+      brand: json['brand']?.toString(),
+      productType: json['product_type']?.toString(),
+      isVariant: int.tryParse(json['is_variant']?.toString() ?? ''),
+      keyWords: json['key_words']?.toString(),
+      description: json['description']?.toString(),
+      summary: json['summary']?.toString(),
+      sizes: json['sizes']?.toString(),
+      colors: json['colors']?.toString(),
+      type: json['type']?.toString(),
+      isFeatured: int.tryParse(json['is_featured']?.toString() ?? ''),
+      price: double.tryParse(json['price']?.toString() ?? ''),
+      offerPrice: double.tryParse(json['offer_price']?.toString() ?? ''),
+      quantity: double.tryParse(json['quantity']?.toString() ?? ''),
+      image: json['image']?.toString(),
+      sizeGuide: json['size_guide']?.toString(),
+      weight: double.tryParse(json['weight']?.toString() ?? ''),
+      images: (json['images'] as List?)?.map((e) => e.toString()).toList(),
+      brandId: json['brand_id']?.toString(),
+      categoryLevel1Id:
+      int.tryParse(json['category_level1_id']?.toString() ?? ''),
+      categoryLevel2Id:
+      int.tryParse(json['category_level2_id']?.toString() ?? ''),
+      categoryLevel3Id:
+      int.tryParse(json['category_level3_id']?.toString() ?? ''),
+      categoryLevel4Id: json['category_level4_id']?.toString(),
+      updatedBy: json['updated_by']?.toString(),
+      deletedBy: json['deleted_by']?.toString(),
+      isApproved: int.tryParse(json['is_approved']?.toString() ?? ''),
+      noOfOrders: int.tryParse(json['no_of_orders']?.toString() ?? ''),
+      deletedAt: json['deleted_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      variant: json['variant'] != null
+          ? BrandVariantLast.fromJson(json['variant'])
+          : null,
+      imageUrl: json['image_url']?.toString(),
+      imagesUrl:
+      (json['images_url'] as List?)?.map((e) => e.toString()).toList(),
+      isWishlist: int.tryParse(json['is_wishlist']?.toString() ?? ''),
+      brandName: json['brand_name']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'barcode': barcode,
+    'merchant_id': merchantId,
+    'name': name,
+    'slug': slug,
+    'brand': brand,
+    'product_type': productType,
+    'is_variant': isVariant,
+    'key_words': keyWords,
+    'description': description,
+    'summary': summary,
+    'sizes': sizes,
+    'colors': colors,
+    'type': type,
+    'is_featured': isFeatured,
+    'price': price,
+    'offer_price': offerPrice,
+    'quantity': quantity,
+    'image': image,
+    'size_guide': sizeGuide,
+    'weight': weight,
+    'images': images,
+    'brand_id': brandId,
+    'category_level1_id': categoryLevel1Id,
+    'category_level2_id': categoryLevel2Id,
+    'category_level3_id': categoryLevel3Id,
+    'category_level4_id': categoryLevel4Id,
+    'updated_by': updatedBy,
+    'deleted_by': deletedBy,
+    'is_approved': isApproved,
+    'no_of_orders': noOfOrders,
+    'deleted_at': deletedAt,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'variant': variant?.toJson(),
+    'image_url': imageUrl,
+    'images_url': imagesUrl,
+    'is_wishlist': isWishlist,
+    'brand_name': brandName,
+  };
+}
+
+class BrandVariantLast {
+  int? id;
+  int? size;
+  int? color;
+  double? price;
+  double? offerPrice;
+  int? isAvailable;
+  int? quantity;
+
+  BrandVariantLast({
+    this.id,
+    this.size,
+    this.color,
+    this.price,
+    this.offerPrice,
+    this.isAvailable,
+    this.quantity,
+  });
+
+  factory BrandVariantLast.fromJson(Map<String, dynamic> json) {
+    return BrandVariantLast(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      size: int.tryParse(json['size']?.toString() ?? ''),
+      color: int.tryParse(json['color']?.toString() ?? ''),
+      price: double.tryParse(json['price']?.toString() ?? ''),
+      offerPrice: double.tryParse(json['offer_price']?.toString() ?? ''),
+      isAvailable: int.tryParse(json['is_available']?.toString() ?? ''),
+      quantity: int.tryParse(json['quantity']?.toString() ?? ''),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'size': size,
+    'color': color,
+    'price': price,
+    'offer_price': offerPrice,
+    'is_available': isAvailable,
+    'quantity': quantity,
+  };
+}
+
+class BrandBrandLast {
+  int? id;
+  String? name;
+  String? email;
+  String? username;
+  String? emailVerifiedAt;
+  int? type;
+  String? image;
+  String? phoneNo;
+  String? address;
+  String? city;
+  String? dateOfBirth;
+  String? postalCode;
+  int? merchantId;
+  String? cnic;
+  String? bankName;
+  String? bankAccountTitle;
+  String? bankAccountNumber;
+  String? facebookLink;
+  String? instagramLink;
+  String? tiktokLink;
+  int? newsletter;
+  int? official;
+  int? status;
+  int? isApproved;
+  String? guestToken;
+  int? isGuest;
+  String? createdAt;
+  String? updatedAt;
+  String? gUserId;
+  String? imagePath;
+  double? walletAmount;
+  String? wallet;
+
+  BrandBrandLast({
+    this.id,
+    this.name,
+    this.email,
+    this.username,
+    this.emailVerifiedAt,
+    this.type,
+    this.image,
+    this.phoneNo,
+    this.address,
+    this.city,
+    this.dateOfBirth,
+    this.postalCode,
+    this.merchantId,
+    this.cnic,
+    this.bankName,
+    this.bankAccountTitle,
+    this.bankAccountNumber,
+    this.facebookLink,
+    this.instagramLink,
+    this.tiktokLink,
+    this.newsletter,
+    this.official,
+    this.status,
+    this.isApproved,
+    this.guestToken,
+    this.isGuest,
+    this.createdAt,
+    this.updatedAt,
+    this.gUserId,
+    this.imagePath,
+    this.walletAmount,
+    this.wallet,
+  });
+
+  factory BrandBrandLast.fromJson(Map<String, dynamic> json) {
+    return BrandBrandLast(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      name: json['name']?.toString(),
+      email: json['email']?.toString(),
+      username: json['username']?.toString(),
+      emailVerifiedAt: json['email_verified_at']?.toString(),
+      type: int.tryParse(json['type']?.toString() ?? ''),
+      image: json['image']?.toString(),
+      phoneNo: json['phone_no']?.toString(),
+      address: json['address']?.toString(),
+      city: json['city']?.toString(),
+      dateOfBirth: json['date_of_birth']?.toString(),
+      postalCode: json['postal_code']?.toString(),
+      merchantId: int.tryParse(json['merchant_id']?.toString() ?? ''),
+      cnic: json['cnic']?.toString(),
+      bankName: json['bank_name']?.toString(),
+      bankAccountTitle: json['bank_account_title']?.toString(),
+      bankAccountNumber: json['bank_account_number']?.toString(),
+      facebookLink: json['facebook_link']?.toString(),
+      instagramLink: json['instagram_link']?.toString(),
+      tiktokLink: json['tiktok_link']?.toString(),
+      newsletter: int.tryParse(json['newsletter']?.toString() ?? ''),
+      official: int.tryParse(json['official']?.toString() ?? ''),
+      status: int.tryParse(json['status']?.toString() ?? ''),
+      isApproved: int.tryParse(json['is_approved']?.toString() ?? ''),
+      guestToken: json['guest_token']?.toString(),
+      isGuest: int.tryParse(json['is_guest']?.toString() ?? ''),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      gUserId: json['g_user_id']?.toString(),
+      imagePath: json['image_path']?.toString(),
+      walletAmount: double.tryParse(json['wallet_amount']?.toString() ?? ''),
+      wallet: json['wallet']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'email': email,
+    'username': username,
+    'email_verified_at': emailVerifiedAt,
+    'type': type,
+    'image': image,
+    'phone_no': phoneNo,
+    'address': address,
+    'city': city,
+    'date_of_birth': dateOfBirth,
+    'postal_code': postalCode,
+    'merchant_id': merchantId,
+    'cnic': cnic,
+    'bank_name': bankName,
+    'bank_account_title': bankAccountTitle,
+    'bank_account_number': bankAccountNumber,
+    'facebook_link': facebookLink,
+    'instagram_link': instagramLink,
+    'tiktok_link': tiktokLink,
+    'newsletter': newsletter,
+    'official': official,
+    'status': status,
+    'is_approved': isApproved,
+    'guest_token': guestToken,
+    'is_guest': isGuest,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'g_user_id': gUserId,
+    'image_path': imagePath,
+    'wallet_amount': walletAmount,
+    'wallet': wallet,
+  };
+}
+
+class BrandCategoryLevel1Last {
+  int? id;
+  String? name;
+  String? slug;
+  String? image;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+  String? imagePath;
+
+  BrandCategoryLevel1Last({
+    this.id,
+    this.name,
+    this.slug,
+    this.image,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.imagePath,
+  });
+
+  factory BrandCategoryLevel1Last.fromJson(Map<String, dynamic> json) {
+    return BrandCategoryLevel1Last(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      name: json['name']?.toString(),
+      slug: json['slug']?.toString(),
+      image: json['image']?.toString(),
+      status: int.tryParse(json['status']?.toString() ?? ''),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      imagePath: json['image_path']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'slug': slug,
+    'image': image,
+    'status': status,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'image_path': imagePath,
+  };
+}
+
+class BrandSizesLast {
+  int? id;
+  String? size;
+  String? type;
+  String? updatedBy;
+  String? deletedBy;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+
+  BrandSizesLast({
+    this.id,
+    this.size,
+    this.type,
+    this.updatedBy,
+    this.deletedBy,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory BrandSizesLast.fromJson(Map<String, dynamic> json) {
+    return BrandSizesLast(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      size: json['size']?.toString(),
+      type: json['type']?.toString(),
+      updatedBy: json['updated_by']?.toString(),
+      deletedBy: json['deleted_by']?.toString(),
+      deletedAt: json['deleted_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'size': size,
+    'type': type,
+    'updated_by': updatedBy,
+    'deleted_by': deletedBy,
+    'deleted_at': deletedAt,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+  };
+}
+
+class BrandColorsLast {
+  int? id;
+  String? color;
+  String? hexCode;
+  String? type;
+  int? updatedBy;
+  String? deletedBy;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+
+  BrandColorsLast({
+    this.id,
+    this.color,
+    this.hexCode,
+    this.type,
+    this.updatedBy,
+    this.deletedBy,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory BrandColorsLast.fromJson(Map<String, dynamic> json) {
+    return BrandColorsLast(
+      id: int.tryParse(json['id']?.toString() ?? ''),
+      color: json['color']?.toString(),
+      hexCode: json['hex_code']?.toString(),
+      type: json['type']?.toString(),
+      updatedBy: int.tryParse(json['updated_by']?.toString() ?? ''),
+      deletedBy: json['deleted_by']?.toString(),
+      deletedAt: json['deleted_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'color': color,
+    'hex_code': hexCode,
+    'type': type,
+    'updated_by': updatedBy,
+    'deleted_by': deletedBy,
+    'deleted_at': deletedAt,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+  };
+
+  @override
+  String toString() => color ?? "Unknown";
+}
+
 

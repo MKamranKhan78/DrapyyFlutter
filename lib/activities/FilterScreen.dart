@@ -1,8 +1,18 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 
 import '../helper/FontsConstants.dart';
+import '../helper/ToastUtils.dart';
+import '../helper/customHttpClient.dart';
+import '../helper/preference_manager.dart';
+import '../models/Model.dart';
+import '../network/Network.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -13,16 +23,24 @@ class FilterScreen extends StatefulWidget {
 
 
 class _FiltersScreenState extends State<FilterScreen> {
-  // Size lists
-  final List<String> clothingSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-  final List<String> shoeSizes = ["14", "14.5", "15"];
+  bool isLoading = false;
 
-  String? selectedSize;
-  String selectedColor = "Lime";
+  List<PBBSizes> size_list = [];
+  List<int> selectedIndexes = []; // ✅ Multiple selections, empty by default
+
+  List<PBBColors> color_list = [];
+  PBBColors? selectedColor; // selected color object
+  int? selectedColorId; // store selected color id
 
   // Price Range
-  RangeValues _priceRange = const RangeValues(0, 100);
+  RangeValues _priceRange = const RangeValues(0, 25000);
 
+
+  @override
+  void initState() {
+    super.initState();
+    getSizeAndColor();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +65,11 @@ class _FiltersScreenState extends State<FilterScreen> {
         ),
       ),
 
-      body: Padding(
+      body: isLoading
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,126 +95,62 @@ class _FiltersScreenState extends State<FilterScreen> {
             ),
 
             const SizedBox(height: 10),
+            _buildNavigationTabs(),
 
-            // Sizes List (Clothing)
-            SizedBox(
-              height: 36, // slightly smaller
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: clothingSizes.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final size = clothingSizes[index];
-                  final isSelected = selectedSize == size;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedSize = size;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.black : Colors.white,
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Text(
-                        size,
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Shoe Sizes List
-            SizedBox(
-              height: 36,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: shoeSizes.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final size = shoeSizes[index];
-                  final isSelected = selectedSize == size;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedSize = size;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.black : Colors.white,
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: Text(
-                        size,
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Color Row (Text + Dropdown)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Color",
-                  style: TextStyle(
-                    fontFamily: FontConstants.gothamPro,
-                    fontSize: 14, // reduced
-                    fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Color",
+                    style: TextStyle(
+                      fontFamily: FontConstants.gothamPro,
+                      fontSize: 16, // reduced
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                DropdownButton<String>(
-                  value: selectedColor,
-                  icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-                  underline: const SizedBox(), // hide underline
-                  items: <String>["Lime", "Red", "Blue", "Black"].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 13, // reduced
-                          color: Colors.black,
-                        ),
+                  DropdownButton<PBBColors>(
+                    value: selectedColor,
+                    icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                    underline: const SizedBox(), // hide underline
+                    hint: const Text(
+                      "Select Color",
+                      style: TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 13,
+                        color: Colors.black54,
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      selectedColor = val!;
-                    });
-                  },
-                ),
-              ],
+                    ),
+                    items: color_list.map((PBBColors value) {
+                      return DropdownMenuItem<PBBColors>(
+                        value: value,
+                        child: Text(
+                          value.color ?? "Unknown",
+                          style: const TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 13,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        selectedColor = val;
+                        selectedColorId = val?.id; // ✅ get color id here
+                      });
+                      debugPrint("Selected Color ID: ${selectedColorId}");
+
+                    },
+                  ),
+                ],
+              ),
             ),
+
 
             const SizedBox(height: 20),
 
@@ -208,7 +166,7 @@ class _FiltersScreenState extends State<FilterScreen> {
             RangeSlider(
               values: _priceRange,
               min: 0,
-              max: 500,
+              max: 25000,
               activeColor: Colors.black,
               inactiveColor: Colors.grey[300],
               onChanged: (RangeValues values) {
@@ -234,7 +192,20 @@ class _FiltersScreenState extends State<FilterScreen> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+
+              // Prepare data to send back
+              Map<String, dynamic> dataToSend = {
+                'colors': selectedColorId.toString(),
+                'sizes': selectedIndexes,
+                'min_price': _priceRange.start.round().toString(), // Round and convert to string
+                'max_price': _priceRange.end.round().toString(),   // Round and convert to string
+              };
+
+              // Send data back and close screen
+              Get.back(result: dataToSend);
+
+            },
             child: const Text(
               "APPLY",
               style: TextStyle(
@@ -249,4 +220,152 @@ class _FiltersScreenState extends State<FilterScreen> {
       ),
     );
   }
+
+  Widget _buildNavigationTabs() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: SizedBox(
+        height: 30,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: size_list.length,
+          itemBuilder: (context, index) {
+            final isSelected = selectedIndexes.contains(index);
+            final item = size_list[index];
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    selectedIndexes.remove(index);
+                  } else {
+                    selectedIndexes.add(index);
+                  }
+                   print("SELECTED SIZES ---> ${selectedIndexes.map((i) => size_list[i].id).toList()}");
+                });
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.black : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.5,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    item.size.toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isSelected ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> getSizeAndColor() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.productByBroand);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "brand": "khazanatul-malabis",
+      "per_page": "2",
+      "current_page": "1",
+      "category_level1_id": "",
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Request Body: ${jsonEncode(requestBody)}');
+      print('Response Code: ${response.statusCode}');
+      print(
+          "-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print(
+          "-------------------------------------------------------------------------------------");
+
+      final model =
+      PBBGetProductByBrand.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        if(model.data!.sizes!.length > 0){
+          size_list.clear();
+          size_list.addAll(model.data!.sizes as Iterable<PBBSizes>);
+        }
+
+        if(model.data!.colors!.length > 0){
+          color_list.clear();
+          color_list.addAll(model.data!.colors as Iterable<PBBColors>);
+        }
+
+
+      } else if (model.status == 0 ||
+          model.status == 401 ||
+          model.status != null) {
+        Get.snackbar(
+          "Status ${model.status}",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Unexpected response from server.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
 }
