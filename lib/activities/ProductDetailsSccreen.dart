@@ -507,11 +507,11 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(height: 40),
+                          Container(height: 20),
                           Image.asset(
-                            Drawables.img_drappy_white,
-                            width: 200,
-                            height: 100,
+                            Drawables.new_drappy_image,
+                            width: 250,
+                            height: 250,
                           ),
 
                           Container(height: 30),
@@ -554,10 +554,12 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  print("PINTEREST clicked");
+                                  print("YOUTUBE clicked");
+
+                                  _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_YOUTUBE).toString());
                                 },
                                 child: Text(
-                                  "PINTEREST",
+                                  "YOUTUBE",
                                   style: TextStyle(
                                     fontFamily: FontConstants.gothamPro,
                                     fontSize: 16,
@@ -569,27 +571,11 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                             ],
                           ),
 
-                          Container(height: 30),
-                          InkWell(
-                            onTap: () {
-                              print("YOUTUBE clicked");
 
-                              _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_YOUTUBE).toString());
-                            },
-                            child: Text(
-                              "YOUTUBE",
-                              style: TextStyle(
-                                fontFamily: FontConstants.gothamPro,
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
 
-                          Container(height: 30),
+                          Container(height: 40),
                           Container(width: 300, height: 1, color: Colors.grey),
-                          Container(height: 30),
+                          Container(height: 40),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

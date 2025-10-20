@@ -12,6 +12,7 @@ class Drawables {
   static const String logo =  'assets/images/logo_screen.png';
   static const String arrow_farward =  'assets/images/arrow_farward.png';
   static const String img_drappy_white =  'assets/images/img_drappy_white.png';
+  static const String new_drappy_image =  'assets/images/new_drappy_image.png';
   static const String demo_product =  'assets/images/demo_product.png';
   static const String img_menu =  'assets/images/img_menu.png';
   static const String img_profile =  'assets/images/img_profile.png';
