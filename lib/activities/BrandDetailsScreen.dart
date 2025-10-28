@@ -36,6 +36,8 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
   bool isLoading = false;
   bool isLoadingMore = false;
 
+  String? is_followed = null;
+
   final List<BrandProductsLast> _products = [];
   final List<BrandCategoryLevel1Last> category = [];
   int selectedIndex = -1;
@@ -210,7 +212,15 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
-                          syncFollowers(widget.brand_Id.toString());
+
+                          final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                          if (skipValue == "1") {
+                            Get.to(() => const LoginScreen());
+                          } else {
+                            syncFollowers(widget.brand_Id.toString());
+                          }
+
+
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -219,14 +229,14 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              'FOLLOW',
-                              style: TextStyle(
-                                fontFamily: FontConstants.gothamPro,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
+                             // "Follow",
+                              (is_followed != null && is_followed != "1") ? "Unfollow" : "Follow",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),
-                            ),
+                            )
                           ),
                         ),
                       ),
@@ -487,7 +497,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         getProductByBrand("1", categor_IDD.toString());
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -496,7 +506,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Wishlist",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -506,7 +516,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -559,16 +569,19 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
 
       if (model.status == 1) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Follow",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        _resetPagination();
+        getProductByBrand("1", "");
+
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Follow",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -577,7 +590,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Follow",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -587,7 +600,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Follow",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -658,6 +671,11 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         setState(() {
           followers = model.data!.followers.toString();
           _currentPage = model.data!.currentPage ?? 1;
+
+          if(model.data!.is_followed != null && model.data!.is_followed!.isNotEmpty){
+            is_followed = model.data!.is_followed.toString();
+          }
+
           _totalPages = model.data!.totalPages ?? 1;
           _hasMorePages = model.data!.hasMorePage ?? false;
 
@@ -677,7 +695,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         });
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Brand",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -686,7 +704,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Brand",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -696,7 +714,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Brand",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

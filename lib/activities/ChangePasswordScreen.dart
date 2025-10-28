@@ -250,7 +250,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         setState(() {
           Get.back(result: "Reload Address");
           Get.snackbar(
-            "Status ${model.status}",
+            "Password",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -263,7 +263,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -272,7 +272,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -281,7 +281,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -291,7 +291,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Password",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

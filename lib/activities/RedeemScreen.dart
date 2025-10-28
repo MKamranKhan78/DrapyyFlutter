@@ -351,7 +351,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Redeem Points",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -360,7 +360,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Redeem Points",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -369,7 +369,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Redeem Points",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -379,7 +379,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Redeem Points",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -444,7 +444,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
 
       if (model.status == 1) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Redeem Points",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -455,7 +455,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Redeem Points",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -464,7 +464,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Redeem Points",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -474,7 +474,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Redeem Points",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

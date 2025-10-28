@@ -266,7 +266,7 @@ class _OrderScreenState extends State<CurrentOrdersFragment> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Orders",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -275,7 +275,7 @@ class _OrderScreenState extends State<CurrentOrdersFragment> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Orders",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -284,7 +284,7 @@ class _OrderScreenState extends State<CurrentOrdersFragment> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Orders",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -294,7 +294,7 @@ class _OrderScreenState extends State<CurrentOrdersFragment> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Orders",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

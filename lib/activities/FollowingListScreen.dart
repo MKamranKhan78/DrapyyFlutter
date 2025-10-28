@@ -221,7 +221,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Follow",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -230,7 +230,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Follow",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -240,7 +240,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Follow",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

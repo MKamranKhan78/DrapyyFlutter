@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:drapyy/helper/SizeConstants.dart';
 import 'package:drapyy/helper/colors.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,7 +69,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   const SizedBox(height: 30),
 
                   Text(
-                    "Add Address",
+                    "ADD ADDRESS",
                     style: TextStyle(
                       fontFamily: "Gotham Pro",
                       fontSize: 18,
@@ -159,42 +160,66 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                    child: DropdownButtonFormField<String>(
-                      value: selectedValueCity_id,
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
+                    child: DropdownSearch<Cities>(
+                      items: city_List, // your list of city objects
+                      itemAsString: (Cities city) => city.name ?? "",
+                      selectedItem: city_List.firstWhere(
+                            (c) => c.id.toString() == selectedValueCity_id,
+                        orElse: () => Cities(id: null, name: "Select City"),
                       ),
-                      icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
-                      hint: const Text(
-                        "Select City",
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 16,
-                          color: Colors.black54,
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            hintText: "Search city...",
+                            prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
-                      ),
-                      items: city_List.map((Cities value) {
-                        return DropdownMenuItem<String>(
-                          value: value.id.toString(),
-                          child: Text(
-                            value.name.toString(),
+                        itemBuilder: (context, item, isSelected) => ListTile(
+                          title: Text(
+                            item.name ?? "",
                             style: const TextStyle(
                               fontFamily: FontConstants.gothamPro,
                               fontSize: 14,
                               color: Colors.black,
                             ),
                           ),
+                        ),
+                      ),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                          hintText: "Select City",
+                          hintStyle: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                          border: UnderlineInputBorder(),
+                        ),
+                      ),
+                      dropdownBuilder: (context, selectedItem) {
+                        return Text(
+                          selectedItem?.name ?? "Select City",
+                          style: const TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (newValue) {
+                      },
+                      onChanged: (Cities? newCity) {
                         setState(() {
-                          selectedValueCity_id = newValue;
-                         });
+                          selectedValueCity_id = newCity?.id?.toString();
+                        });
                       },
                     ),
                   ),
-
                   const SizedBox(height: 50),
 
 
@@ -357,7 +382,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       if (model.status == 1) {
         Get.back(result: "Reload Address");
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -368,7 +393,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -377,7 +402,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Address",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -387,7 +412,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Address",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -542,7 +567,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -551,7 +576,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -560,7 +585,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -570,7 +595,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Address",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

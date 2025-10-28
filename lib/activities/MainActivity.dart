@@ -91,7 +91,7 @@ class _BottomNavScreenState extends State<MainActivity> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -100,7 +100,7 @@ class _BottomNavScreenState extends State<MainActivity> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -109,7 +109,7 @@ class _BottomNavScreenState extends State<MainActivity> {
         );
       } else {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -119,7 +119,7 @@ class _BottomNavScreenState extends State<MainActivity> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Guest",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -271,7 +271,7 @@ class _BottomNavScreenState extends State<MainActivity> {
 
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Config",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -280,7 +280,7 @@ class _BottomNavScreenState extends State<MainActivity> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Config",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -289,7 +289,7 @@ class _BottomNavScreenState extends State<MainActivity> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Config",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -299,7 +299,7 @@ class _BottomNavScreenState extends State<MainActivity> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Config",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

@@ -113,7 +113,7 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Privacy Policy",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -122,7 +122,7 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Privacy Policy",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -131,7 +131,7 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Privacy Policy",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -141,7 +141,7 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Privacy Policy",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

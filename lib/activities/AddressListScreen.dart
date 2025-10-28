@@ -255,7 +255,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -264,7 +264,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Address",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -274,7 +274,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Address",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -326,7 +326,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -335,7 +335,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -344,7 +344,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Address",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -354,7 +354,7 @@ class _AddressListScreenState extends State<AddressListScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Address",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

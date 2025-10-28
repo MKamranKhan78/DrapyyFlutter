@@ -765,131 +765,6 @@ class CategoryProductHomee {
 }
 
 
-class ProductHomee {
-  int? id;
-  String? barcode;
-  int? merchantId;
-  String? name;
-  String? slug;
-  String? brand;
-  String? productType;
-  int? isVariant;
-  String? keyWords;
-  String? description;
-  String? summary;
-  String? sizes;
-  String? colors;
-  String? type;
-  int? isFeatured;
-  int? price;
-  int? offerPrice;
-  int? quantity;
-  String? image;
-  String? sizeGuide;
-  double? weight;
-  List<String>? images;
-  int? brandId;
-  int? categoryLevel1Id;
-  int? categoryLevel2Id;
-  int? categoryLevel3Id;
-  int? categoryLevel4Id;
-  String? updatedBy;
-  String? deletedBy;
-  String? brandName;
-  int? isApproved;
-  int? isWishlist;
-  int? noOfOrders;
-  String? deletedAt;
-  String? createdAt;
-  String? updatedAt;
-  VariantHomee? variant;
-  String? imageUrl;
-  List<String>? imagesUrl;
-
-  ProductHomee.fromJson(Map<String, dynamic> json) {
-    id = _toInt(json['id']);
-    barcode = json['barcode']?.toString();
-    merchantId = _toInt(json['merchantId']);
-    name = json['name']?.toString();
-    slug = json['slug']?.toString();
-    brand = json['brand']?.toString();
-    productType = json['productType']?.toString();
-    isVariant = _toInt(json['isVariant']);
-    keyWords = json['keyWords']?.toString();
-    description = json['description']?.toString();
-    summary = json['summary']?.toString();
-    sizes = json['sizes']?.toString();
-    colors = json['colors']?.toString();
-    type = json['type']?.toString();
-    isFeatured = _toInt(json['isFeatured']);
-    price = _toInt(json['price']);
-    offerPrice = _toInt(json['offer_price']);
-    quantity = _toInt(json['quantity']);
-    image = json['image']?.toString();
-    sizeGuide = json['sizeGuide']?.toString();
-    weight = _toDouble(json['weight']);
-    images = _toStringList(json['images']);
-    brandId = _toInt(json['brandId']);
-    categoryLevel1Id = _toInt(json['categoryLevel1Id']);
-    categoryLevel2Id = _toInt(json['categoryLevel2Id']);
-    categoryLevel3Id = _toInt(json['categoryLevel3Id']);
-    categoryLevel4Id = _toInt(json['categoryLevel4Id']);
-    updatedBy = json['updatedBy']?.toString();
-    deletedBy = json['deletedBy']?.toString();
-    brandName = json['brand_name']?.toString();
-    isApproved = _toInt(json['isApproved']);
-    isWishlist = _toInt(json['is_wishlist']);
-    noOfOrders = _toInt(json['noOfOrders']);
-    deletedAt = json['deletedAt']?.toString();
-    createdAt = json['createdAt']?.toString();
-    updatedAt = json['updatedAt']?.toString();
-    variant = json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
-    imageUrl = json['image_url']?.toString();
-    imagesUrl = _toStringList(json['imagesUrl']);
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'barcode': barcode,
-    'merchantId': merchantId,
-    'name': name,
-    'slug': slug,
-    'brand': brand,
-    'productType': productType,
-    'isVariant': isVariant,
-    'keyWords': keyWords,
-    'description': description,
-    'summary': summary,
-    'sizes': sizes,
-    'colors': colors,
-    'type': type,
-    'isFeatured': isFeatured,
-    'price': price,
-    'offer_price': offerPrice,
-    'quantity': quantity,
-    'image': image,
-    'sizeGuide': sizeGuide,
-    'weight': weight,
-    'images': images,
-    'brandId': brandId,
-    'categoryLevel1Id': categoryLevel1Id,
-    'categoryLevel2Id': categoryLevel2Id,
-    'categoryLevel3Id': categoryLevel3Id,
-    'categoryLevel4Id': categoryLevel4Id,
-    'updatedBy': updatedBy,
-    'deletedBy': deletedBy,
-    'brand_name': brandName,
-    'isApproved': isApproved,
-    'is_wishlist': isWishlist,
-    'noOfOrders': noOfOrders,
-    'deletedAt': deletedAt,
-    'createdAt': createdAt,
-    'updatedAt': updatedAt,
-    'variant': variant?.toJson(),
-    'image_url': imageUrl,
-    'imagesUrl': imagesUrl,
-  };
-}
 
 
 
@@ -4020,8 +3895,8 @@ class DetailProductDetailsModel {
   DetailProductDetailsModel({this.status, this.message, this.data});
 
   DetailProductDetailsModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
+    status = _toInt(json['status']);
+    message = _toString(json['message']);
     data = json['data'] != null
         ? DetailDataProductDetail.fromJson(json['data'])
         : null;
@@ -4045,12 +3920,13 @@ class DetailDataProductDetail {
   List<DetailSizes>? sizes;
   List<DetailColors>? colors;
 
-  DetailDataProductDetail(
-      {this.product,
-        this.similarProducts,
-        this.matchWithProducts,
-        this.sizes,
-        this.colors});
+  DetailDataProductDetail({
+    this.product,
+    this.similarProducts,
+    this.matchWithProducts,
+    this.sizes,
+    this.colors,
+  });
 
   DetailDataProductDetail.fromJson(Map<String, dynamic> json) {
     product = json['product'] != null
@@ -4134,90 +4010,82 @@ class DetailProductt {
   DetailMerchant? merchant;
   List<String>? reviews;
 
-  DetailProductt(
-      {this.id,
-        this.barcode,
-        this.merchantId,
-        this.name,
-        this.slug,
-        this.productType,
-        this.isVariant,
-        this.keyWords,
-        this.description,
-        this.summary,
-        this.sizes,
-        this.colors,
-        this.type,
-        this.isFeatured,
-        this.image,
-        this.imageUrl,
-        this.sizeGuide,
-        this.video,
-        this.weight,
-        this.images,
-        this.imagesUrl,
-        this.brandId,
-        this.categoryLevel1Id,
-        this.categoryLevel2Id,
-        this.categoryLevel3Id,
-        this.updatedBy,
-        this.deletedBy,
-        this.isApproved,
-        this.noOfOrders,
-        this.deletedAt,
-        this.createdAt,
-        this.updatedAt,
-        this.variant,
-        this.brandName,
-        this.merchant,
-        this.reviews});
+  DetailProductt({
+    this.id,
+    this.barcode,
+    this.merchantId,
+    this.name,
+    this.slug,
+    this.productType,
+    this.isVariant,
+    this.keyWords,
+    this.description,
+    this.summary,
+    this.sizes,
+    this.colors,
+    this.type,
+    this.isFeatured,
+    this.image,
+    this.imageUrl,
+    this.sizeGuide,
+    this.video,
+    this.weight,
+    this.images,
+    this.imagesUrl,
+    this.brandId,
+    this.categoryLevel1Id,
+    this.categoryLevel2Id,
+    this.categoryLevel3Id,
+    this.updatedBy,
+    this.deletedBy,
+    this.isApproved,
+    this.noOfOrders,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.variant,
+    this.brandName,
+    this.merchant,
+    this.reviews,
+  });
 
   DetailProductt.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    barcode = json['barcode'];
-    merchantId = json['merchant_id'];
-    name = json['name'];
-    slug = json['slug'];
-    productType = json['product_type'];
-    isVariant = json['is_variant'];
-    keyWords = json['key_words'];
-    description = json['description'];
-    summary = json['summary'];
-    sizes = json['sizes'];
-    colors = json['colors'];
-    type = json['type'];
-    isFeatured = json['is_featured'];
-    image = json['image'];
-    imageUrl = json['image_url'];
-    sizeGuide = json['size_guide'];
-    video = json['video'];
-    weight = (json['weight'] is num) ? (json['weight'] as num).toDouble() : null;
-    images = (json['images'] != null)
-        ? List<String>.from(json['images'])
-        : <String>[];
-    imagesUrl = (json['images_url'] != null)
-        ? List<String>.from(json['images_url'])
-        : <String>[];
-    brandId = json['brand_id'];
-    categoryLevel1Id = json['category_level1_id'];
-    categoryLevel2Id = json['category_level2_id'];
-    categoryLevel3Id = json['category_level3_id'];
-    updatedBy = json['updated_by'];
-    deletedBy = json['deleted_by'];
-    isApproved = json['is_approved'];
-    noOfOrders = json['no_of_orders'];
-    deletedAt = json['deleted_at'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    variant =
-    json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
-    brandName = json['brand_name'];
-    merchant = json['merchant'] != null
-        ? DetailMerchant.fromJson(json['merchant'])
-        : null;
-    reviews = (json['reviews'] != null)
-        ? List<String>.from(json['reviews'])
-        : <String>[];
+    id = _toInt(json['id']);
+    barcode = _toString(json['barcode']);
+    merchantId = _toInt(json['merchant_id']);
+    name = _toString(json['name']);
+    slug = _toString(json['slug']);
+    productType = _toString(json['product_type']);
+    isVariant = _toInt(json['is_variant']);
+    keyWords = _toString(json['key_words']);
+    description = _toString(json['description']);
+    summary = _toString(json['summary']);
+    sizes = _toString(json['sizes']);
+    colors = _toString(json['colors']);
+    type = _toString(json['type']);
+    isFeatured = _toInt(json['is_featured']);
+    image = _toString(json['image']);
+    imageUrl = _toString(json['image_url']);
+    sizeGuide = _toString(json['size_guide']);
+    video = _toString(json['video']);
+    weight = _toDouble(json['weight']);
+    images = _toStringList(json['images']);
+    imagesUrl = _toStringList(json['images_url']);
+    brandId = _toString(json['brand_id']);
+    categoryLevel1Id = _toInt(json['category_level1_id']);
+    categoryLevel2Id = _toInt(json['category_level2_id']);
+    categoryLevel3Id = _toInt(json['category_level3_id']);
+    updatedBy = _toString(json['updated_by']);
+    deletedBy = _toString(json['deleted_by']);
+    isApproved = _toInt(json['is_approved']);
+    noOfOrders = _toInt(json['no_of_orders']);
+    deletedAt = _toString(json['deleted_at']);
+    createdAt = _toString(json['created_at']);
+    updatedAt = _toString(json['updated_at']);
+    variant = json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
+    brandName = _toString(json['brand_name']);
+    merchant = json['merchant'] != null ? DetailMerchant.fromJson(json['merchant']) : null;
+    reviews = _toStringList(json['reviews']);
   }
 
   Map<String, dynamic> toJson() {
@@ -4271,23 +4139,24 @@ class DetailMerchant {
   String? city;
   String? image;
 
-  DetailMerchant(
-      {this.id,
-        this.name,
-        this.email,
-        this.username,
-        this.phoneNo,
-        this.city,
-        this.image});
+  DetailMerchant({
+    this.id,
+    this.name,
+    this.email,
+    this.username,
+    this.phoneNo,
+    this.city,
+    this.image,
+  });
 
   DetailMerchant.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    username = json['username'];
-    phoneNo = json['phone_no'];
-    city = json['city'];
-    image = json['image'];
+    id = _toInt(json['id']);
+    name = _toString(json['name']);
+    email = _toString(json['email']);
+    username = _toString(json['username']);
+    phoneNo = _toString(json['phone_no']);
+    city = _toString(json['city']);
+    image = _toString(json['image']);
   }
 
   Map<String, dynamic> toJson() {
@@ -4318,35 +4187,36 @@ class DetailColors {
   String? colorName;
   String? sizeName;
 
-  DetailColors(
-      {this.id,
-        this.productId,
-        this.size,
-        this.color,
-        this.price,
-        this.offerPrice,
-        this.quantity,
-        this.isAvailable,
-        this.createdAt,
-        this.updatedAt,
-        this.hexCode,
-        this.colorName,
-        this.sizeName});
+  DetailColors({
+    this.id,
+    this.productId,
+    this.size,
+    this.color,
+    this.price,
+    this.offerPrice,
+    this.quantity,
+    this.isAvailable,
+    this.createdAt,
+    this.updatedAt,
+    this.hexCode,
+    this.colorName,
+    this.sizeName,
+  });
 
   DetailColors.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    productId = json['product_id'];
-    size = json['size'];
-    color = json['color'];
-    price = json['price'];
-    offerPrice = json['offer_price'];
-    quantity = json['quantity'];
-    isAvailable = json['is_available'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    hexCode = json['hex_code'];
-    colorName = json['color_name'];
-    sizeName = json['size_name'];
+    id = _toInt(json['id']);
+    productId = _toInt(json['product_id']);
+    size = _toInt(json['size']);
+    color = _toInt(json['color']);
+    price = _toInt(json['price']);
+    offerPrice = _toString(json['offer_price']);
+    quantity = _toInt(json['quantity']);
+    isAvailable = _toInt(json['is_available']);
+    createdAt = _toString(json['created_at']);
+    updatedAt = _toString(json['updated_at']);
+    hexCode = _toString(json['hex_code']);
+    colorName = _toString(json['color_name']);
+    sizeName = _toString(json['size_name']);
   }
 
   Map<String, dynamic> toJson() {
@@ -4382,33 +4252,34 @@ class DetailSizes {
   String? colorName;
   String? sizeName;
 
-  DetailSizes(
-      {this.id,
-        this.productId,
-        this.size,
-        this.color,
-        this.price,
-        this.offerPrice,
-        this.quantity,
-        this.isAvailable,
-        this.createdAt,
-        this.updatedAt,
-        this.colorName,
-        this.sizeName});
+  DetailSizes({
+    this.id,
+    this.productId,
+    this.size,
+    this.color,
+    this.price,
+    this.offerPrice,
+    this.quantity,
+    this.isAvailable,
+    this.createdAt,
+    this.updatedAt,
+    this.colorName,
+    this.sizeName,
+  });
 
   DetailSizes.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    productId = json['product_id'];
-    size = json['size'];
-    color = json['color'];
-    price = json['price'];
-    offerPrice = json['offer_price'];
-    quantity = json['quantity'];
-    isAvailable = json['is_available'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    colorName = json['color_name'];
-    sizeName = json['size_name'];
+    id = _toInt(json['id']);
+    productId = _toInt(json['product_id']);
+    size = _toInt(json['size']);
+    color = _toInt(json['color']);
+    price = _toInt(json['price']);
+    offerPrice = _toString(json['offer_price']);
+    quantity = _toInt(json['quantity']);
+    isAvailable = _toInt(json['is_available']);
+    createdAt = _toString(json['created_at']);
+    updatedAt = _toString(json['updated_at']);
+    colorName = _toString(json['color_name']);
+    sizeName = _toString(json['size_name']);
   }
 
   Map<String, dynamic> toJson() {
@@ -4427,6 +4298,141 @@ class DetailSizes {
     dataMap['size_name'] = sizeName;
     return dataMap;
   }
+}
+
+class ProductHomee {
+  int? id;
+  String? barcode;
+  int? merchantId;
+  String? name;
+  String? slug;
+  String? brand;
+  String? productType;
+  int? isVariant;
+  String? keyWords;
+  String? description;
+  String? summary;
+  String? sizes;
+  String? colors;
+  String? type;
+  int? isFeatured;
+  int? price;
+  int? offerPrice;
+  int? quantity;
+  String? image;
+  String? sizeGuide;
+  double? weight;
+  List<String>? images;
+  int? brandId;
+  int? categoryLevel1Id;
+  int? categoryLevel2Id;
+  int? categoryLevel3Id;
+  int? categoryLevel4Id;
+  String? updatedBy;
+  String? deletedBy;
+  String? brandName;
+  int? isApproved;
+  int? isWishlist;
+  int? noOfOrders;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  VariantHomee? variant;
+  String? imageUrl;
+  List<String>? imagesUrl;
+
+  ProductHomee.fromJson(Map<String, dynamic> json) {
+    id = _toInt(json['id']);
+    barcode = _toString(json['barcode']);
+    merchantId = _toInt(json['merchantId']);
+    name = _toString(json['name']);
+    slug = _toString(json['slug']);
+    brand = _toString(json['brand']);
+    productType = _toString(json['productType']);
+    isVariant = _toInt(json['isVariant']);
+    keyWords = _toString(json['keyWords']);
+    description = _toString(json['description']);
+    summary = _toString(json['summary']);
+    sizes = _toString(json['sizes']);
+    colors = _toString(json['colors']);
+    type = _toString(json['type']);
+    isFeatured = _toInt(json['isFeatured']);
+    price = _toInt(json['price']);
+    offerPrice = _toInt(json['offer_price']);
+    quantity = _toInt(json['quantity']);
+    image = _toString(json['image']);
+    sizeGuide = _toString(json['sizeGuide']);
+    weight = _toDouble(json['weight']);
+    images = _toStringList(json['images']);
+    brandId = _toInt(json['brandId']);
+    categoryLevel1Id = _toInt(json['categoryLevel1Id']);
+    categoryLevel2Id = _toInt(json['categoryLevel2Id']);
+    categoryLevel3Id = _toInt(json['categoryLevel3Id']);
+    categoryLevel4Id = _toInt(json['categoryLevel4Id']);
+    updatedBy = _toString(json['updatedBy']);
+    deletedBy = _toString(json['deletedBy']);
+    brandName = _toString(json['brand_name']);
+    isApproved = _toInt(json['isApproved']);
+    isWishlist = _toInt(json['is_wishlist']);
+    noOfOrders = _toInt(json['noOfOrders']);
+    deletedAt = _toString(json['deletedAt']);
+    createdAt = _toString(json['createdAt']);
+    updatedAt = _toString(json['updatedAt']);
+    variant = json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
+    imageUrl = _toString(json['image_url']);
+    imagesUrl = _toStringList(json['imagesUrl']);
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'barcode': barcode,
+    'merchantId': merchantId,
+    'name': name,
+    'slug': slug,
+    'brand': brand,
+    'productType': productType,
+    'isVariant': isVariant,
+    'keyWords': keyWords,
+    'description': description,
+    'summary': summary,
+    'sizes': sizes,
+    'colors': colors,
+    'type': type,
+    'isFeatured': isFeatured,
+    'price': price,
+    'offer_price': offerPrice,
+    'quantity': quantity,
+    'image': image,
+    'sizeGuide': sizeGuide,
+    'weight': weight,
+    'images': images,
+    'brandId': brandId,
+    'categoryLevel1Id': categoryLevel1Id,
+    'categoryLevel2Id': categoryLevel2Id,
+    'categoryLevel3Id': categoryLevel3Id,
+    'categoryLevel4Id': categoryLevel4Id,
+    'updatedBy': updatedBy,
+    'deletedBy': deletedBy,
+    'brand_name': brandName,
+    'isApproved': isApproved,
+    'is_wishlist': isWishlist,
+    'noOfOrders': noOfOrders,
+    'deletedAt': deletedAt,
+    'createdAt': createdAt,
+    'updatedAt': updatedAt,
+    'variant': variant?.toJson(),
+    'image_url': imageUrl,
+    'imagesUrl': imagesUrl,
+  };
+}
+
+// Add these helper functions at the end of your file:
+
+
+String? _toString(dynamic value) {
+  if (value == null) return null;
+  if (value is String) return value;
+  return value.toString();
 }
 
 
@@ -5673,6 +5679,7 @@ class BrandDataLast {
   int? currentPage;
   int? followers;
   String? brandName;
+  String? is_followed;
   int? totalPages;
   BrandBrandLast? brand;
   List<BrandCategoryLevel1Last>? categoryLevel1;
@@ -5685,6 +5692,7 @@ class BrandDataLast {
     this.currentPage,
     this.followers,
     this.brandName,
+    this.is_followed,
     this.totalPages,
     this.brand,
     this.categoryLevel1,
@@ -5702,6 +5710,7 @@ class BrandDataLast {
       currentPage: int.tryParse(json['current_page']?.toString() ?? ''),
       followers: int.tryParse(json['followers']?.toString() ?? ''),
       brandName: json['brand_name']?.toString(),
+      is_followed: json['is_followed']?.toString(),
       totalPages: int.tryParse(json['totalPages']?.toString() ?? ''),
       brand: json['brand'] != null
           ? BrandBrandLast.fromJson(json['brand'])
@@ -5724,6 +5733,7 @@ class BrandDataLast {
     'current_page': currentPage,
     'followers': followers,
     'brand_name': brandName,
+    'is_followed': is_followed,
     'totalPages': totalPages,
     'brand': brand?.toJson(),
     'category_level1': categoryLevel1?.map((e) => e.toJson()).toList(),

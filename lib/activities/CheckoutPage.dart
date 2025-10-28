@@ -475,7 +475,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Checkout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -484,7 +484,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Checkout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -493,7 +493,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Checkout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -503,7 +503,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Checkout",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -573,7 +573,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
 
       if (model.status == 1) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Orders",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -585,7 +585,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Orders",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -594,7 +594,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Orders",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -604,7 +604,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Orders",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -685,7 +685,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Coupon",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -694,7 +694,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Coupon",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -704,7 +704,7 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Coupon",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

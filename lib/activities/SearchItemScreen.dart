@@ -383,7 +383,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -392,7 +392,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Wishlist",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -402,7 +402,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -477,7 +477,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Colors",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -486,7 +486,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Colors",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -496,7 +496,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Colors",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -591,7 +591,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Search",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -600,7 +600,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Search",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -610,7 +610,8 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Search",
+
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

@@ -237,7 +237,7 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
          });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -246,7 +246,7 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -255,7 +255,7 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -265,7 +265,7 @@ class _AccountInformationScreenState extends State<AccountInformationScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Profile",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

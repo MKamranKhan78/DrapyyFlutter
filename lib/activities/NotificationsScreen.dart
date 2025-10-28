@@ -188,7 +188,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
       if (model.status == 1) {
         setState(() {
           Get.snackbar(
-            "Status ${model.status}",
+            "Notification",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -203,7 +203,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Notification",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -212,7 +212,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Notification",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -221,7 +221,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Notification",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -231,7 +231,7 @@ class _NotificationsPageState extends State<NotificationsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Notification",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

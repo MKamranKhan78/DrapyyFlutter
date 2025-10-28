@@ -277,7 +277,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
                               : "${DateFormat('dd-MM-yyyy').format(selectedDate!)}",
                           style: const TextStyle(
                             fontFamily: "Gotham Pro",
-                            fontSize: 12,
+                            fontSize: 16,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -405,23 +405,28 @@ class _RegisterActivityState extends State<RegisterActivity> {
                   ),
                   const SizedBox(height: 30),
 
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "ALREADY HAVE AN ACCOUNT?",
                         style: TextStyle(
                           fontFamily: "Gotham Pro",
                           fontSize: 11,
                         ),
                       ),
-                      SizedBox(width: 5),
-                      Text(
-                        "SIGN IN",
-                        style: TextStyle(
-                          fontFamily: "Gotham Pro",
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(width: 5),
+                      InkWell(
+                        onTap: (){
+                          Get.to(const LoginScreen());
+                        },
+                        child: const Text(
+                          "SIGN IN",
+                          style: TextStyle(
+                            fontFamily: "Gotham Pro",
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -504,7 +509,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
       if (model.status == 1) {
         setState(() {
           Get.snackbar(
-            "Status ${model.status}",
+            "Register",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -518,7 +523,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
 
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Register",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -527,7 +532,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Register",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -536,7 +541,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Register",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -546,7 +551,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Register",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

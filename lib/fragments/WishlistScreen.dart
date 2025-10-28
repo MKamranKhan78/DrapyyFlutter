@@ -27,52 +27,31 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-
   bool isLoading = false;
-
+  bool isFirstLoad = true; // Track first time loading
   List<ProductHomee> products = [];
-
 
   @override
   void initState() {
-     super.initState();
+    super.initState();
     getWishlist();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 0),
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                return HomeProductItem(
-                  product: products[index],
-                  onItemClick: () {
-                    Get.to(() => ProductDetailsSccreen(productId: products[index].id.toString()));
-                  },
-                  onFavoriteClick: (newWishlistValue) async {
-                    final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
-                    if (skipValue == "1") {
-                      Get.to(() => const LoginScreen());
-                    } else {
-                      addRemoveWishlist(products[index].id.toString());
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-          if (isLoading)
+          // Show shimmer effect only during first load
+          if (isFirstLoad && isLoading)
+            _buildShimmerEffect()
+          else if (products.isEmpty && !isLoading)
+            _buildEmptyState()
+          else
+            _buildProductGrid(),
+
+          // Show loading indicator only for subsequent loads (not first time)
+          if (!isFirstLoad && isLoading)
             Container(
               child: const Center(
                 child: SizedBox(
@@ -83,10 +62,165 @@ class _WishlistScreenState extends State<WishlistScreen> {
               ),
             ),
         ],
-      )
+      ),
     );
   }
 
+  Widget _buildProductGrid() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          childAspectRatio: 0.7,
+        ),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          return HomeProductItem(
+            product: products[index],
+            onItemClick: () {
+              Get.to(() => ProductDetailsSccreen(productId: products[index].id.toString()));
+            },
+            onFavoriteClick: (newWishlistValue) async {
+              final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+              if (skipValue == "1") {
+                Get.to(() => const LoginScreen());
+              } else {
+                addRemoveWishlist(products[index].id.toString());
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          childAspectRatio: 0.7,
+        ),
+        itemCount: 6, // Show 6 shimmer items
+        itemBuilder: (context, index) {
+          return _buildShimmerItem();
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerItem() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image placeholder
+          Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+          ),
+
+          // Content area
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title placeholder
+                Container(
+                  height: 16,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Price placeholder
+                Container(
+                  height: 14,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Button placeholder
+                Container(
+                  height: 30,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.favorite_border,
+            size: 80,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Your wishlist is empty',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Add items you love to your wishlist',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[500],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> getWishlist() async {
     setState(() {
@@ -99,7 +233,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
       "Content-Type": "application/json",
       "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
-
 
     final client = CustomHttpClient(http.Client());
 
@@ -123,7 +256,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -132,7 +265,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -141,7 +274,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -151,7 +284,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -162,6 +295,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       if (mounted) {
         setState(() {
           isLoading = false;
+          isFirstLoad = false; // Mark first load as complete
         });
       }
     }
@@ -180,10 +314,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
       PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
 
-    // ✅ Request body changed to match Kotlin version
     final requestBody = {
       "id": id.toString(),
-     };
+    };
 
     final client = CustomHttpClient(http.Client());
 
@@ -198,18 +331,15 @@ class _WishlistScreenState extends State<WishlistScreen> {
       print('Request Headers: $headers');
       print('Request Body: ${jsonEncode(requestBody)}');
       print('Response Code: ${response.statusCode}');
-      print(
-          "-------------------------------------FULL RESPONSE-------------------------------------");
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
       Toastutils.printFullText(response.body.toString());
-      print(
-          "-------------------------------------------------------------------------------------");
+      print("-------------------------------------------------------------------------------------");
 
-      final model =
-      AddWishlistModell.fromJson(json.decode(response.body));
+      final model = AddWishlistModell.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -217,9 +347,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
           duration: const Duration(seconds: 2),
         );
         getWishlist();
-      }else if (model.status == 2) {
+      } else if (model.status == 2) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -231,7 +361,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -240,7 +370,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Wishlist",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -250,7 +380,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -265,6 +395,4 @@ class _WishlistScreenState extends State<WishlistScreen> {
       }
     }
   }
-
-
 }

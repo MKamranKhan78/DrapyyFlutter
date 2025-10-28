@@ -400,7 +400,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -409,7 +409,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -418,7 +418,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -428,7 +428,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Profile",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -500,7 +500,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -509,7 +509,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -518,7 +518,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -528,7 +528,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Profile",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

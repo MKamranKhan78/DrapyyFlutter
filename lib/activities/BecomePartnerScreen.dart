@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drapyy/helper/colors.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -205,38 +206,64 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: DropdownButtonFormField<String>(
-                  value: selectedValueCity,
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 8), // 👈 space between text & line
-                  ),
-                  icon: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.black,size: 30,), // dropdown icon
-                  hint: const Text(
-                    "SELECT CITY",
-                    style: TextStyle(
-                      fontFamily: FontConstants.gothamPro,
-                      fontSize: 16,
-                      color: Colors.black54,
+                child: DropdownSearch<String>(
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    searchFieldProps: TextFieldProps(
+                      decoration: InputDecoration(
+                        hintText: "Search city...",
+                        hintStyle: const TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
+                        prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ),
-                  ),
-                  items: cities_list.map((Cities value) {
-                    return DropdownMenuItem<String>(
-                      value: value.name.toString(),
-                      child: Text(
-                        value.name.toString(),
+                    itemBuilder: (context, item, isSelected) => ListTile(
+                      title: Text(
+                        item,
                         style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
                           color: Colors.black,
                         ),
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ),
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                      hintText: "SELECT CITY",
+                      hintStyle: const TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                      border: const UnderlineInputBorder(),
+                    ),
+                  ),
+                  items: cities_list.map((e) => e.name ?? "").toList(),
+                  selectedItem: selectedValueCity,
                   onChanged: (newValue) {
                     setState(() {
                       selectedValueCity = newValue;
                     });
+                  },
+                  dropdownBuilder: (context, selectedItem) {
+                    return Text(
+                      selectedItem ?? "SELECT CITY",
+                      style: const TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -656,17 +683,14 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
-
 
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.get(
-        url,
-        headers: headers,
-      );
+      final response = await client.get(url, headers: headers);
 
       print('POST URL: $url');
       print('Request Headers: $headers');
@@ -674,35 +698,29 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       print("-------------------------------------FULL RESPONSE-------------------------------------");
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
+
       final model = GetCheckoutResponse.fromJson(json.decode(response.body));
+
       if (model.status == 1) {
-        print("CITY_ID---------->"+model.data!.address!.city.toString());
+        // ✅ Safely get cities list
+        final cities = model.data?.cities ?? [];
+
+        print("Fetched cities count: ${cities.length}");
+        for (var c in cities) {
+          print("City: ${c.name}");
+        }
+
         setState(() {
-          cities_list.clear();
-          cities_list.addAll(model.data!.cities as Iterable<Cities>);
-          becomeSellerData();
+          cities_list
+            ..clear()
+            ..addAll(cities);
         });
-      } else if (model.status == 0) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
-      } else if (model.status == 401) {
-        Get.snackbar(
-          "Status ${model.status}",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+
+        becomeSellerData();
       } else {
+        // ✅ Handle other statuses safely
         Get.snackbar(
-          "Status ${model.status}",
+          "Cities",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -712,7 +730,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Cities",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -760,7 +778,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       if (model.status == 1) {
         setState(() {
           Get.snackbar(
-            "Status ${model.status}",
+            "Get Partner Data",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -799,7 +817,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Get Partner Data",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -808,7 +826,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Get Partner Data",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -817,7 +835,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Get Partner Data",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -827,7 +845,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Get Partner Data",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -1037,7 +1055,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
           // Try Get.snackbar first
           try {
             Get.snackbar(
-              "Success",
+              "Become Partner",
               model.message ?? "Successfully Registered",
               backgroundColor: Colors.black,
               colorText: Colors.white,
@@ -1077,7 +1095,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           try {
             Get.snackbar(
-              "Status ${model.status}",
+              "Become Partner",
               model.message ?? "Something went wrong",
               backgroundColor: Colors.black,
               colorText: Colors.white,
@@ -1099,7 +1117,7 @@ class _BecomePartnerScreenState extends State<BecomePartnerScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         try {
           Get.snackbar(
-            "Error",
+            "Become Partner",
             e.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,

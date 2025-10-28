@@ -369,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (model.status == 1) {
         setState(() {
           Get.snackbar(
-            "Status ${model.status}",
+            "Login",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -394,7 +394,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Login",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -403,7 +403,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Login",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -412,7 +412,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Login",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -422,7 +422,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Login",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:drapyy/activities/AccountInformationScreen.dart';
@@ -42,6 +41,7 @@ class ProfileFragment extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileFragment> {
 
   bool isLoading = false;
+  bool isFirstLoad = true;
 
   String wallet = "";
   String points = "";
@@ -50,41 +50,30 @@ class _ProfileScreenState extends State<ProfileFragment> {
   String name = "";
   String image = "";
 
-
-
   @override
   void initState() {
     super.initState();
     getProfile();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: isLoading
-            ? const Center(
-          child: CircularProgressIndicator(), // ✅ Centered progress bar
-        )
+        child: (isLoading && isFirstLoad)
+            ? _buildShimmerEffect()
             : SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
-
             children: [
-
               Row(
                 children: [
-
-                  const SizedBox(width: 48), // same width as IconButton
-
-                  // Expanded makes the Text take remaining space and stay centered
+                  const SizedBox(width: 48),
                   Expanded(
                     child: Center(
                       child: Text(
-                        "PROFILE", // 👈 your text here
+                        "PROFILE",
                         style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 18,
@@ -93,38 +82,38 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       ),
                     ),
                   ),
-
-                  // Back button
                   IconButton(
                     icon: const Icon(Icons.notifications_none, color: Colors.black,size: 25,),
                     onPressed: () {
                       Get.to(() => NotificationsScreen());
                     },
                   ),
-
-                  // To balance Row (so title stays centered even with only one button)
                 ],
               ),
 
-              // Profile Image
+              // Profile Image with shimmer
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, top: 30),
                 child: Container(
-                  width: 80, // same as diameter (2 * radius)
+                  width: 80,
                   height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.black, // black circular border
-                      width: 1, // border thickness
+                      color: Colors.black,
+                      width: 1,
                     ),
                   ),
                   child: ClipOval(
-                    child: Container(
+                    child: (isLoading && isFirstLoad)
+                        ? Container(
+                      color: Colors.grey.shade300,
+                    )
+                        : Container(
                       color: Colors.black12,
                       child: Image.network(
                         image.toString(),
-                        fit: BoxFit.cover, // same as "centerInside"
+                        fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: Colors.grey.shade200,
@@ -138,10 +127,16 @@ class _ProfileScreenState extends State<ProfileFragment> {
               ),
               SizedBox(height: 10),
 
-              // Name
+              // Name with shimmer
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
+                child: (isLoading && isFirstLoad)
+                    ? Container(
+                  width: 120,
+                  height: 16,
+                  color: Colors.grey.shade300,
+                )
+                    : Text(
                   name.toString(),
                   style: TextStyle(
                     fontFamily: FontConstants.gothamPro,
@@ -153,14 +148,13 @@ class _ProfileScreenState extends State<ProfileFragment> {
               ),
               const SizedBox(height: 30),
 
-              // Tabs Row
+              // Tabs Row with shimmer
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // WALLET
                   Column(
                     children: [
-
                       Text(
                         "WALLET",
                         style: TextStyle(
@@ -170,9 +164,14 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         ),
                       ),
                       SizedBox(height: 5),
-
-                      Text(
-                        wallet.toString(), // value
+                      (isLoading && isFirstLoad)
+                          ? Container(
+                        width: 40,
+                        height: 14,
+                        color: Colors.grey.shade300,
+                      )
+                          : Text(
+                        wallet.toString(),
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -180,14 +179,12 @@ class _ProfileScreenState extends State<ProfileFragment> {
                           color: Colors.black,
                         ),
                       ),
-
                     ],
                   ),
 
                   // POINTS
                   Column(
                     children: [
-
                       Text(
                         "POINTS",
                         style: TextStyle(
@@ -196,12 +193,15 @@ class _ProfileScreenState extends State<ProfileFragment> {
                           color: Colors.black,
                         ),
                       ),
-
-
                       SizedBox(height: 5),
-
-                      Text(
-                        points.toString(), // value
+                      (isLoading && isFirstLoad)
+                          ? Container(
+                        width: 40,
+                        height: 14,
+                        color: Colors.grey.shade300,
+                      )
+                          : Text(
+                        points.toString(),
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
@@ -209,20 +209,18 @@ class _ProfileScreenState extends State<ProfileFragment> {
                           color: Colors.black,
                         ),
                       ),
-
                     ],
                   ),
 
                   // ORDERS
                   InkWell(
                     onTap: (){
-
-                      Get.to(() =>  CurrentOrdersFragment());
-
+                      if (!(isLoading && isFirstLoad)) {
+                        Get.to(() =>  CurrentOrdersFragment());
+                      }
                     },
                     child: Column(
                       children: [
-
                         Text(
                           "ORDERS",
                           style: TextStyle(
@@ -232,8 +230,14 @@ class _ProfileScreenState extends State<ProfileFragment> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Text(
-                          orders.toString(), // value
+                        (isLoading && isFirstLoad)
+                            ? Container(
+                          width: 40,
+                          height: 14,
+                          color: Colors.grey.shade300,
+                        )
+                            : Text(
+                          orders.toString(),
                           style: TextStyle(
                             fontFamily: FontConstants.gothamPro,
                             fontSize: 14,
@@ -241,16 +245,16 @@ class _ProfileScreenState extends State<ProfileFragment> {
                             color: Colors.black,
                           ),
                         ),
-
                       ],
                     ),
                   ),
 
                   // FOLLOWING
-
                   InkWell(
                     onTap: (){
-                      Get.to(FollowingListScreen());
+                      if (!(isLoading && isFirstLoad)) {
+                        Get.to(FollowingListScreen());
+                      }
                     },
                     child: Column(
                       children: [
@@ -263,7 +267,13 @@ class _ProfileScreenState extends State<ProfileFragment> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Text(
+                        (isLoading && isFirstLoad)
+                            ? Container(
+                          width: 40,
+                          height: 14,
+                          color: Colors.grey.shade300,
+                        )
+                            : Text(
                           following.toString(),
                           style: TextStyle(
                             fontFamily: FontConstants.gothamPro,
@@ -278,70 +288,27 @@ class _ProfileScreenState extends State<ProfileFragment> {
                 ],
               ),
 
-
               const SizedBox(height: 20),
-
               const Divider(color: Colors.black, thickness: 0.5),
 
-              // Menu Items (inline, no extra widget class)
-              buildMenuRow("ACCOUNT INFORMATION", () async {
-                //Get.to(() => const AccountInformationScreen());
-
-                var result = await Get.to(() => AccountInformationScreen());
-                if (result != null) {
-                  print("Received from B: $result");
-                  setState(() {
-                    getProfile();
-                  });
-                }
-
-              }),
-              buildMenuRow("DELIVERY ADDRESS", () {
-                print("DELIVERY Clicked");
-                Get.to(() => const AddressListScreen());
-
-              }),
-              buildMenuRow("WALLET", () {
-                print("WALLET Clicked");
-
-              }),
-              buildMenuRow("VOCHERS", () {
-                print("VOCHERS Clicked");
-
-                Get.to(() => const MyVoucherListingScreen());
-
-              }),
-              buildMenuRow("REDEEM POINTS", () {
-                print("REDEEM Clicked");
-                 Get.to(() => RedeemScreen(points: points.toString()));
-
-              }),
-              buildMenuRow("PAYMENT METHODS", () {
-                print("PAYMENT Clicked");
-              }),
-              buildMenuRow("BECOME PARTNER", () {
-                print("PAYMENT Clicked");
-                Get.to(() => const BecomePartnerScreen());
-              }),
-              buildMenuRow("SETTINGS", () {
-                print("SETTINGS Clicked");
-              }),
-              buildMenuRow("HELPS FAQS", () {
-                print("HELPS FAQS Clicked");
-                Get.to(() => const ContactUsScreen());
-              }),
+              // Menu Items with shimmer
+              ..._buildMenuItemsWithShimmer(),
 
               const SizedBox(height: 30),
 
+              // Logout Button with shimmer
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: ElevatedButton(
+                  child: (isLoading && isFirstLoad)
+                      ? Container(
+                    color: Colors.grey.shade300,
+                  )
+                      : ElevatedButton(
                     onPressed: () {
-
-                      logout();
+                      _showLogoutConfirmationDialog();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -362,8 +329,11 @@ class _ProfileScreenState extends State<ProfileFragment> {
                 ),
               ),
 
-              Container(height: 30,),
-              Container(
+              Container(height: 30),
+              // Footer section with shimmer
+              (isLoading && isFirstLoad)
+                  ? _buildFooterShimmer()
+                  : Container(
                 color: Colors.black,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -374,7 +344,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
                       width: 250,
                       height: 250,
                     ),
-
                     Container(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -384,7 +353,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
                             print("INSTAGRAM clicked");
                             print(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
                             _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_INSTAGRAM).toString());
-                            // 👉 Add navigation or link open here
                           },
                           child: Text(
                             "INSTAGRAM",
@@ -401,7 +369,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
                             print("FACEBOOK clicked");
                             print(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
                             _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_FACEBOOK).toString());
-
                           },
                           child: Text(
                             "FACEBOOK",
@@ -413,11 +380,9 @@ class _ProfileScreenState extends State<ProfileFragment> {
                             ),
                           ),
                         ),
-
                         InkWell(
                           onTap: () {
                             print("YOUTUBE clicked");
-
                             _launchSocialLink(PreferenceManager.getString(NetworkManager.PREF_YOUTUBE).toString());
                           },
                           child: Text(
@@ -432,13 +397,9 @@ class _ProfileScreenState extends State<ProfileFragment> {
                         ),
                       ],
                     ),
-
-
-
                     Container(height: 40),
                     Container(width: 300, height: 1, color: Colors.grey),
                     Container(height: 40),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -487,25 +448,356 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ],
                 ),
               )
-
-
             ],
-
-
           ),
         ),
       ),
     );
   }
 
+  // Shimmer effect widget
+  Widget _buildShimmerEffect() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 48),
+              Expanded(
+                child: Center(
+                  child: Container(
+                    width: 100,
+                    height: 18,
+                    color: Colors.grey.shade300,
+                  ),
+                ),
+              ),
+              Container(
+                width: 25,
+                height: 25,
+                color: Colors.grey.shade300,
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, top: 30),
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey.shade300,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Container(
+              width: 120,
+              height: 16,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(4, (index) => Column(
+              children: [
+                Container(
+                  width: 50,
+                  height: 14,
+                  color: Colors.grey.shade300,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  width: 40,
+                  height: 14,
+                  color: Colors.grey.shade300,
+                ),
+              ],
+            )),
+          ),
+          const SizedBox(height: 20),
+          const Divider(color: Colors.grey, thickness: 0.5),
+          ...List.generate(9, (index) => Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                child: Container(
+                  width: double.infinity,
+                  height: 13,
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              const Divider(
+                color: Colors.grey,
+                height: 1,
+                thickness: 0.5,
+              ),
+            ],
+          )),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0,right: 20),
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          Container(height: 30),
+          _buildFooterShimmer(),
+        ],
+      ),
+    );
+  }
+
+  // Footer shimmer effect
+  Widget _buildFooterShimmer() {
+    return Container(
+      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(height: 20),
+          Container(
+            width: 250,
+            height: 250,
+            color: Colors.grey.shade800,
+          ),
+          Container(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(3, (index) => Container(
+              width: 80,
+              height: 16,
+              color: Colors.grey.shade700,
+            )),
+          ),
+          Container(height: 40),
+          Container(width: 300, height: 1, color: Colors.grey.shade800),
+          Container(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 100,
+                height: 16,
+                color: Colors.grey.shade700,
+              ),
+              Container(
+                width: 10,
+                height: 16,
+                color: Colors.grey.shade700,
+              ),
+              Container(
+                width: 100,
+                height: 16,
+                color: Colors.grey.shade700,
+              ),
+            ],
+          ),
+          const SizedBox(height: 50),
+        ],
+      ),
+    );
+  }
+
+  // Build menu items with shimmer
+  List<Widget> _buildMenuItemsWithShimmer() {
+    List<String> menuItems = [
+      "ACCOUNT INFORMATION",
+      "DELIVERY ADDRESS",
+      "WALLET",
+      "VOCHERS",
+      "REDEEM POINTS",
+      "PAYMENT METHODS",
+      "BECOME PARTNER",
+      "SETTINGS",
+      "HELPS FAQS",
+    ];
+
+    List<Widget> widgets = [];
+    for (int i = 0; i < menuItems.length; i++) {
+      widgets.add(
+        Column(
+          children: [
+            InkWell(
+              onTap: (isLoading && isFirstLoad) ? null : () {
+                _handleMenuTap(i);
+              },
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                child: (isLoading && isFirstLoad)
+                    ? Container(
+                  width: double.infinity,
+                  height: 13,
+                  color: Colors.grey.shade300,
+                )
+                    : Text(
+                  menuItems[i],
+                  style: const TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 1,
+              thickness: 0.5,
+            ),
+          ],
+        ),
+      );
+    }
+    return widgets;
+  }
+
+  // Handle menu tap
+  void _handleMenuTap(int index) async {
+    switch (index) {
+      case 0: // ACCOUNT INFORMATION
+        var result = await Get.to(() => AccountInformationScreen());
+        if (result != null) {
+          print("Received from B: $result");
+          setState(() {
+            getProfile();
+          });
+        }
+        break;
+      case 1: // DELIVERY ADDRESS
+        Get.to(() => const AddressListScreen());
+        break;
+      case 2: // WALLET
+        print("WALLET Clicked");
+        break;
+      case 3: // VOCHERS
+        Get.to(() => const MyVoucherListingScreen());
+        break;
+      case 4: // REDEEM POINTS
+        Get.to(() => RedeemScreen(points: points.toString()));
+        break;
+      case 5: // PAYMENT METHODS
+        print("PAYMENT Clicked");
+        break;
+      case 6: // BECOME PARTNER
+        Get.to(() => const BecomePartnerScreen());
+        break;
+      case 7: // SETTINGS
+        print("SETTINGS Clicked");
+        break;
+      case 8: // HELPS FAQS
+        Get.to(() => const ContactUsScreen());
+        break;
+    }
+  }
+
+  // Logout confirmation dialog
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Are you sure you want to logout?",
+                  style: TextStyle(
+                    fontFamily: FontConstants.gothamPro,
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.black),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                          logout(); // Proceed with logout
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _launchSocialLink(String url) async {
     Uri uri = Uri.parse(url);
 
-    // Try native deep links for known apps
     if (url.contains('facebook.com')) {
-      final fbAppUrl =
-      Uri.parse('fb://facewebmodal/f?href=$url');
+      final fbAppUrl = Uri.parse('fb://facewebmodal/f?href=$url');
       if (await canLaunchUrl(fbAppUrl)) {
         await launchUrl(fbAppUrl, mode: LaunchMode.externalApplication);
         return;
@@ -525,18 +817,12 @@ class _ProfileScreenState extends State<ProfileFragment> {
       }
     }
 
-    // Fallback to browser if native app not available
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
-
-
-
   Widget _buildClickableSocialMediaItem(String text, String url) {
     return GestureDetector(
-      onTap: (){
-
-      },
+      onTap: (){},
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: MouseRegion(
@@ -557,11 +843,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
 
   Widget _buildClickableLegalLink(String text, String route) {
     return GestureDetector(
-      onTap: () {
-        // Navigate to the respective page
-        // Navigator.pushNamed(context, route);
-
-      },
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6.0),
         child: MouseRegion(
@@ -580,37 +862,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
     );
   }
 
-
-  Widget buildMenuRow(String title, VoidCallback onTap) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontFamily: FontConstants.gothamPro,
-                fontSize: 13,
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        ),
-        const Divider(
-          color: Colors.black,
-          height: 1,
-          thickness: 0.5,
-        ),
-      ],
-    );
-  }
-
-
-
   Future<void> logout() async {
     setState(() {
       isLoading = true;
@@ -622,7 +873,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
       "Content-Type": "application/json",
       "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
-
 
     final client = CustomHttpClient(http.Client());
 
@@ -641,14 +891,12 @@ class _ProfileScreenState extends State<ProfileFragment> {
       final model = GetNotificationsResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-
           PreferenceManager.clearAll();
           Get.offAll(MainActivity());
-
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Logout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -657,7 +905,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Logout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -666,7 +914,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Logout",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -676,7 +924,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Logout",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -695,6 +943,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
   Future<void> getProfile() async {
     setState(() {
       isLoading = true;
+      isFirstLoad = true;
     });
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.profile);
@@ -703,7 +952,6 @@ class _ProfileScreenState extends State<ProfileFragment> {
       "Content-Type": "application/json",
       "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
-
 
     final client = CustomHttpClient(http.Client());
 
@@ -722,50 +970,63 @@ class _ProfileScreenState extends State<ProfileFragment> {
       final model = GetProfileResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
-           wallet = model.data!.wallet.toString();
-           points = model.data!.points.toString();
-           orders = model.data!.orders.toString();
-           following = model.data!.following.toString();
-           name = model.data!.user!.name.toString();
-           image = model.data!.user!.image.toString();
-         });
+          wallet = model.data!.wallet.toString();
+          points = model.data!.points.toString();
+          orders = model.data!.orders.toString();
+          following = model.data!.following.toString();
+          name = model.data!.user!.name.toString();
+          image = model.data!.user!.image.toString();
+          isFirstLoad = false;
+        });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        setState(() {
+          isFirstLoad = false;
+        });
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        setState(() {
+          isFirstLoad = false;
+        });
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Profile",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
+        setState(() {
+          isFirstLoad = false;
+        });
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Profile",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
         margin: const EdgeInsets.all(10),
         duration: const Duration(seconds: 2),
       );
+      setState(() {
+        isFirstLoad = false;
+      });
     } finally {
       if (mounted) {
         setState(() {
@@ -774,7 +1035,4 @@ class _ProfileScreenState extends State<ProfileFragment> {
       }
     }
   }
-
-
-
 }

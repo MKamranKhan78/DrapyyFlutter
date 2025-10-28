@@ -332,7 +332,7 @@ class _FiltersScreenState extends State<FilterScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Colors",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -341,7 +341,7 @@ class _FiltersScreenState extends State<FilterScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Colors",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -351,7 +351,7 @@ class _FiltersScreenState extends State<FilterScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Colors",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

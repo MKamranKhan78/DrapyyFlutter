@@ -112,7 +112,7 @@ class _TermsAndConditionsPageState extends State<Termsandconditionscreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Terms And Conditions",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -121,7 +121,7 @@ class _TermsAndConditionsPageState extends State<Termsandconditionscreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Terms And Conditions",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -130,7 +130,7 @@ class _TermsAndConditionsPageState extends State<Termsandconditionscreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Terms And Conditions",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -140,7 +140,7 @@ class _TermsAndConditionsPageState extends State<Termsandconditionscreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Terms And Conditions",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

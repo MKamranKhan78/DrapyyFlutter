@@ -206,7 +206,7 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Vouchers",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -215,7 +215,7 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Vouchers",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -224,7 +224,7 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Vouchers",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -234,7 +234,7 @@ class _MyVoucherListingScreenState extends State<MyVoucherListingScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Vouchers",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

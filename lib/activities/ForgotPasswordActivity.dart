@@ -192,7 +192,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
 
           Get.back();
           Get.snackbar(
-            "Status ${model.status}",
+            "Forgot Password",
             model.message.toString(),
             backgroundColor: Colors.black,
             colorText: Colors.white,
@@ -202,7 +202,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Forgot Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -211,7 +211,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Forgot Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -220,7 +220,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Forgot Password",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -230,7 +230,7 @@ class _ForgotPasswordActivityState extends State<ForgotPasswordActivity> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Forgot Password",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

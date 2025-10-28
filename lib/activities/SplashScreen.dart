@@ -133,7 +133,7 @@ class SplashScreenState extends State<SplashScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -142,7 +142,7 @@ class SplashScreenState extends State<SplashScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -151,7 +151,7 @@ class SplashScreenState extends State<SplashScreen> {
         );
       } else {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -161,7 +161,7 @@ class SplashScreenState extends State<SplashScreen> {
       }
     } catch (e) {
        Get.snackbar(
-        "Error",
+         "Guest",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

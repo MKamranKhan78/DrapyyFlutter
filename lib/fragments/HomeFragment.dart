@@ -894,7 +894,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Home",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -903,7 +903,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Home",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -912,7 +912,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else {
         Get.snackbar(
-          "Status ${model.status}",
+          "Home",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -922,7 +922,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Home",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -982,7 +982,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Products",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -991,7 +991,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Products",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1001,7 +1001,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Products",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -1075,7 +1075,7 @@ class _HomeScreenState extends State<HomeScreen> {
         getHome();
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1084,7 +1084,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Wishlist",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1094,7 +1094,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -1152,7 +1152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       } else if (model.status == 0) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1161,7 +1161,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else if (model.status == 401) {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1170,7 +1170,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else {
         Get.snackbar(
-          "Status "+model.status.toString(),
+          "Guest",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -1180,7 +1180,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Guest",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,

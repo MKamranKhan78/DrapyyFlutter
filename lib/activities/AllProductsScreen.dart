@@ -142,7 +142,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
           model.status == 401 ||
           model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Product",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -151,7 +151,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Product",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -161,7 +161,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Product",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
@@ -294,7 +294,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         getCategoryProducts(widget.categoryId.toString(),"100");
       } else if (model.status == 0 || model.status == 401 || model.status != null) {
         Get.snackbar(
-          "Status ${model.status}",
+          "Wishlist",
           model.message.toString(),
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -303,7 +303,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         );
       } else {
         Get.snackbar(
-          "Error",
+          "Wishlist",
           "Unexpected response from server.",
           backgroundColor: Colors.black,
           colorText: Colors.white,
@@ -313,7 +313,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        "Error",
+        "Wishlist",
         e.toString(),
         backgroundColor: Colors.black,
         colorText: Colors.white,
