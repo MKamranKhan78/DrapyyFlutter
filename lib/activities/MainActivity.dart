@@ -1,15 +1,10 @@
-
-
 import 'dart:convert';
-
 import 'package:drapyy/fragments/MenuFragment.dart';
 import 'package:drapyy/fragments/ProfileFragment.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:drapyy/models/Model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 import '../fragments/BagFragment.dart';
@@ -20,6 +15,7 @@ import '../helper/customHttpClient.dart';
 import '../helper/preference_manager.dart';
 import '../network/Network.dart';
 import 'LoginScreen.dart';
+import 'NotificationsScreen.dart';
 
 class MainActivity extends StatefulWidget {
   const MainActivity({super.key});
@@ -32,25 +28,26 @@ class _BottomNavScreenState extends State<MainActivity> {
   int _currentIndex = 0;
   bool isLoading = false;
 
+  String is_cart = "1";
+
   @override
   void initState() {
     super.initState();
 
-    print("hjshjshddhhhh------>"+PreferenceManager.getString(NetworkManager.API_TOKEN).toString());
-    if(PreferenceManager.getString(NetworkManager.API_TOKEN).toString().isEmpty || PreferenceManager.getString(NetworkManager.API_TOKEN) == null || PreferenceManager.getString(NetworkManager.API_TOKEN) == "null"){
+    print("API TOKEN ------> ${PreferenceManager.getString(NetworkManager.API_TOKEN)}");
+    if (PreferenceManager.getString(NetworkManager.API_TOKEN).toString().isEmpty ||
+        PreferenceManager.getString(NetworkManager.API_TOKEN) == null ||
+        PreferenceManager.getString(NetworkManager.API_TOKEN) == "null") {
       print("MAINACT------>");
-      guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
-    }else{
+      guestSignup("device_token_12345");
+    } else {
       getconfig();
     }
   }
 
   Future<void> guestSignup(String deviceToken) async {
-    setState(() {
-      isLoading = true;
-    });
-    final url =
-    Uri.parse(NetworkManager.BASE_URL + NetworkManager.guest_api);
+    setState(() => isLoading = true);
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.guest_api);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -65,93 +62,131 @@ class _BottomNavScreenState extends State<MainActivity> {
         headers: headers,
         body: jsonEncode(requestBody),
       );
-      print('POST URL: $url');
-      print('Request Body: ${jsonEncode(requestBody)}');
-      print('Response Code: ${response.statusCode}');
-      print("-------------------------------------FULL RESPONSE------------------------------------------------");
-      Toastutils.printFullText(response.body.toString());
-      print("-------------------------------------------------------------------------------------");
+
       final model = GuestResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
-        setState(() {
-
-          PreferenceManager.setString(NetworkManager.API_TOKEN, "Bearer ${model.data?.accessToken.toString()}");
-          PreferenceManager.setString(NetworkManager.PREF_IS_GUEST, model.data!.user!.isGuest.toString());
-          PreferenceManager.setString(NetworkManager.PREF_EMAIL, model.data!.user?.email ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_MOBILE, model.data!.user?.phoneNo ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_FULL_NAME, model.data!.user?.name ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_USER_ID, model.data!.user!.id.toString());
-          PreferenceManager.setString(NetworkManager.PREF_CITY_NAME, model.data!.user?.city ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_DOB_NAME, model.data!.user?.dateOfBirth ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_ADRESS, model.data!.user?.address ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_POSTAL_CODE, model.data!.user?.postalCode ?? "");
-          getconfig();
-
-
-        });
-      } else if (model.status == 0) {
-        Get.snackbar(
-          "Guest",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: EdgeInsets.all(10),
-          duration: Duration(seconds: 2),
-        );
-      } else if (model.status == 401) {
-        Get.snackbar(
-          "Guest",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: EdgeInsets.all(10),
-          duration: Duration(seconds: 2),
-        );
+        PreferenceManager.setString(
+            NetworkManager.API_TOKEN, "Bearer ${model.data?.accessToken}");
+        PreferenceManager.setString(
+            NetworkManager.PREF_IS_GUEST, model.data!.user!.isGuest.toString());
+        PreferenceManager.setString(
+            NetworkManager.PREF_EMAIL, model.data!.user?.email ?? "");
+        PreferenceManager.setString(
+            NetworkManager.PREF_FULL_NAME, model.data!.user?.name ?? "");
+        getconfig();
       } else {
-        Get.snackbar(
-          "Guest",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: EdgeInsets.all(10),
-          duration: Duration(seconds: 2),
-        );
+        Get.snackbar("Guest", model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2));
       }
     } catch (e) {
-      Get.snackbar(
-        "Guest",
-        e.toString(),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 2),
-      );
+      Get.snackbar("Guest", e.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2));
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
-
-
-
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    MenuFragment(),
-    BagFragment(),
-    SearchScreen(),
-    ProfileFragment(),
-  ];
+  /// Build the screen dynamically so that BagFragment always receives the latest `is_cart` value.
+  Widget _getScreen(int index) {
+    switch (index) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const MenuFragment();
+      case 2:
+      // Construct BagFragment each time so it gets the current is_cart value
+        return BagFragment(isCart: is_cart);
+      case 3:
+        return const SearchScreen();
+      case 4:
+        return const ProfileFragment();
+      default:
+        return const HomeScreen();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 👇 Only the selected screen is built
-      body: _screens[_currentIndex],
+      // 🔹 Using Stack to overlay floating buttons at the top-right
+      body: Stack(
+        children: [
+          // Main content (fragments)
+          _getScreen(_currentIndex),
 
+          // 🔹 Floating Favorite & Cart Buttons (Top-right)
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12.0, right: 15.0),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        final isGuest = PreferenceManager
+                            .getString(NetworkManager.PREF_IS_GUEST)
+                            ?.toString() ??
+                            "";
+                        if (isGuest.isNotEmpty) {
+                          if (isGuest == "0") {
+                            // guest = false => logged-in user, show wishlist (is_cart = "0")
+                            setState(() {
+                              is_cart = "0";
+                              _currentIndex = 2;
+                            });
+                          } else {
+                            // guest user - open login
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const LoginScreen()),
+                            );
+                          }
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Icon(Icons.favorite, color: Colors.black),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Set to cart and go to BagFragment
+                        setState(() {
+                          is_cart = "1";
+                          _currentIndex = 2; // 👈 This is the Cart fragment index
+                        });
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 0.0),
+                        child: Icon(
+                          Icons.shopping_cart,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      // 🔹 Bottom Navigation Bar
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 60,
@@ -188,12 +223,10 @@ class _BottomNavScreenState extends State<MainActivity> {
 
                     if (isGuest.isNotEmpty) {
                       if (isGuest == "0") {
-                        // ✅ Normal user
                         setState(() {
                           _currentIndex = index;
                         });
                       } else {
-                        // 🚫 Guest → redirect to login
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -207,9 +240,17 @@ class _BottomNavScreenState extends State<MainActivity> {
                       );
                     }
                   } else {
-                    setState(() {
-                      _currentIndex = index;
-                    });
+                    // If tapping the cart icon in bottom nav, ensure is_cart is set to "1"
+                    if (index == 2) {
+                      setState(() {
+                        is_cart = "1";
+                        _currentIndex = index;
+                      });
+                    } else {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    }
                   }
                 },
                 child: AnimatedContainer(
@@ -232,91 +273,44 @@ class _BottomNavScreenState extends State<MainActivity> {
   }
 
   Future<void> getconfig() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.config_data);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
-
 
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.get(
-        url,
-        headers: headers,
-      );
-
-      print('POST URL: $url');
-      print('Request Headers: $headers');
-      print('Response Code: ${response.statusCode}');
-      print("-------------------------------------FULL RESPONSE-------------------------------------");
-      Toastutils.printFullText(response.body.toString());
-      print("-------------------------------------------------------------------------------------");
+      final response = await client.get(url, headers: headers);
       final model = GetConfigResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
-        setState(() {
-          PreferenceManager.setString(NetworkManager.PREF_YOUTUBE, model.data!.youtube.toString() ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_FACEBOOK, model.data!.facebook.toString() ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_INSTAGRAM, model.data!.instagram.toString() ?? "");
-          PreferenceManager.setString(NetworkManager.PREF_PINTREST, "Not Provided" ?? "");
-        });
-
-
-
-      } else if (model.status == 0) {
-        Get.snackbar(
-          "Config",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
-      } else if (model.status == 401) {
-        Get.snackbar(
-          "Config",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        PreferenceManager.setString(
+            NetworkManager.PREF_YOUTUBE, model.data!.youtube.toString());
+        PreferenceManager.setString(
+            NetworkManager.PREF_FACEBOOK, model.data!.facebook.toString());
+        PreferenceManager.setString(
+            NetworkManager.PREF_INSTAGRAM, model.data!.instagram.toString());
+        PreferenceManager.setString(NetworkManager.PREF_PINTREST, "Not Provided");
       } else {
-        Get.snackbar(
-          "Config",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        Get.snackbar("Config", model.message.toString(),
+            backgroundColor: Colors.black,
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(10),
+            duration: const Duration(seconds: 2));
       }
     } catch (e) {
-      Get.snackbar(
-        "Config",
-        e.toString(),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        duration: const Duration(seconds: 2),
-      );
+      Get.snackbar("Config", e.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2));
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      if (mounted) setState(() => isLoading = false);
     }
   }
-
-
-
-
-
 }

@@ -54,7 +54,7 @@ class _CartScreenState extends State<CartScreen> {
                   // Shopping Cart Title
                   Container(
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 15),
+                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 15,top: 20),
                     child: Text(
                       "SHOPPING CART",
                       style: TextStyle(

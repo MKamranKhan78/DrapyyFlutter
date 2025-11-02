@@ -68,7 +68,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   Widget _buildProductGrid() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
+      padding: const EdgeInsets.only(left: 15.0,right: 15, top: 10),
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -100,7 +100,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   Widget _buildShimmerEffect() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
+      padding: const EdgeInsets.only(left: 15.0,right: 15, top: 10),
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

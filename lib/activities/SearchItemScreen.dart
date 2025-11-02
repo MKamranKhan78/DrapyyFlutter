@@ -91,7 +91,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
                   onPressed: () {
-                    //Get.to(() => Back);
+                    Get.back();
                   },
                 ),
                 // Expanded makes the Text take remaining space and stay centered

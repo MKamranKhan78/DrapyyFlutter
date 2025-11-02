@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CategoryHomee> category_list = [];
   List<PartnerHomee> partner_list = [];
   List<ProductHomee> product_list = [];
-  int? selectedIndex;
+  int? selectedIndex = 0;
 
   @override
   void initState() {
@@ -409,6 +409,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           },
                           itemBuilder: (context, index) {
+                            final banner = banners_list[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                final bannerId = banner.id.toString();
+                                print("Clicked banner ID: $bannerId");
+                                Get.to(ProductDetailsSccreen(productId: bannerId));
+
+                              },
+                              child: Image.network(
+                                banner.imageMobilePath.toString(),
+                                fit: BoxFit.contain,
+                                width: double.infinity,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      /* SizedBox(
+                        height: 300,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount: banners_list.length,
+                          onPageChanged: (index) {
+                            setState(() {
+                              _currentPage = index;
+                            });
+                          },
+                          itemBuilder: (context, index) {
                             return Image.network(
                               banners_list[index].imageMobilePath.toString(),
                               fit: BoxFit.contain,
@@ -416,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                      ),
+                      ),*/
 
                     // Indicators
                     if (_isFirstLoad) _buildIndicatorShimmer() else
@@ -494,7 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                     // GridView
-                    if (_isFirstLoad) _buildProductGridShimmer() else
+                    /*if (_isFirstLoad) _buildProductGridShimmer() else
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0,right: 10),
                         child: GridView.builder(
@@ -524,7 +553,61 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
+                      ),*/
+                    _isFirstLoad
+                        ? _buildProductGridShimmer()
+                        : category_product_list.isEmpty
+                        ? Container(
+                      width: double.infinity,
+                      height: 100,
+                      color: Colors.white,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'No products found',
+                        style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black54,
+                         ),
                       ),
+                    )
+                        : Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10),
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16.0,
+                          mainAxisSpacing: 16.0,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemCount: category_product_list.length,
+                        itemBuilder: (context, index) {
+                          return HomeCategoryProductItem(
+                            product: category_product_list[index],
+                            onItemClick: () {
+                              Get.to(() => ProductDetailsSccreen(
+                                productId: category_product_list[index].id.toString(),
+                              ));
+                            },
+                            onFavoriteClick: (newWishlistValue) async {
+                              final skipValue = PreferenceManager.getString(
+                                  NetworkManager.PREF_IS_GUEST)
+                                  .toString();
+                              if (skipValue == "1") {
+                                Get.to(() => const LoginScreen());
+                              } else {
+                                addRemoveWishlist(
+                                    category_product_list[index].id.toString());
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
 
                     const SizedBox(height: 20),
 

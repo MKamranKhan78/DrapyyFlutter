@@ -83,9 +83,9 @@ class _ProfileScreenState extends State<ProfileFragment> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.notifications_none, color: Colors.black,size: 25,),
+                    icon: const Icon(Icons.notifications_none, color: Colors.white,size: 25,),
                     onPressed: () {
-                      Get.to(() => NotificationsScreen());
+                      //Get.to(() => NotificationsScreen());
                     },
                   ),
                 ],
@@ -461,6 +461,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(height: 20,),
           Row(
             children: [
               const SizedBox(width: 48),
@@ -473,11 +474,11 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   ),
                 ),
               ),
-              Container(
+             /* Container(
                 width: 25,
                 height: 25,
                 color: Colors.grey.shade300,
-              ),
+              ),*/
               const SizedBox(width: 16),
             ],
           ),
@@ -611,6 +612,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
   List<Widget> _buildMenuItemsWithShimmer() {
     List<String> menuItems = [
       "ACCOUNT INFORMATION",
+      "NOTIFICATIONS",
       "DELIVERY ADDRESS",
       "WALLET",
       "VOCHERS",
@@ -675,27 +677,30 @@ class _ProfileScreenState extends State<ProfileFragment> {
         }
         break;
       case 1: // DELIVERY ADDRESS
+        Get.to(() => const NotificationsScreen());
+        break;
+      case 2: // DELIVERY ADDRESS
         Get.to(() => const AddressListScreen());
         break;
-      case 2: // WALLET
+      case 3: // WALLET
         print("WALLET Clicked");
         break;
-      case 3: // VOCHERS
+      case 4: // VOCHERS
         Get.to(() => const MyVoucherListingScreen());
         break;
-      case 4: // REDEEM POINTS
+      case 5: // REDEEM POINTS
         Get.to(() => RedeemScreen(points: points.toString()));
         break;
-      case 5: // PAYMENT METHODS
+      case 6: // PAYMENT METHODS
         print("PAYMENT Clicked");
         break;
-      case 6: // BECOME PARTNER
+      case 7: // BECOME PARTNER
         Get.to(() => const BecomePartnerScreen());
         break;
-      case 7: // SETTINGS
+      case 8: // SETTINGS
         print("SETTINGS Clicked");
         break;
-      case 8: // HELPS FAQS
+      case 9: // HELPS FAQS
         Get.to(() => const ContactUsScreen());
         break;
     }
