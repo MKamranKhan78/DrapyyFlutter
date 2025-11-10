@@ -159,7 +159,7 @@ class _BottomNavScreenState extends State<MainActivity> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(Icons.favorite, color: Colors.black),
+                        child: Icon(Icons.favorite,size: 30, color: Colors.black),
                       ),
                     ),
                     InkWell(
@@ -174,6 +174,7 @@ class _BottomNavScreenState extends State<MainActivity> {
                         padding: EdgeInsets.only(right: 0.0),
                         child: Icon(
                           Icons.shopping_cart,
+                          size: 30,
                           color: Colors.black,
                         ),
                       ),

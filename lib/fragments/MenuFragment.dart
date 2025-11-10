@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:drapyy/activities/ProductListingActivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
@@ -26,10 +24,14 @@ class MenuFragment extends StatefulWidget {
 class _MenuFragmentState extends State<MenuFragment> {
   List<Categoryymeny> category_list = [];
   List<Categoryymeny> product_name_list = [];
+  List<Categoryymeny> sub_category_list = [];
+
   int selectedIndex = 0;
+  String category_id = "";
+  int? expandedIndex; // ✅ which parent index is expanded
 
   bool isLoading = false;
-  bool isInitialLoading = true; // 👈 New flag for initial loading
+  bool isInitialLoading = true;
 
   @override
   void initState() {
@@ -42,11 +44,9 @@ class _MenuFragmentState extends State<MenuFragment> {
     return Scaffold(
       body: Stack(
         children: [
-          /// --- Main UI ---
           Column(
             children: [
               const SizedBox(height: 50),
-
               Center(
                 child: Text(
                   "MENU",
@@ -57,30 +57,19 @@ class _MenuFragmentState extends State<MenuFragment> {
                   ),
                 ),
               ),
-
-              /// --- Horizontal List ---
-              SizedBox(
-                height: 80,
-                child: _buildHorizontalList(),
-              ),
-
-              /// --- Vertical List ---
-              Expanded(
-                child: _buildVerticalList(),
-              ),
+              SizedBox(height: 80, child: _buildHorizontalList()),
+              Expanded(child: _buildVerticalList()),
             ],
           ),
 
-          /// --- Loader Overlay ---
-          if (isLoading && !isInitialLoading) // 👈 Show only for subsequent loads
-            Center(
-              child: CircularProgressIndicator(),
-            )
+          if (isLoading && !isInitialLoading)
+            const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
   }
 
+  // ------------------- Horizontal List -------------------
   Widget _buildHorizontalList() {
     if (isInitialLoading) {
       return Shimmer.fromColors(
@@ -89,20 +78,15 @@ class _MenuFragmentState extends State<MenuFragment> {
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          itemCount: 6, // 👈 Show 6 shimmer items
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              width: 80,
-              child: Container(
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            );
-          },
+          itemCount: 6,
+          itemBuilder: (context, index) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            width: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
         ),
       );
     }
@@ -117,8 +101,9 @@ class _MenuFragmentState extends State<MenuFragment> {
           onTap: () {
             setState(() {
               selectedIndex = index;
+              category_id = category_list[index].id.toString();
             });
-            getMenu("2", category_list[index].id.toString());
+            getMenu("2", category_id);
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -126,10 +111,7 @@ class _MenuFragmentState extends State<MenuFragment> {
             decoration: isSelected
                 ? const BoxDecoration(
               border: Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
+                bottom: BorderSide(color: Colors.black, width: 2.0),
               ),
             )
                 : null,
@@ -148,211 +130,238 @@ class _MenuFragmentState extends State<MenuFragment> {
     );
   }
 
+  // ------------------- Vertical List -------------------
   Widget _buildVerticalList() {
     if (isInitialLoading) {
       return Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
         highlightColor: Colors.grey[100]!,
         child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-          itemCount: 8, // 👈 Show 8 shimmer items
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              height: 20,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            );
-          },
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          itemCount: 8,
+          itemBuilder: (context, index) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            height: 20,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
         ),
       );
     }
 
     return ListView.builder(
-      scrollDirection: Axis.vertical,
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       itemCount: product_name_list.length,
       itemBuilder: (context, index) {
-        return InkWell(
-          onTap: () {
-            Get.to(() => AllProductsScreen(categoryId: product_name_list[index].id.toString()));
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              product_name_list[index].name.toString(),
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                fontFamily: FontConstants.gothamPro,
+        final item = product_name_list[index];
+        final isExpanded = expandedIndex == index; // ✅ fixed condition
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                getCategoryThree("3", item.id.toString(), index);
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  item.name.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    fontFamily: FontConstants.gothamPro,
+                  ),
+                ),
               ),
             ),
-          ),
+
+            if (isExpanded && sub_category_list.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 25, top: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: sub_category_list.map((sub) {
+                    return InkWell(
+                      onTap: () {
+                      //  Fluttertoast.showToast(msg: "Clicked on ${sub.name}");
+                        Get.to(() => AllProductsScreen(categoryId: sub.id.toString()));
+
+
+
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          "- ${sub.name}",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+          ],
         );
       },
     );
   }
 
+  // ------------------- API 1: Get Top Menu -------------------
   Future<void> getMenuFirst(String level) async {
     setState(() {
       isLoading = true;
-      isInitialLoading = true; // 👈 Set initial loading to true
+      isInitialLoading = true;
     });
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.getMenu);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
 
-    final requestBody = {
-      "level": level.toString(),
-    };
+    final requestBody = {"level": level};
 
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.post(
-        url,
-        headers: headers,
-        body: jsonEncode(requestBody),
-      );
+      final response =
+      await client.post(url, headers: headers, body: jsonEncode(requestBody));
 
       print('POST URL: $url');
-      print('Request Headers: $headers');
-      print('Request Body: ${jsonEncode(requestBody)}');
-      print('Response Code: ${response.statusCode}');
-      print("-------------------------------------FULL RESPONSE-------------------------------------");
-      Toastutils.printFullText(response.body.toString());
-      print("-------------------------------------------------------------------------------------");
+      print('Response: ${response.body}');
 
       final model = CategoryResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
         setState(() {
-          category_list.clear();
-          category_list.addAll(model.data!.category as Iterable<Categoryymeny>);
+          category_list
+            ..clear()
+            ..addAll(model.data!.category ?? []);
+          category_id = category_list.first.id.toString();
         });
-        getMenu("2", model.data!.category![0].id.toString());
-      } else if (model.status == 0 || model.status == 401 || model.status != null) {
-        Get.snackbar(
-          "Menu",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        getMenu("2", category_id);
       } else {
-        Get.snackbar(
-          "Menu",
-          "Unexpected response from server.",
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        _showError(model.message ?? "Unexpected response from server.");
       }
     } catch (e) {
-      Get.snackbar(
-        "Menu",
-        e.toString(),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        duration: const Duration(seconds: 2),
-      );
+      _showError(e.toString());
     } finally {
       if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
       }
     }
   }
 
+  // ------------------- API 2: Get Sub Menu -------------------
   Future<void> getMenu(String level, String category_id) async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() => isLoading = true);
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.getMenu);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
 
-    final requestBody = {
-      "level": level.toString(),
-      "category_id": category_id.toString(),
-    };
-
+    final requestBody = {"level": level, "category_id": category_id};
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.post(
-        url,
-        headers: headers,
-        body: jsonEncode(requestBody),
-      );
+      final response =
+      await client.post(url, headers: headers, body: jsonEncode(requestBody));
 
       print('POST URL: $url');
-      print('Request Headers: $headers');
-      print('Request Body: ${jsonEncode(requestBody)}');
-      print('Response Code: ${response.statusCode}');
-      print("-------------------------------------FULL RESPONSE-------------------------------------");
-      Toastutils.printFullText(response.body.toString());
-      print("-------------------------------------------------------------------------------------");
+      print('Response: ${response.body}');
 
       final model = CategoryResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
         setState(() {
-          product_name_list.clear();
-          product_name_list.addAll(model.data!.category as Iterable<Categoryymeny>);
-          isInitialLoading = false; // 👈 Set initial loading to false after first successful data load
+          product_name_list
+            ..clear()
+            ..addAll(model.data!.category ?? []);
+          isInitialLoading = false;
+          expandedIndex = null; // ✅ correct tracking
+
         });
-      } else if (model.status == 0 || model.status == 401 || model.status != null) {
-        Get.snackbar(
-          "Menu",
-          model.message.toString(),
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
       } else {
-        Get.snackbar(
-          "Menu",
-          "Unexpected response from server.",
-          backgroundColor: Colors.black,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(10),
-          duration: const Duration(seconds: 2),
-        );
+        _showError(model.message ?? "Unexpected response from server.");
       }
     } catch (e) {
-      Get.snackbar(
-        "Menu",
-        e.toString(),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        duration: const Duration(seconds: 2),
-      );
+      _showError(e.toString());
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      if (mounted) setState(() => isLoading = false);
     }
+  }
+
+  // ------------------- API 3: Get Category Level 3 -------------------
+  Future<void> getCategoryThree(String level, String categoryId, int index) async {
+    setState(() => isLoading = true);
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.getMenu);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    final requestBody = {"level": level, "category_id": categoryId};
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response =
+      await client.post(url, headers: headers, body: jsonEncode(requestBody));
+
+      print('POST URL: $url');
+      print('Response: ${response.body}');
+
+      final model = CategoryResponsee.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        final categories = model.data?.category ?? [];
+        if (categories.isEmpty) {
+           Get.to(() => AllProductsScreen(categoryId: categoryId.toString()));
+
+          return;
+        }
+
+        setState(() {
+          sub_category_list
+            ..clear()
+            ..addAll(categories);
+          expandedIndex = index; // ✅ correct tracking
+        });
+      } else {
+        _showError(model.message ?? "Something went wrong.");
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  // ------------------- Common Snackbar -------------------
+  void _showError(String message) {
+    Get.snackbar(
+      "Menu",
+      message,
+      backgroundColor: Colors.black,
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(10),
+      duration: const Duration(seconds: 2),
+    );
   }
 }

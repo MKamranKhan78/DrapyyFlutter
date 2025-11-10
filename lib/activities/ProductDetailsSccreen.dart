@@ -38,6 +38,9 @@ class ProductDetailsSccreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
   List<ProductHomee> product_list = [];
 
+
+  String PRODUCT_ID = "";
+
   String? _selectedSize; // keep as-is (this will store sizeName)
   List<DetailSizes> size_list = []; // your API-loaded list
 
@@ -62,7 +65,8 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
   @override
   void initState() {
     super.initState();
-    getProductDetails(widget.productId.toString());
+    PRODUCT_ID = widget.productId;
+    getProductDetails(PRODUCT_ID.toString());
   }
 
   @override
@@ -469,8 +473,13 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                     return DetailProductItem(
                       product: product_list[index],
                       onItemClick: () {
-                        Get.to(() => ProductDetailsSccreen(
-                            productId: product_list[index].id.toString()));
+                        /*Get.to(() => ProductDetailsSccreen(
+                            productId: product_list[index].id.toString()));*/
+                        setState(() {
+                          PRODUCT_ID = product_list[index].id.toString();
+                          _isFirstLoad = true;
+                          getProductDetails(PRODUCT_ID.toString());
+                        });
                       },
                       onFavoriteClick: (newWishlistValue) async {
                         final skipValue = PreferenceManager.getString(
@@ -945,7 +954,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
-        getProductDetails(widget.productId.toString());
+        getProductDetails(PRODUCT_ID.toString());
       }else if (model.status == 2) {
         Get.snackbar(
           "Wishlist",
@@ -955,7 +964,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
-        getProductDetails(widget.productId.toString());
+        getProductDetails(PRODUCT_ID.toString());
       } else if (model.status == 0 ||
           model.status == 401 ||
           model.status != null) {

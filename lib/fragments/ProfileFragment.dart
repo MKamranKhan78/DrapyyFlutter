@@ -7,6 +7,7 @@ import 'package:drapyy/activities/FilterScreen.dart';
 import 'package:drapyy/activities/MainActivity.dart';
 import 'package:drapyy/activities/MyVoucherListingScreen.dart';
 import 'package:drapyy/activities/NotificationsScreen.dart';
+import 'package:drapyy/activities/PageNotFoundScreen.dart';
 import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
 import 'package:drapyy/activities/RedeemScreen.dart';
 import 'package:drapyy/activities/TermsAndConditionScreen.dart';
@@ -618,9 +619,8 @@ class _ProfileScreenState extends State<ProfileFragment> {
       "VOCHERS",
       "REDEEM POINTS",
       "PAYMENT METHODS",
-      "BECOME PARTNER",
-      "SETTINGS",
-      "HELPS FAQS",
+      "BECOME A PARTNER",
+       "FAQS",
     ];
 
     List<Widget> widgets = [];
@@ -683,7 +683,7 @@ class _ProfileScreenState extends State<ProfileFragment> {
         Get.to(() => const AddressListScreen());
         break;
       case 3: // WALLET
-        print("WALLET Clicked");
+         Get.to(() => PageNotFoundScreen());
         break;
       case 4: // VOCHERS
         Get.to(() => const MyVoucherListingScreen());
@@ -692,15 +692,12 @@ class _ProfileScreenState extends State<ProfileFragment> {
         Get.to(() => RedeemScreen(points: points.toString()));
         break;
       case 6: // PAYMENT METHODS
-        print("PAYMENT Clicked");
+        Get.to(() => PageNotFoundScreen());
         break;
       case 7: // BECOME PARTNER
         Get.to(() => const BecomePartnerScreen());
         break;
-      case 8: // SETTINGS
-        print("SETTINGS Clicked");
-        break;
-      case 9: // HELPS FAQS
+      case 8: // HELPS FAQS
         Get.to(() => const ContactUsScreen());
         break;
     }

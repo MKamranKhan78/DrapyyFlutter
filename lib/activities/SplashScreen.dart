@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/ForgotPasswordActivity.dart';
 import 'package:drapyy/activities/MainActivity.dart';
+import 'package:drapyy/activities/OnboardingScreen.dart';
 import 'package:drapyy/activities/RegisterActivity.dart';
 import 'package:drapyy/fragments/ProfileFragment.dart';
 import 'package:drapyy/helper/ToastUtils.dart';
@@ -50,6 +51,7 @@ class SplashScreenState extends State<SplashScreen> {
        if (isGuest == "0") {
         print("SPLASH_checkGuestStatus------------2>");
         Get.offAll(() => MainActivity());
+        //Get.offAll(() => Onboardingscreen());
       } else {
         print("SPLASH_checkGuestStatus------------3>");
         guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
@@ -128,6 +130,7 @@ class SplashScreenState extends State<SplashScreen> {
            PreferenceManager.setString(NetworkManager.PREF_ADRESS, model.data!.user?.address ?? "");
            PreferenceManager.setString(NetworkManager.PREF_POSTAL_CODE, model.data!.user?.postalCode ?? "");
            Get.offAll(() => MainActivity());
+           //Get.offAll(() => Onboardingscreen());
 
 
         });
