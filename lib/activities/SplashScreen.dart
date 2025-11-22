@@ -50,8 +50,24 @@ class SplashScreenState extends State<SplashScreen> {
       print("SPLASH_checkGuestStatus------------1>-------isGuest--->"+isGuest.toString());
        if (isGuest == "0") {
         print("SPLASH_checkGuestStatus------------2>");
-        Get.offAll(() => MainActivity());
-        //Get.offAll(() => Onboardingscreen());
+        //Get.offAll(() => MainActivity());
+        if(PreferenceManager.getString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE) == null){
+          print("rrrrrrrrrrrrrrrrrrrrrrrr------------------>1");
+
+        if(PreferenceManager.getString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE).toString() == "null"){
+          print("rrrrrrrrrrrrrrrrrrrrrrrr------------------>2");
+
+          Get.offAll(() => Onboardingscreen());
+          }else{
+          print("rrrrrrrrrrrrrrrrrrrrrrrr------------------>3");
+
+          Get.offAll(() => MainActivity());
+          }
+        }else{
+         print("rrrrrrrrrrrrrrrrrrrrrrrr------------------>4");
+
+         Get.offAll(() => MainActivity());
+        }
       } else {
         print("SPLASH_checkGuestStatus------------3>");
         guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
@@ -129,9 +145,22 @@ class SplashScreenState extends State<SplashScreen> {
            PreferenceManager.setString(NetworkManager.PREF_DOB_NAME, model.data!.user?.dateOfBirth ?? "");
            PreferenceManager.setString(NetworkManager.PREF_ADRESS, model.data!.user?.address ?? "");
            PreferenceManager.setString(NetworkManager.PREF_POSTAL_CODE, model.data!.user?.postalCode ?? "");
-           Get.offAll(() => MainActivity());
+           //Get.offAll(() => MainActivity());
            //Get.offAll(() => Onboardingscreen());
+           if(PreferenceManager.getString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE) == null){
+             print("ffffffffffffffffff------------------>1");
+             if(PreferenceManager.getString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE).toString() == "null"){
+               print("ffffffffffffffffff------------------>2");
+               Get.offAll(() => Onboardingscreen());
 
+             }else{
+               print("ffffffffffffffffff------------------>3");
+               Get.offAll(() => MainActivity());
+             }
+           }else{
+             print("ffffffffffffffffff------------------>4");
+             Get.offAll(() => MainActivity());
+           }
 
         });
       } else if (model.status == 0) {

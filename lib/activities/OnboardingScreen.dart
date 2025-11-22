@@ -1,10 +1,13 @@
-
 import 'package:drapyy/helper/drawables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import '../helper/FontsConstants.dart';
-
+import '../helper/preference_manager.dart';
+import '../network/Network.dart';
+import 'MainActivity.dart';
 
 class Onboardingscreen extends StatefulWidget {
   const Onboardingscreen({super.key});
@@ -19,19 +22,19 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
 
   final List<Map<String, String>> _pages = [
     {
-      "image": Drawables.img_menu,
+      "image": Drawables.img_one,
       "title": "ONLINE SHOPPING",
       "subtitle":
       "Browse and purchase your favorite products easily through our app."
     },
     {
-      "image": Drawables.img_search,
+      "image": Drawables.img_two,
       "title": "MAKE THE ORDER",
       "subtitle":
       "Add products to your cart and complete your order in a few simple steps."
     },
     {
-      "image": Drawables.img_menu,
+      "image": Drawables.img_three,
       "title": "GET THE ORDER",
       "subtitle":
       "Sit back and relax while we deliver your order to your doorstep."
@@ -45,6 +48,7 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // ---------------- PAGE VIEW ----------------
             Expanded(
               child: PageView.builder(
                 controller: _controller,
@@ -71,7 +75,7 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
                           _pages[index]['title']!,
                           style: const TextStyle(
                             fontSize: 20,
-                            fontFamily: FontConstants.gothamPro, // 👈 your font
+                            fontFamily: FontConstants.gothamPro,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
                           ),
@@ -81,7 +85,7 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
                         Text(
                           _pages[index]['subtitle']!,
                           style: const TextStyle(
-                            fontFamily: FontConstants.gothamPro, // 👈 your font
+                            fontFamily: FontConstants.gothamPro,
                             fontSize: 16,
                             color: Colors.black54,
                             height: 1.5,
@@ -94,8 +98,10 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
                 },
               ),
             ),
+
             const SizedBox(height: 30),
-            // Page indicator
+
+            // ---------------- PAGE INDICATOR ----------------
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(_pages.length, (index) {
@@ -103,7 +109,7 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   height: 10,
-                  width: _currentPage == index ? 10 : 10,
+                  width: 10,
                   decoration: BoxDecoration(
                     color: _currentPage == index
                         ? Colors.black
@@ -113,7 +119,60 @@ class _OnboardingScreenState extends State<Onboardingscreen> {
                 );
               }),
             ),
+
             const SizedBox(height: 30),
+
+            // ---------------- BOTTOM BUTTONS ----------------
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // ---------- SKIP BUTTON (ALWAYS VISIBLE) ----------
+                  TextButton(
+                    onPressed: () {
+                      PreferenceManager.setString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE,"1");
+                      Get.offAll(() => MainActivity());
+                    },
+                    child: const Text(
+                      "Skip",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+
+                  // ---------- GET STARTED BUTTON (ONLY LAST PAGE) ----------
+                  if (_currentPage == _pages.length - 1)
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        PreferenceManager.setString(NetworkManager.PREF_IS_INTRO_SCREEN_DONE,"1");
+                        Get.offAll(() => MainActivity());
+                      },
+                      child: const Text(
+                        "Get Started",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

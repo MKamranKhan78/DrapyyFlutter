@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:drapyy/activities/AllBrandsScreen.dart';
 import 'package:drapyy/activities/BrandDetailsScreen.dart';
 import 'package:drapyy/activities/LoginScreen.dart';
 import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
@@ -612,23 +613,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 20),
 
                     if (_isFirstLoad) _buildTitleShimmer() else
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "EXPLORE MORE",
-                            style: TextStyle(
-                              fontFamily: FontConstants.gothamPro,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
+                      InkWell(
+                        onTap: (){
+                          Get.to(() => const AllBrandsScreen());
+
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "EXPLORE MORE",
+                              style: TextStyle(
+                                fontFamily: FontConstants.gothamPro,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          Image.asset(Drawables.arrow_farward
-                            ,width: 70,
-                            height: 40,
-                          ),
-                        ],
+                            Image.asset(Drawables.arrow_farward
+                              ,width: 70,
+                              height: 40,
+                            ),
+                          ],
+                        ),
                       ),
 
                     Container(height: 40,),

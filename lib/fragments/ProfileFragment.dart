@@ -615,10 +615,10 @@ class _ProfileScreenState extends State<ProfileFragment> {
       "ACCOUNT INFORMATION",
       "NOTIFICATIONS",
       "DELIVERY ADDRESS",
-      "WALLET",
+      "WALLET                                       (Comming soon)",
       "VOCHERS",
       "REDEEM POINTS",
-      "PAYMENT METHODS",
+      "PAYMENT METHODS                   (Comming soon)",
       "BECOME A PARTNER",
        "FAQS",
     ];

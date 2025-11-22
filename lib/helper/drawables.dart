@@ -9,6 +9,10 @@ class Drawables {
   static const String circularprofilegrey =  'assets/images/img_circular_profile_grey.png';
   static const String round_trip =  'assets/images/img_round_trip.png';
   static const String oneway_trip =  'assets/images/img_oneway_trip.png';
+  static const String img_tailor =  'assets/images/img_tailor.png';
+  static const String img_one =  'assets/images/img_one.png';
+  static const String img_two =  'assets/images/img_two.png';
+  static const String img_three =  'assets/images/img_three.png';
   static const String logo =  'assets/images/logo_screen.png';
   static const String arrow_farward =  'assets/images/arrow_farward.png';
   static const String img_drappy_white =  'assets/images/img_drappy_white.png';
@@ -19,6 +23,7 @@ class Drawables {
   static const String img_search =  'assets/images/img_search.png';
   static const String img_cart =  'assets/images/img_cart.png';
   static const String img_home =  'assets/images/img_home.png';
+  static const String img_homme =  'assets/images/img_homme.png';
 
 
 

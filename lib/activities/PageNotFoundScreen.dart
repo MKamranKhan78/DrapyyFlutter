@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/FontsConstants.dart';
+import '../helper/drawables.dart';
 
 class PageNotFoundScreen extends StatelessWidget {
 
@@ -25,10 +26,10 @@ class PageNotFoundScreen extends StatelessWidget {
           children: [
 
             // ✅ Green Check Icon in Circle
-            Icon(
-              Icons.accessibility_sharp,
-              color: Colors.black,
-              size: 70,
+            Image.asset(
+              Drawables.img_tailor,
+              width: 80,
+              height: 80,
             ),
 
             const SizedBox(height: 10),

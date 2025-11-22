@@ -55,6 +55,7 @@ class NetworkManager {
     static const String avail_Points ="customer/avail-points";
     static const String avail_points_list ="customer/avail-points-list";
     static const String my_follow ="customer/my-follows";
+    static const String all_brands ="customer/brands";
     static const String my_follows_sync ="customer/my-follows/sync";
     static const String sync_my_follows ="customer/my-follows/sync";
     static const String search ="search";
@@ -92,6 +93,7 @@ class NetworkManager {
 
    static const String PREF_IS_GUEST ="PREF_IS_GUEST";
    static const String PREF_MOBILE ="PREF_MOBILE";
+   static const String PREF_IS_INTRO_SCREEN_DONE ="PREF_INTRO_SCREEN";
    static const String PREF_FULL_NAME ="PREF_FULL_NAME";
    static const String PREF_USER_ID ="PREF_USER_ID";
    static const String PREF_CITY_NAME ="PREF_CITY_NAME";

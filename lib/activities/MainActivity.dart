@@ -205,7 +205,7 @@ class _BottomNavScreenState extends State<MainActivity> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(5, (index) {
               final icons = [
-                Drawables.img_home,
+                Drawables.img_homme,
                 Drawables.img_menu,
                 Drawables.img_cart,
                 Drawables.img_search,

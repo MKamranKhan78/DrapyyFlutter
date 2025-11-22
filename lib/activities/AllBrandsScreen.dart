@@ -17,14 +17,14 @@ import '../helper/preference_manager.dart';
 import '../network/Network.dart';
 
 
-class FollowingListScreen extends StatefulWidget {
-  const FollowingListScreen({super.key});
+class AllBrandsScreen extends StatefulWidget {
+  const AllBrandsScreen({super.key});
 
   @override
-  State<FollowingListScreen> createState() => _FollowingListScreenState();
+  State<AllBrandsScreen> createState() => _AllBrandsScreenState();
 }
 
-class _FollowingListScreenState extends State<FollowingListScreen> {
+class _AllBrandsScreenState extends State<AllBrandsScreen> {
 
   bool isLoading = false;
   List<FollowMyFollower> followersList = [];
@@ -32,7 +32,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
   @override
   void initState() {
     super.initState();
-    myFollowers();
+    allBrands();
   }
 
   @override
@@ -49,7 +49,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          "FOLLOWING",
+          "ALL BRANDS",
           style: TextStyle(
             fontFamily: FontConstants.gothamPro,
             fontSize: 18,
@@ -69,7 +69,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           : followersList.isEmpty
           ? const Center(
         child: Text(
-          "No follower found",
+          "No brand found",
           style: TextStyle(color: Colors.grey),
         ),
       )
@@ -109,7 +109,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
                     children: [
                       Text(
                         item.merchant?.merchantProfile?.brandName.toString() ?? "Unknown User",
-                         style: const TextStyle(
+                        style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -146,7 +146,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
                 // ✅ Cute rounded "Follow" button with border
                 InkWell(
                   onTap: (){
-                    syncFollowers(item.merchant!.id.toString());
+                    //syncFollowers(item.merchant!.id.toString());
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
@@ -171,16 +171,16 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           );
         },
       ),
-     );
+    );
   }
 
 
-  Future<void> myFollowers() async {
+  Future<void> allBrands() async {
     setState(() {
       isLoading = true;
     });
 
-    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.my_follow);
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.all_brands);
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -193,21 +193,21 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
     final client = CustomHttpClient(http.Client());
 
     try {
-      final response = await client.get(
+      final response = await client.post(
         url,
         headers: headers,
-       );
+      );
 
       print('POST URL: $url');
       print('Request Headers: $headers');
-       print('Response Code: ${response.statusCode}');
+      print('Response Code: ${response.statusCode}');
       print(
           "-------------------------------------FULL RESPONSE-------------------------------------");
       Toastutils.printFullText(response.body.toString());
       print(
           "-------------------------------------------------------------------------------------");
 
-      final model =
+     /* final model =
       FollowMyFollowersResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
@@ -237,7 +237,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           margin: const EdgeInsets.all(10),
           duration: const Duration(seconds: 2),
         );
-      }
+      }*/
     } catch (e) {
       Get.snackbar(
         "Follow",
@@ -256,7 +256,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
     }
   }
 
-
+/*
   Future<void> syncFollowers(String brandId) async {
     setState(() {
       isLoading = true;
@@ -336,7 +336,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
         });
       }
     }
-  }
+  }*/
 
 
 
