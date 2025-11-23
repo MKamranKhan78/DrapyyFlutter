@@ -572,6 +572,9 @@ class _MyOrdersPageState extends State<CheckoutPage> {
       PlaceOrderResponsee.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+
+        eventBus.fire(WishlistUpdatedEvent("0"));
+
         Get.snackbar(
           "Orders",
           model.message.toString(),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:drapyy/fragments/MenuFragment.dart';
 import 'package:drapyy/fragments/ProfileFragment.dart';
@@ -29,10 +30,46 @@ class _BottomNavScreenState extends State<MainActivity> {
   bool isLoading = false;
 
   String is_cart = "1";
+  String cartCount = "";
+  String wishCount = "";
+  late StreamSubscription cartListener;
+  late StreamSubscription wishListener;
 
   @override
   void initState() {
     super.initState();
+
+    if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT) != null){
+      if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString() != "null"){
+        cartCount = PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString();
+      }
+    }else{
+      cartCount = "0";
+    }
+
+    if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT) != null){
+      if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString() != "null"){
+        wishCount = PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString();
+      }
+    }else{
+      wishCount = "0";
+    }
+
+    cartListener = eventBus.on<WishlistUpdatedEvent>().listen((event) {
+      print("Cart Count Updated: ${event.count}");
+      setState(() {
+        PreferenceManager.setString(NetworkManager.PREF_CART_COUNT, event.count.toString() ?? "");
+        cartCount = event.count;  // Update your UI
+      });
+    });
+
+    wishListener = eventBus.on<FavUpdatedEvent>().listen((event) {
+      print("Fav Count Updated: ${event.count}");
+      setState(() {
+        PreferenceManager.setString(NetworkManager.PREF_WISH_COUNT, event.count.toString() ?? "");
+        wishCount = event.count;  // Update your UI
+      });
+    });
 
     print("API TOKEN ------> ${PreferenceManager.getString(NetworkManager.API_TOKEN)}");
     if (PreferenceManager.getString(NetworkManager.API_TOKEN).toString().isEmpty ||
@@ -44,6 +81,15 @@ class _BottomNavScreenState extends State<MainActivity> {
       getconfig();
     }
   }
+
+  @override
+  void dispose() {
+    cartListener.cancel();
+    wishListener.cancel();
+    super.dispose();
+  }
+
+
 
   Future<void> guestSignup(String deviceToken) async {
     setState(() => isLoading = true);
@@ -133,21 +179,19 @@ class _BottomNavScreenState extends State<MainActivity> {
                       onTap: () {
                         final isGuest = PreferenceManager
                             .getString(NetworkManager.PREF_IS_GUEST)
-                            ?.toString() ??
-                            "";
+                            ?.toString() ?? "";
+
                         if (isGuest.isNotEmpty) {
                           if (isGuest == "0") {
-                            // guest = false => logged-in user, show wishlist (is_cart = "0")
+                            // logged-in user: wishlist
                             setState(() {
                               is_cart = "0";
                               _currentIndex = 2;
                             });
                           } else {
-                            // guest user - open login
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (_) => const LoginScreen()),
+                              MaterialPageRoute(builder: (_) => const LoginScreen()),
                             );
                           }
                         } else {
@@ -157,28 +201,94 @@ class _BottomNavScreenState extends State<MainActivity> {
                           );
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(Icons.favorite,size: 30, color: Colors.black),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(
+                              Icons.favorite,
+                              size: 30,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          // ============================
+                          // ❤️ Wishlist Count Badge
+                          // ============================
+                             Positioned(
+                              right: 2,
+                              top: -4,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 20,
+                                  minHeight: 20,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    wishCount.toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                     InkWell(
                       onTap: () {
-                        // Set to cart and go to BagFragment
                         setState(() {
                           is_cart = "1";
-                          _currentIndex = 2; // 👈 This is the Cart fragment index
+                          _currentIndex = 2;
                         });
                       },
-                      child: const Padding(
-                        padding: EdgeInsets.only(right: 0.0),
-                        child: Icon(
-                          Icons.shopping_cart,
-                          size: 30,
-                          color: Colors.black,
-                        ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(
+                            Icons.shopping_cart,
+                            size: 30,
+                            color: Colors.black,
+                          ),
+
+                          // 🔥 Badge
+                         Positioned(
+                            right: -6,
+                            top: -6,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(20), // makes it circular/pill
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 20,
+                                minHeight: 20,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  cartCount.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

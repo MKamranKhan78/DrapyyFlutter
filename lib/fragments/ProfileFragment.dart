@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:drapyy/activities/AccountInformationScreen.dart';
 import 'package:drapyy/activities/BecomePartnerScreen.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../activities/AddressListScreen.dart';
@@ -50,6 +52,21 @@ class _ProfileScreenState extends State<ProfileFragment> {
   String following = "";
   String name = "";
   String image = "";
+  File? _pickedImage;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _pickedImage = File(image.path); // Update UI instantly
+      });
+
+      // Upload to server
+      await updateProfile(_pickedImage!);
+    }
+  }
 
   @override
   void initState() {
@@ -95,24 +112,29 @@ class _ProfileScreenState extends State<ProfileFragment> {
               // Profile Image with shimmer
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, top: 30),
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1,
+                child: GestureDetector(
+                  onTap: _pickImage, // <--- Tap to select image
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: ClipOval(
-                    child: (isLoading && isFirstLoad)
-                        ? Container(
-                      color: Colors.grey.shade300,
-                    )
-                        : Container(
-                      color: Colors.black12,
-                      child: Image.network(
+                    child: ClipOval(
+                      child: (isLoading && isFirstLoad)
+                          ? Container(
+                        color: Colors.grey.shade300,
+                      )
+                          : _pickedImage != null
+                          ? Image.file(
+                        _pickedImage!,
+                        fit: BoxFit.cover,
+                      )
+                          : Image.network(
                         image.toString(),
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
@@ -138,14 +160,14 @@ class _ProfileScreenState extends State<ProfileFragment> {
                   color: Colors.grey.shade300,
                 )
                     : Text(
-                  name.toString(),
+                  toCamelCase(name.toString()),
                   style: TextStyle(
                     fontFamily: FontConstants.gothamPro,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
-                ),
+                )
               ),
               const SizedBox(height: 30),
 
@@ -455,6 +477,16 @@ class _ProfileScreenState extends State<ProfileFragment> {
       ),
     );
   }
+
+  String toCamelCase(String name) {
+    if (name.isEmpty) return name;
+
+    return name.split(" ").map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(" ");
+  }
+
 
   // Shimmer effect widget
   Widget _buildShimmerEffect() {
@@ -1037,4 +1069,68 @@ class _ProfileScreenState extends State<ProfileFragment> {
       }
     }
   }
+
+  Future<void> updateProfile(File img_file) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.updateImage);
+
+    final request = http.MultipartRequest("POST", url);
+
+    request.headers.addAll({
+      "Accept": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    });
+
+    /// ---------------------------
+    /// ADD MULTIPART IMAGE HERE
+    /// ---------------------------
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        "image",       // <-- API parameter name
+        img_file!.path,
+      ),
+    );
+
+    try {
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      print("URL: $url");
+      print("Status Code: ${response.statusCode}");
+      print("Response: ${response.body}");
+
+      final model = ApiResponseUpdateProfile.fromJson(json.decode(response.body));
+
+      if (model.status == 1) {
+        getProfile();
+      } else {
+        Get.snackbar(
+          "Update",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      print("ERROR-------------------->"+e.toString());
+      Get.snackbar(
+        "Update",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+
 }

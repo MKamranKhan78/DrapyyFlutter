@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CategoryHomee> category_list = [];
   List<PartnerHomee> partner_list = [];
   List<ProductHomee> product_list = [];
+  List<ProductHomee> top_seller = [];
   int? selectedIndex = 0;
 
   @override
@@ -727,6 +728,59 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
+
+                    Container(height: 20,),
+
+                    if (_isFirstLoad) _buildTitleShimmer() else
+                      const Text(
+                        "TOP SELLER",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    Container(height: 40,),
+
+                    if (_isFirstLoad) _buildHorizontalProductsShimmer() else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: top_seller.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: SizedBox(
+                                  width: 180,
+                                  child: HomeProductItem(
+                                    product: top_seller[index],
+                                    onItemClick: () {
+                                      Get.to(() => ProductDetailsSccreen(productId: top_seller[index].id.toString()));
+                                    },
+                                    onFavoriteClick: (newWishlistValue) async {
+                                      final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                                      if (skipValue == "1") {
+                                        Get.to(() => const LoginScreen());
+                                      } else {
+                                        addRemoveWishlist(top_seller[index].id.toString());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+
+
+
+
                     Container(height: 40,),
 
                     if (_isFirstLoad) _buildTitleShimmer() else
@@ -963,6 +1017,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final model = GetHomeModelResponsee.fromJson(json.decode(response.body));
       if (model.status == 1) {
         setState(() {
+
+          getTopSeller();
+
           category_product_list.clear();
           category_product_list.addAll((model.data?.categoryProducts ?? []).take(4),);
 
@@ -1027,6 +1084,87 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
   }
+
+
+  Future<void> getTopSeller() async {
+
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.top_seller);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = TopSellingProductsResponse.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+
+          top_seller.clear();
+          top_seller.addAll(model.data!.products as Iterable<ProductHomee>);
+
+
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Home",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+
+      }
+    }
+  }
+
+
+
 
   Future<void> getCategoryProducts(String product_id,String take) async {
     setState(() {
@@ -1141,9 +1279,10 @@ class _HomeScreenState extends State<HomeScreen> {
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
 
-      final model = AddWishlistModell.fromJson(json.decode(response.body));
+      final model = WishlistResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -1154,6 +1293,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         getHome();
       }else if (model.status == 2) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:drapyy/activities/products_items/DetailProductItem.dart';
 import 'package:drapyy/activities/products_items/HomeCategoryProductItem.dart';
 import 'package:drapyy/helper/colors.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -943,9 +944,10 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           "-------------------------------------------------------------------------------------");
 
       final model =
-      AddWishlistModell.fromJson(json.decode(response.body));
+      WishlistResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -956,6 +958,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
         );
         getProductDetails(PRODUCT_ID.toString());
       }else if (model.status == 2) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -1292,10 +1295,9 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
       print(
           "-------------------------------------------------------------------------------------");
 
-      final model =
-      BrandGetProductByBrand.fromJson(json.decode(response.body));
-
+      final model = WishlistResponse.fromJson(json.decode(response.body));
       if (model.status == 1) {
+        eventBus.fire(WishlistUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Cart",
           model.message.toString(),

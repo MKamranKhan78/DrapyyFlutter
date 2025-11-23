@@ -269,9 +269,11 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
 
-      final model = AddWishlistModell.fromJson(json.decode(response.body));
+      final model = WishlistResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
+
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -283,6 +285,8 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         getCategoryProducts(widget.categoryId.toString(),"100");
 
       } else if (model.status == 2) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
+
         Get.snackbar(
           "Wishlist",
           model.message.toString(),

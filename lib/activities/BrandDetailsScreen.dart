@@ -473,9 +473,10 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
 
-      final model = AddWishlistModell.fromJson(json.decode(response.body));
+      final model = WishlistResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -486,6 +487,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         );
         getProductByBrand("1", categor_IDD.toString());
       } else if (model.status == 2) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -672,10 +674,13 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
           followers = model.data!.followers.toString();
           _currentPage = model.data!.currentPage ?? 1;
 
-          if(model.data!.is_followed != null && model.data!.is_followed!.isNotEmpty){
-            is_followed = model.data!.is_followed.toString();
+          if(model.data!.brand!.is_followed != null && model.data!.brand!.is_followed.toString().isNotEmpty){
+            is_followed = model.data!.brand!.is_followed.toString();
+          }else{
+            is_followed = "0";
           }
 
+          print("IS_FOLLOWED------>"+model.data!.brand!.is_followed.toString());
           _totalPages = model.data!.totalPages ?? 1;
           _hasMorePages = model.data!.hasMorePage ?? false;
 

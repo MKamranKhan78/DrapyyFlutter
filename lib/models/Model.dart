@@ -5987,6 +5987,7 @@ class BrandBrandLast {
   int? isApproved;
   String? guestToken;
   int? isGuest;
+  int? is_followed;
   String? createdAt;
   String? updatedAt;
   String? gUserId;
@@ -6021,6 +6022,7 @@ class BrandBrandLast {
     this.isApproved,
     this.guestToken,
     this.isGuest,
+    this.is_followed,
     this.createdAt,
     this.updatedAt,
     this.gUserId,
@@ -6057,6 +6059,7 @@ class BrandBrandLast {
       isApproved: int.tryParse(json['is_approved']?.toString() ?? ''),
       guestToken: json['guest_token']?.toString(),
       isGuest: int.tryParse(json['is_guest']?.toString() ?? ''),
+      is_followed: int.tryParse(json['is_followed']?.toString() ?? ''),
       createdAt: json['created_at']?.toString(),
       updatedAt: json['updated_at']?.toString(),
       gUserId: json['g_user_id']?.toString(),
@@ -6093,6 +6096,7 @@ class BrandBrandLast {
     'is_approved': isApproved,
     'guest_token': guestToken,
     'is_guest': isGuest,
+    'is_followed': is_followed,
     'created_at': createdAt,
     'updated_at': updatedAt,
     'g_user_id': gUserId,
@@ -6247,4 +6251,453 @@ class BrandColorsLast {
   String toString() => color ?? "Unknown";
 }
 
+//------------------------------------------------
 
+class BrandResponse {
+  final int status;
+  final String message;
+  final BrandDataa data;
+
+  BrandResponse({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory BrandResponse.fromJson(Map<String, dynamic> json) {
+    return BrandResponse(
+      status: json['status'] ?? 0,
+      message: json['message'] ?? '',
+      data: BrandDataa.fromJson(json['data'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "status": status,
+      "message": message,
+      "data": data.toJson(),
+    };
+  }
+}
+
+
+class BrandDataa {
+  final List<Brand> brands;
+  final bool hasMorePage;
+  final int currentPage;
+  final int total;
+
+  BrandDataa({
+    required this.brands,
+    required this.hasMorePage,
+    required this.currentPage,
+    required this.total,
+  });
+
+  factory BrandDataa.fromJson(Map<String, dynamic> json) {
+    return BrandDataa(
+      brands: (json['brands'] as List<dynamic>)
+          .map((e) => Brand.fromJson(e))
+          .toList(),
+      hasMorePage: json['has_more_page'] ?? false,
+      currentPage: json['current_page'] ?? 0,
+      total: json['total'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "brands": brands.map((e) => e.toJson()).toList(),
+      "has_more_page": hasMorePage,
+      "current_page": currentPage,
+      "total": total,
+    };
+  }
+}
+
+
+
+class Brand {
+  final int id;
+  final String name;
+  final String slug;
+  final String sellerType;
+  final int isApproved;
+  final int followers;
+  final String imagePath;
+
+  Brand({
+    required this.id,
+    required this.name,
+    required this.slug,
+    required this.sellerType,
+    required this.isApproved,
+    required this.followers,
+    required this.imagePath,
+  });
+
+  factory Brand.fromJson(Map<String, dynamic> json) {
+    return Brand(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      slug: json['slug'] ?? '',
+      sellerType: json['seller_type'] ?? '',
+      isApproved: json['is_approved'] ?? 0,
+      followers: json['followers'] ?? 0,
+      imagePath: json['image_path'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "slug": slug,
+      "seller_type": sellerType,
+      "is_approved": isApproved,
+      "followers": followers,
+      "image_path": imagePath,
+    };
+  }
+}
+//-----------------Cart and Wishlist
+class WishlistResponse {
+  final int status;
+  final String message;
+  final WishlistData data;
+
+  WishlistResponse({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory WishlistResponse.fromJson(Map<String, dynamic> json) {
+    return WishlistResponse(
+      status: json['status'] ?? 0,
+      message: json['message'] ?? '',
+      data: WishlistData.fromJson(json['data'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "status": status,
+      "message": message,
+      "data": data.toJson(),
+    };
+  }
+}
+
+class WishlistData {
+  final int count;
+
+  WishlistData({
+    required this.count,
+  });
+
+  factory WishlistData.fromJson(Map<String, dynamic> json) {
+    return WishlistData(
+      count: json['count'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "count": count,
+    };
+  }
+}
+
+//-----------------
+class WishlistUpdatedEvent {
+  final String count;
+
+  WishlistUpdatedEvent(this.count);
+}
+class FavUpdatedEvent {
+  final String count;
+
+  FavUpdatedEvent(this.count);
+}
+//------------------------------
+
+
+class ApiResponseUpdateProfile {
+  int? status;
+  String? message;
+  ResponseData? data;
+
+  ApiResponseUpdateProfile({this.status, this.message, this.data});
+
+  factory ApiResponseUpdateProfile.fromJson(Map<String, dynamic> json) {
+    return ApiResponseUpdateProfile(
+      status: json['status'],
+      message: json['message'],
+      data: json['data'] != null ? ResponseData.fromJson(json['data']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class ResponseData {
+  Userrr? user;
+
+  ResponseData({this.user});
+
+  factory ResponseData.fromJson(Map<String, dynamic> json) {
+    return ResponseData(
+      user: json['user'] != null ? Userrr.fromJson(json['user']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "user": user?.toJson(),
+  };
+}
+
+class Userrr {
+  int? id;
+  String? name;
+  String? email;
+  String? username;
+  String? emailVerifiedAt;
+  int? type;
+  String? image;
+  String? phoneNo;
+  String? address;
+  String? city;
+  String? dateOfBirth;
+  String? postalCode;
+  int? merchantId;
+  String? cnic;
+  String? bankName;
+  String? bankAccountTitle;
+  String? bankAccountNumber;
+  String? facebookLink;
+  String? instagramLink;
+  String? tiktokLink;
+  int? newsletter;
+  int? official;
+  int? status;
+  int? isApproved;
+  String? guestToken;
+  int? isGuest;
+  String? createdAt;
+  String? updatedAt;
+  String? gUserId;
+  String? imagePath;
+  int? walletAmount;
+  Wallet? wallet;
+
+  Userrr({
+    this.id,
+    this.name,
+    this.email,
+    this.username,
+    this.emailVerifiedAt,
+    this.type,
+    this.image,
+    this.phoneNo,
+    this.address,
+    this.city,
+    this.dateOfBirth,
+    this.postalCode,
+    this.merchantId,
+    this.cnic,
+    this.bankName,
+    this.bankAccountTitle,
+    this.bankAccountNumber,
+    this.facebookLink,
+    this.instagramLink,
+    this.tiktokLink,
+    this.newsletter,
+    this.official,
+    this.status,
+    this.isApproved,
+    this.guestToken,
+    this.isGuest,
+    this.createdAt,
+    this.updatedAt,
+    this.gUserId,
+    this.imagePath,
+    this.walletAmount,
+    this.wallet,
+  });
+
+  factory Userrr.fromJson(Map<String, dynamic> json) {
+    return Userrr(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      username: json['username'],
+      emailVerifiedAt: json['email_verified_at'],
+      type: json['type'],
+      image: json['image'],
+      phoneNo: json['phone_no'],
+      address: json['address'],
+      city: json['city'],
+      dateOfBirth: json['date_of_birth'],
+      postalCode: json['postal_code'],
+      merchantId: json['merchant_id'],
+      cnic: json['cnic'],
+      bankName: json['bank_name'],
+      bankAccountTitle: json['bank_account_title'],
+      bankAccountNumber: json['bank_account_number'],
+      facebookLink: json['facebook_link'],
+      instagramLink: json['instagram_link'],
+      tiktokLink: json['tiktok_link'],
+      newsletter: json['newsletter'],
+      official: json['official'],
+      status: json['status'],
+      isApproved: json['is_approved'],
+      guestToken: json['guest_token'],
+      isGuest: json['is_guest'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      gUserId: json['g_user_id'],
+      imagePath: json['image_path'],
+      walletAmount: json['wallet_amount'],
+      wallet: json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "username": username,
+    "email_verified_at": emailVerifiedAt,
+    "type": type,
+    "image": image,
+    "phone_no": phoneNo,
+    "address": address,
+    "city": city,
+    "date_of_birth": dateOfBirth,
+    "postal_code": postalCode,
+    "merchant_id": merchantId,
+    "cnic": cnic,
+    "bank_name": bankName,
+    "bank_account_title": bankAccountTitle,
+    "bank_account_number": bankAccountNumber,
+    "facebook_link": facebookLink,
+    "instagram_link": instagramLink,
+    "tiktok_link": tiktokLink,
+    "newsletter": newsletter,
+    "official": official,
+    "status": status,
+    "is_approved": isApproved,
+    "guest_token": guestToken,
+    "is_guest": isGuest,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+    "g_user_id": gUserId,
+    "image_path": imagePath,
+    "wallet_amount": walletAmount,
+    "wallet": wallet?.toJson(),
+  };
+}
+
+class Wallet {
+  int? id;
+  int? userId;
+  String? createdAt;
+  String? updatedAt;
+  int? amount;
+
+  Wallet({
+    this.id,
+    this.userId,
+    this.createdAt,
+    this.updatedAt,
+    this.amount,
+  });
+
+  factory Wallet.fromJson(Map<String, dynamic> json) {
+    return Wallet(
+      id: json['id'],
+      userId: json['user_id'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      amount: json['amount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "user_id": userId,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+    "amount": amount,
+  };
+}
+
+//---------------------------------------
+
+
+// TopSellingProductsResponse.dart
+
+class TopSellingProductsResponse {
+  final int status;
+  final String message;
+  final ProductsData data;
+
+  TopSellingProductsResponse({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory TopSellingProductsResponse.fromJson(Map<String, dynamic> json) {
+    return TopSellingProductsResponse(
+      status: json['status'],
+      message: json['message'],
+      data: ProductsData.fromJson(json['data']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'status': status,
+    'message': message,
+    'data': data.toJson(),
+  };
+}
+
+// -------------------------------------------------------------
+
+class ProductsData {
+  final List<ProductHomee> products;
+  final bool hasMorePage;
+  final int currentPage;
+  final int total;
+
+  ProductsData({
+    required this.products,
+    required this.hasMorePage,
+    required this.currentPage,
+    required this.total,
+  });
+
+  factory ProductsData.fromJson(Map<String, dynamic> json) {
+    return ProductsData(
+      products: List<ProductHomee>.from(
+          json['products'].map((x) => ProductHomee.fromJson(x))),
+      hasMorePage: json['has_more_page'],
+      currentPage: json['current_page'],
+      total: json['total'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'products': List<dynamic>.from(products.map((x) => x.toJson())),
+    'has_more_page': hasMorePage,
+    'current_page': currentPage,
+    'total': total,
+  };
+}

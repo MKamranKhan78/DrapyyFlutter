@@ -28,6 +28,7 @@ class NetworkManager {
     static const String getMenu ="get-menu";
     static const String config_data ="config-data";
     static const String cart ="cart";
+    static const String top_seller ="top-selling-products";
     static const String cartUpdate ="cart/update";
     static const String cartRemove ="cart/remove";
     static const String addCart ="cart/add";
@@ -35,6 +36,7 @@ class NetworkManager {
     static const String productColor ="product-colors";
     static const String syncWishlist ="sync-wishlist";
     static const String wishlist ="customer/wishlist";
+    static const String updateImage ="customer/profile-picture-update";
     static const String termsAndCondition ="page/terms_and_condition";
     static const String privacy_policy ="page/privacy-policy";
     static const String placeOrder ="checkout/place-order";
@@ -55,7 +57,7 @@ class NetworkManager {
     static const String avail_Points ="customer/avail-points";
     static const String avail_points_list ="customer/avail-points-list";
     static const String my_follow ="customer/my-follows";
-    static const String all_brands ="customer/brands";
+    static const String all_brands ="brands";
     static const String my_follows_sync ="customer/my-follows/sync";
     static const String sync_my_follows ="customer/my-follows/sync";
     static const String search ="search";
@@ -99,6 +101,8 @@ class NetworkManager {
    static const String PREF_CITY_NAME ="PREF_CITY_NAME";
    static const String PREF_DOB_NAME ="PREF_DOB_NAME";
    static const String PREF_ADRESS ="PREF_ADRESS";
+   static const String PREF_CART_COUNT ="PREF_CART_COUNT";
+   static const String PREF_WISH_COUNT ="PREF_WISH_COUNT";
    static const String PREF_POSTAL_CODE ="PREF_POSTAL_CODE";
 
    static const String PREF_YOUTUBE ="PREF_YOUTUBE";

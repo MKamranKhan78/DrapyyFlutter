@@ -335,9 +335,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
       Toastutils.printFullText(response.body.toString());
       print("-------------------------------------------------------------------------------------");
 
-      final model = AddWishlistModell.fromJson(json.decode(response.body));
+      final model = WishlistResponse.fromJson(json.decode(response.body));
 
       if (model.status == 1) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
@@ -348,6 +349,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         );
         getWishlist();
       } else if (model.status == 2) {
+        eventBus.fire(FavUpdatedEvent(model.data.count.toString()));
         Get.snackbar(
           "Wishlist",
           model.message.toString(),
