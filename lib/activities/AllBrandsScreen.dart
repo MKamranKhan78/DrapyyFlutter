@@ -291,13 +291,24 @@ class _AllBrandsScreenState extends State<AllBrandsScreen> {
 
 
 
+    // ✅ Request body changed to match Kotlin version
+    final requestBody = {
+      "per_page": "100",
+      "current_page": "1",
+    };
+
+
+
     final client = CustomHttpClient(http.Client());
 
     try {
       final response = await client.post(
         url,
         headers: headers,
+        body: jsonEncode(requestBody),
       );
+
+
 
       print('POST URL: $url');
       print('Request Headers: $headers');

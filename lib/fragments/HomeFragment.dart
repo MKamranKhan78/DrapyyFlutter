@@ -5,6 +5,7 @@ import 'package:drapyy/activities/BrandDetailsScreen.dart';
 import 'package:drapyy/activities/LoginScreen.dart';
 import 'package:drapyy/activities/PrivacyPolicyScreen.dart';
 import 'package:drapyy/activities/TermsAndConditionScreen.dart';
+import 'package:drapyy/activities/ViewAllProducts.dart';
 import 'package:drapyy/activities/products_items/HomeCategoryProductItem.dart';
 import 'package:drapyy/activities/ProductDetailsSccreen.dart';
 import 'package:drapyy/activities/products_items/HomeProductItem.dart';
@@ -611,12 +612,63 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
 
 
+                    Container(height: 30,),
+
+                    if (_isFirstLoad) _buildTitleShimmer() else
+                      const Text(
+                        "TOP SELLER",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    Container(height: 30,),
+
+                    if (_isFirstLoad) _buildHorizontalProductsShimmer() else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: top_seller.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: SizedBox(
+                                  width: 180,
+                                  child: HomeProductItem(
+                                    product: top_seller[index],
+                                    onItemClick: () {
+                                      Get.to(() => ProductDetailsSccreen(productId: top_seller[index].id.toString()));
+                                    },
+                                    onFavoriteClick: (newWishlistValue) async {
+                                      final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                                      if (skipValue == "1") {
+                                        Get.to(() => const LoginScreen());
+                                      } else {
+                                        addRemoveWishlist(top_seller[index].id.toString());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+
+
+
                     const SizedBox(height: 20),
 
                     if (_isFirstLoad) _buildTitleShimmer() else
                       InkWell(
                         onTap: (){
-                          Get.to(() => const AllBrandsScreen());
+                          Get.to(() => ViewAllProducts());
 
                         },
                         child: Row(
@@ -639,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                    Container(height: 40,),
+                    Container(height: 20,),
 
                     //brands
                     if (_isFirstLoad) _buildBrandsGridShimmer() else
@@ -679,7 +731,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                    Container(height: 20,),
+                    Container(height: 30,),
+                    if (_isFirstLoad) _buildTitleShimmer() else
+                      InkWell(
+                        onTap: (){
+                          Get.to(const AllBrandsScreen());
+                        },
+                        child: const Text(
+                          "VIEW ALL BRANDS",
+                          style: TextStyle(
+                            fontFamily: FontConstants.gothamPro,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+
+                    Container(height: 40,),
 
                     if (_isFirstLoad) _buildTitleShimmer() else
                       const Text(
@@ -728,55 +797,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-
-                    Container(height: 20,),
-
-                    if (_isFirstLoad) _buildTitleShimmer() else
-                      const Text(
-                        "TOP SELLER",
-                        style: TextStyle(
-                          fontFamily: FontConstants.gothamPro,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                        ),
-                      ),
-
-                    Container(height: 40,),
-
-                    if (_isFirstLoad) _buildHorizontalProductsShimmer() else
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: SizedBox(
-                          height: 250,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: top_seller.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: SizedBox(
-                                  width: 180,
-                                  child: HomeProductItem(
-                                    product: top_seller[index],
-                                    onItemClick: () {
-                                      Get.to(() => ProductDetailsSccreen(productId: top_seller[index].id.toString()));
-                                    },
-                                    onFavoriteClick: (newWishlistValue) async {
-                                      final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
-                                      if (skipValue == "1") {
-                                        Get.to(() => const LoginScreen());
-                                      } else {
-                                        addRemoveWishlist(top_seller[index].id.toString());
-                                      }
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
 
 
 
