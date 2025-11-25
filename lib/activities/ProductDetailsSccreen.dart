@@ -51,6 +51,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
 
   bool isLoading = false;
   bool _isFirstLoad = true; // Track first load for shimmer
+  bool isLoadingAddToCart = false; // Track first load for shimmer
 
   final PageController _pageController = PageController();
   List<String> banners_list = [];
@@ -77,17 +78,47 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
     super.dispose();
   }
 
+/*  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: _isFirstLoad || isLoading
+            ? _buildShimmerEffect()
+            : _buildMainContent(),
+      ),
+    );
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: _isFirstLoad && isLoading
-            ? _buildShimmerEffect()
-            : _buildMainContent(),
+        child: Stack(
+          children: [
+            // Main Logic (Shimmer or Content)
+            _isFirstLoad || isLoading
+                ? _buildShimmerEffect()
+                : _buildMainContent(),
+
+            // Add to Cart Loading Overlay
+            if (isLoadingAddToCart)
+              Container(
+                color: Colors.black.withOpacity(0.0),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
+
+
 
   Widget _buildMainContent() {
     return SingleChildScrollView(
@@ -355,8 +386,22 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
               // Add to Cart Button
               InkWell(
                 onTap: () {
-                  print("VERIATION_ID------>" + variation_iddd.toString());
-                  addToCart(variation_iddd.toString());
+
+                  print("SELECTED-COLOR------>"+_selectedColor.toString());
+
+                  if(_selectedColor != null){
+                    print("VERIATION_ID------>" + variation_iddd.toString());
+                    addToCart(variation_iddd.toString());
+                  }else{
+                    Get.snackbar(
+                      "Product Details",
+                      "Please select color",
+                      backgroundColor: Colors.black,
+                      colorText: Colors.white,
+                      margin: const EdgeInsets.all(10),
+                      duration: const Duration(seconds: 2),
+                    );
+                  }
                 },
                 child: Container(
                   width: double.infinity,
@@ -1171,7 +1216,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
       String variation_id,
       ) async {
     setState(() {
-      isLoading = true;
+      isLoadingAddToCart = true;
     });
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.productColor);
@@ -1252,7 +1297,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          isLoadingAddToCart = false;
         });
       }
     }
@@ -1260,7 +1305,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
 
   Future<void> addToCart(String variation_id) async {
     setState(() {
-      isLoading = true;
+      isLoadingAddToCart = true;
     });
 
     final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.addCart);
@@ -1339,7 +1384,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          isLoadingAddToCart = false;
         });
       }
     }
