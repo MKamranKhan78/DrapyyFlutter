@@ -229,6 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () {
 
+                        print("PRINT-1--->");
                         if (_validateInputs()) {
                           login(
                             emailController.text.trim(),
@@ -307,13 +308,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   bool _validateInputs() {
+    print("PRINT-2--->");
     if (emailController.text.trim().isEmpty ||
         !RegExp(
           r"^[\w\.-]+@[\w\.-]+\.\w+$",
         ).hasMatch(emailController.text.trim())) {
+      print("PRINT-3--->");
       _showError("Please enter a valid email address");
       return false;
     } else if (passwordController.text.trim().isEmpty) {
+      print("PRINT-4--->");
       _showError("Please enter password");
       return false;
     }
@@ -321,6 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showError(String message) {
+    print("PRINT-5--->");
     Get.snackbar(
       "Validation Error",
       message,
