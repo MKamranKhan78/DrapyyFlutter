@@ -61,6 +61,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
   String product_offer_price = "";
   String product_price = "";
   String product_name = "";
+  String brand_name = "";
   String product_description = "";
   String product_summary = "";
 
@@ -206,6 +207,15 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: grey,
+                      ),
+                    ),
+                    Text(
+                      brand_name.toString(),
+                      style: TextStyle(
+                        fontFamily: FontConstants.gothamPro,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: black_color,
                       ),
                     ),
                     Row(
@@ -1147,6 +1157,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           product_offer_price = model.data!.product!.variant!.offerPrice.toString();
 
           product_name = model.data!.product!.name.toString();
+          brand_name = model.data!.product!.brandName.toString();
           product_description = model.data!.product!.description.toString();
           product_summary = model.data!.product!.summary.toString();
 

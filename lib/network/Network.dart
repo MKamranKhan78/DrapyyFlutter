@@ -29,6 +29,8 @@ class NetworkManager {
     static const String config_data ="config-data";
     static const String cart ="cart";
     static const String top_seller ="top-selling-products";
+    static const String getTrending ="get-trending";
+    static const String getTopRated ="get-top-rated";
     static const String cartUpdate ="cart/update";
     static const String cartRemove ="cart/remove";
     static const String addCart ="cart/add";

@@ -46,6 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<PartnerHomee> partner_list = [];
   List<ProductHomee> product_list = [];
   List<ProductHomee> top_seller = [];
+  List<ProductHomee> top_rated = [];
+  List<ProductHomee> trending = [];
+
   int? selectedIndex = 0;
 
   @override
@@ -616,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     if (_isFirstLoad) _buildTitleShimmer() else
                       const Text(
-                        "TOP SELLER",
+                        "TOP SELLERS",
                         style: TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 24,
@@ -661,6 +664,105 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
+
+                    Container(height: 20,),
+
+                    if (_isFirstLoad) _buildTitleShimmer() else
+                      const Text(
+                        "TOP RATED",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    Container(height: 30,),
+
+                    if (_isFirstLoad) _buildHorizontalProductsShimmer() else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: top_rated.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: SizedBox(
+                                  width: 180,
+                                  child: HomeProductItem(
+                                    product: top_rated[index],
+                                    onItemClick: () {
+                                      Get.to(() => ProductDetailsSccreen(productId: top_rated[index].id.toString()));
+                                    },
+                                    onFavoriteClick: (newWishlistValue) async {
+                                      final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                                      if (skipValue == "1") {
+                                        Get.to(() => const LoginScreen());
+                                      } else {
+                                        addRemoveWishlist(top_rated[index].id.toString());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+
+
+                    Container(height: 20,),
+
+                    if (_isFirstLoad) _buildTitleShimmer() else
+                      const Text(
+                        "TRENDING",
+                        style: TextStyle(
+                          fontFamily: FontConstants.gothamPro,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                    Container(height: 30,),
+
+                    if (_isFirstLoad) _buildHorizontalProductsShimmer() else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: trending.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: SizedBox(
+                                  width: 180,
+                                  child: HomeProductItem(
+                                    product: trending[index],
+                                    onItemClick: () {
+                                      Get.to(() => ProductDetailsSccreen(productId: trending[index].id.toString()));
+                                    },
+                                    onFavoriteClick: (newWishlistValue) async {
+                                      final skipValue = PreferenceManager.getString(NetworkManager.PREF_IS_GUEST).toString();
+                                      if (skipValue == "1") {
+                                        Get.to(() => const LoginScreen());
+                                      } else {
+                                        addRemoveWishlist(trending[index].id.toString());
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
 
 
                     const SizedBox(height: 20),
@@ -1039,6 +1141,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
 
           getTopSeller();
+          getTrending();
+          topRated();
 
           category_product_list.clear();
           category_product_list.addAll((model.data?.categoryProducts ?? []).take(4),);
@@ -1105,6 +1209,159 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> getTrending() async {
+
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.getTrending);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = TopSellingProductsResponse.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+
+          trending.clear();
+          trending.addAll(model.data!.products as Iterable<ProductHomee>);
+
+
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Home",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+
+      }
+    }
+  }
+
+  Future<void> topRated() async {
+
+
+    final url = Uri.parse(NetworkManager.BASE_URL + NetworkManager.getTopRated);
+    final headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+    };
+
+    final client = CustomHttpClient(http.Client());
+
+    try {
+      final response = await client.post(
+        url,
+        headers: headers,
+      );
+
+      print('POST URL: $url');
+      print('Request Headers: $headers');
+      print('Response Code: ${response.statusCode}');
+      print("-------------------------------------FULL RESPONSE-------------------------------------");
+      Toastutils.printFullText(response.body.toString());
+      print("-------------------------------------------------------------------------------------");
+      final model = TopSellingProductsResponse.fromJson(json.decode(response.body));
+      if (model.status == 1) {
+        setState(() {
+
+          top_rated.clear();
+          top_rated.addAll(model.data!.products as Iterable<ProductHomee>);
+
+
+        });
+      } else if (model.status == 0) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else if (model.status == 401) {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      } else {
+        Get.snackbar(
+          "Home",
+          model.message.toString(),
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Home",
+        e.toString(),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      if (mounted) {
+
+      }
+    }
+  }
 
   Future<void> getTopSeller() async {
 

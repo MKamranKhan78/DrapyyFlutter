@@ -11,12 +11,6 @@ import '../helper/preference_manager.dart';
 import '../models/Model.dart';
 import '../network/Network.dart';
 
-// Assuming you already have these imported in your project
-// import 'network_manager.dart';
-// import 'preference_manager.dart';
-// import 'custom_http_client.dart';
-// import 'toast_utils.dart';
-// import 'registration_model.dart';
 
 class RegisterActivity extends StatefulWidget {
   const RegisterActivity({super.key});
@@ -38,12 +32,12 @@ class _RegisterActivityState extends State<RegisterActivity> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final TextEditingController postalCodeController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+
+  //final TextEditingController postalCodeController = TextEditingController();
+  //final TextEditingController addressController = TextEditingController();
 
   @override
   void initState() {
@@ -90,21 +84,25 @@ class _RegisterActivityState extends State<RegisterActivity> {
       _showError("Passwords do not match");
       return false;
     } else if (selectedDate == null) {
-      _showError("Please select your date of birth");
+      _showError("Please select date of birth");
       return false;
-    } else if (postalCodeController.text.trim().isEmpty ||
+    }
+    /* else if (postalCodeController.text.trim().isEmpty ||
         !RegExp(r"^\d+$").hasMatch(postalCodeController.text.trim())) {
       _showError("Please enter a valid postal code");
       return false;
-    } else if (mobileController.text.trim().isEmpty ||
+    }*/
+    else if (mobileController.text.trim().isEmpty ||
         !RegExp(r"^[0-9]+$").hasMatch(mobileController.text.trim())) {
       _showError("Please enter a valid mobile number (only digits)");
       return false;
-    } else if (addressController.text.trim().isEmpty) {
+    }
+    /* else if (addressController.text.trim().isEmpty) {
       _showError("Please enter your address");
       return false;
-    } else if (cityController.text.trim().isEmpty) {
-      _showError("Please enter your city");
+    }*/
+    else if (countryController.text.trim().isEmpty) {
+      _showError("Please enter country");
       return false;
     } else if (gender == null) {
       _showError("Please select gender");
@@ -191,7 +189,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
                     controller: nameController,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
-                      labelText: "ENTER YOUR FULL NAME",
+                      labelText: "FULL NAME",
                       border: UnderlineInputBorder(),
                     ),
                   ),
@@ -202,7 +200,7 @@ class _RegisterActivityState extends State<RegisterActivity> {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: "ENTER YOUR EMAIL ADDRESS",
+                      labelText: "EMAIL ADDRESS",
                       border: UnderlineInputBorder(),
                     ),
                   ),
@@ -285,7 +283,9 @@ class _RegisterActivityState extends State<RegisterActivity> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+
+
+                  /* const SizedBox(height: 10),
 
                   /// Postal Code
                   TextField(
@@ -295,9 +295,10 @@ class _RegisterActivityState extends State<RegisterActivity> {
                       labelText: "POSTAL CODE",
                       border: UnderlineInputBorder(),
                     ),
-                  ),
-                  const SizedBox(height: 10),
+                  ),*/
 
+
+                  const SizedBox(height: 10),
                   /// Mobile Number
                   TextField(
                     controller: mobileController,
@@ -307,7 +308,9 @@ class _RegisterActivityState extends State<RegisterActivity> {
                       border: UnderlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 10),
+
+
+                  /*const SizedBox(height: 10),
 
                   /// Address
                   TextField(
@@ -317,15 +320,15 @@ class _RegisterActivityState extends State<RegisterActivity> {
                       labelText: "ENTER ADDRESS",
                       border: UnderlineInputBorder(),
                     ),
-                  ),
-                  const SizedBox(height: 10),
+                  ),*/
 
+                  const SizedBox(height: 10),
                   /// City
                   TextField(
-                    controller: cityController,
+                    controller: countryController,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
-                      labelText: "ENTER CITY",
+                      labelText: "ENTER COUNTRY",
                       border: UnderlineInputBorder(),
                     ),
                   ),
@@ -376,11 +379,11 @@ class _RegisterActivityState extends State<RegisterActivity> {
                             emailController.text.trim(),
                             usernameController.text.trim(),
                             mobileController.text.trim(),
-                            addressController.text.trim(),
+                            //addressController.text.trim(),
                             gender!,
                             DateFormat('dd-MM-yyyy').format(selectedDate!),
-                            cityController.text.trim(),
-                            postalCodeController.text.trim(),
+                            countryController.text.trim(),
+                            //postalCodeController.text.trim(),
                             passwordController.text.trim(),
                             confirmPasswordController.text.trim(),
                           );
@@ -450,18 +453,18 @@ class _RegisterActivityState extends State<RegisterActivity> {
 
   /// ✅ Your original register() method remains untouched
   Future<void> register(
-    String name,
-    String email,
-    String username,
-    String phone_no,
-    String address,
-    String gender_,
-    String date_of_birth,
-    String city,
-    String postal_code,
-    String password,
-    String password_confirmation,
-  ) async {
+      String name,
+      String email,
+      String username,
+      String phone_no,
+      //String address,
+      String gender_,
+      String date_of_birth,
+      String country,//city,
+      //String postal_code,
+      String password,
+      String password_confirmation,
+      ) async {
     setState(() {
       isLoading = true;
     });
@@ -470,18 +473,19 @@ class _RegisterActivityState extends State<RegisterActivity> {
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization":
-          PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
+      PreferenceManager.getString(NetworkManager.API_TOKEN).toString(),
     };
     final requestBody = {
       "name": name,
       "email": email,
       "username": username,
       "phone_no": phone_no,
-      "address": address,
+      //"address": address,
       "gender": gender_,
       "date_of_birth": date_of_birth,
-      "city": city,
-      "postal_code": postal_code,
+      //"city": city,
+      "country": country,
+      //"postal_code": postal_code,
       "newsletter": 1,
       "privacy_and_policy": 1,
       "password": password,
