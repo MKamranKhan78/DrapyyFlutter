@@ -35,6 +35,22 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
     myFollowers();
   }
 
+
+
+  String toTitleCase(String? text) {
+    if (text!.isEmpty) return text;
+
+    return text
+        .trim()
+        .split(RegExp(r'\s+')) // handles multiple spaces
+        .map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    })
+        .join(' ');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +124,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.merchant?.merchantProfile?.brandName.toString() ?? "Unknown User",
+                        toTitleCase(item.merchant?.merchantProfile!.brandName.toString()),
                          style: const TextStyle(
                           fontFamily: FontConstants.gothamPro,
                           fontSize: 14,
