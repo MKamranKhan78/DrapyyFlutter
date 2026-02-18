@@ -1,4 +1,4 @@
-package com.drapyy.drapyy
+package com.drapyy
 
 import io.flutter.embedding.android.FlutterActivity
 
