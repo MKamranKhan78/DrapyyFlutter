@@ -96,6 +96,21 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
     });
   }
 
+
+  String toTitleCase(String text) {
+    if (text.isEmpty) return text;
+
+    return text
+        .trim()
+        .split(RegExp(r'\s+')) // handles multiple spaces
+        .map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    })
+        .join(' ');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,7 +185,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
                         Container(
                           width: 150,
                           child: Text(
-                            "" + widget.brand_name.toString(),
+                            toTitleCase(widget.brand_name ?? ""),
                             style: TextStyle(
                               fontFamily: FontConstants.gothamPro,
                               fontSize: 14,
@@ -230,7 +245,7 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
                           child: Center(
                             child: Text(
                              // "Follow",
-                              (is_followed != null && is_followed != "1") ? "Unfollow" : "Follow",
+                              (is_followed != null && is_followed == "1") ? "Unfollow" : "Follow",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -673,6 +688,9 @@ class _BranddetailsScreenState extends State<BranddetailsScreen> {
         setState(() {
           followers = model.data!.followers.toString();
           _currentPage = model.data!.currentPage ?? 1;
+
+
+          print("BD---->---IS_FOLLOWED------->"+model.data!.brand!.is_followed.toString());
 
           if(model.data!.brand!.is_followed != null && model.data!.brand!.is_followed.toString().isNotEmpty){
             is_followed = model.data!.brand!.is_followed.toString();

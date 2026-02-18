@@ -33,7 +33,7 @@ class _FiltersScreenState extends State<FilterScreen> {
   int? selectedColorId; // store selected color id
 
   // Price Range
-  RangeValues _priceRange = const RangeValues(0, 25000);
+  RangeValues _priceRange = const RangeValues(0, 100000);
 
 
   @override
@@ -163,7 +163,7 @@ class _FiltersScreenState extends State<FilterScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            RangeSlider(
+            /*RangeSlider(
               values: _priceRange,
               min: 0,
               max: 25000,
@@ -174,7 +174,54 @@ class _FiltersScreenState extends State<FilterScreen> {
                   _priceRange = values;
                 });
               },
+            ),*/
+
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                showValueIndicator: ShowValueIndicator.always,
+                valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
+                valueIndicatorTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: RangeSlider(
+                values: _priceRange,
+                min: 0,
+                max: 100000,
+                divisions: 300, // optional (increases smoothness)
+                labels: RangeLabels(
+                  _priceRange.start.toStringAsFixed(0),
+                  _priceRange.end.toStringAsFixed(0),
+                ),
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey[300],
+                onChanged: (RangeValues values) {
+                  setState(() {
+                    _priceRange = values;
+                  });
+                },
+              ),
             ),
+
+            /// ✅ Start & End Price Text Bottom Left & Right
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Rs ${_priceRange.start.toStringAsFixed(0)}",
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "Rs ${_priceRange.end.toStringAsFixed(0)}",
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+
           ],
         ),
       ),
