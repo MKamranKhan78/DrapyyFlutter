@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -62,6 +63,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
   String product_price = "";
   String product_name = "";
   String brand_name = "";
+  String share_url = "";
   String product_description = "";
   String product_summary = "";
 
@@ -200,15 +202,36 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product_name.toString(),
-                      style: TextStyle(
-                        fontFamily: FontConstants.gothamPro,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: grey,
+
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           product_name.toString(),
+                           style: TextStyle(
+                             fontFamily: FontConstants.gothamPro,
+                             fontSize: 14,
+                             fontWeight: FontWeight.w600,
+                             color: grey,
+                           ),
+                         ),
+                         InkWell(
+                           onTap: () async {
+                             await Share.share(share_url.toString());
+                           },
+                           child: Icon(
+                             size: 25,
+                             Icons.share,
+                             color: Colors.black,
+                           ),
+                         ),
+
+                       ],
                       ),
                     ),
+
                     Text(
                       brand_name.toString(),
                       style: TextStyle(
@@ -1160,6 +1183,7 @@ class _ProductDetailScreenState extends State<ProductDetailsSccreen> {
           brand_name = model.data!.product!.brandName.toString();
           product_description = model.data!.product!.description.toString();
           product_summary = model.data!.product!.summary.toString();
+          share_url = model.data!.product!.share_url.toString();
 
           product_list.clear();
           product_list.addAll(model.data!.similarProducts as Iterable<ProductHomee>);

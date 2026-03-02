@@ -4005,6 +4005,7 @@ class DetailProductt {
   String? deletedAt;
   String? createdAt;
   String? updatedAt;
+  String? share_url;
   VariantHomee? variant;
   String? brandName;
   DetailMerchant? merchant;
@@ -4043,6 +4044,7 @@ class DetailProductt {
     this.deletedAt,
     this.createdAt,
     this.updatedAt,
+    this.share_url,
     this.variant,
     this.brandName,
     this.merchant,
@@ -4082,6 +4084,7 @@ class DetailProductt {
     deletedAt = _toString(json['deleted_at']);
     createdAt = _toString(json['created_at']);
     updatedAt = _toString(json['updated_at']);
+    share_url = _toString(json['share_url']);
     variant = json['variant'] != null ? VariantHomee.fromJson(json['variant']) : null;
     brandName = _toString(json['brand_name']);
     merchant = json['merchant'] != null ? DetailMerchant.fromJson(json['merchant']) : null;
@@ -4122,6 +4125,7 @@ class DetailProductt {
     dataMap['deleted_at'] = deletedAt;
     dataMap['created_at'] = createdAt;
     dataMap['updated_at'] = updatedAt;
+    dataMap['share_url'] = share_url;
     if (variant != null) dataMap['variant'] = variant!.toJson();
     dataMap['brand_name'] = brandName;
     if (merchant != null) dataMap['merchant'] = merchant!.toJson();
