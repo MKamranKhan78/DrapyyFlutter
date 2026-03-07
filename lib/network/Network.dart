@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 
 
 class NetworkManager {
-    static const String BASE_URL ="https://app.drapyy.com/api/v1/";
+    //static const String BASE_URL ="https://app.drapyy.com/api/v1/";
+      static const String BASE_URL ="https://drapyy.com/api/v1/";
 
 
 
