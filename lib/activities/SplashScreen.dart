@@ -70,11 +70,34 @@ class SplashScreenState extends State<SplashScreen> {
         }
       } else {
         print("SPLASH_checkGuestStatus------------3>");
-        guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
-      }
+       // guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+
+        final String? fcmToken =
+        await FirebaseMessaging.instance.getToken();
+
+        debugPrint("FCM TOKEN: $fcmToken");
+
+        if (fcmToken != null && fcmToken.isNotEmpty) {
+          guestSignup(fcmToken);
+        }
+
+
+
+       }
     } else {
       print("checkGuestStatus------------4>");
-      guestSignup("SPLASH_sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+     // guestSignup("SPLASH_sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+
+      final String? fcmToken =
+      await FirebaseMessaging.instance.getToken();
+
+      debugPrint("FCM TOKEN: $fcmToken");
+
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        guestSignup(fcmToken);
+      }
+
+
     }
   }
 

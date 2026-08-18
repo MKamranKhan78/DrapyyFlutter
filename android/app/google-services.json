@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "248383839421",
+    "project_id": "drpy-5bf2a",
+    "storage_bucket": "drpy-5bf2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248383839421:android:d0b12b2677fa5ddbbb2bd4",
+        "android_client_info": {
+          "package_name": "com.drapyy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCissYUf53t53NCXerN1WwrzZMlxRYMMHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

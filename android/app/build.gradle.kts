@@ -6,6 +6,9 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
+    // Firebase Google Services
+    id("com.google.gms.google-services")
 }
 
 val keystoreProperties = Properties()
@@ -14,11 +17,14 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val hasReleaseKeystore = listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
+    .all { keystoreProperties[it] != null }
+
 android {
     namespace = "com.drapyy"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-// ✅ Explicitly use the correct NDK version
+
+    // Explicitly use the correct NDK version
     ndkVersion = "29.0.13113456"
 
     compileOptions {
@@ -31,40 +37,51 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.drapyy"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        // ✅ Only include ABIs if you have native code
+
+        // Only include ABIs if you have native code
         ndk {
-            abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))
+            abiFilters.addAll(
+                listOf(
+                    "arm64-v8a",
+                    "armeabi-v7a",
+                    "x86",
+                    "x86_64"
+                )
+            )
         }
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
+        if (hasReleaseKeystore) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = rootProject.file(
+                    keystoreProperties["storeFile"] as String
+                )
+                storePassword = keystoreProperties["storePassword"] as String
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseKeystore) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
-    // ✅ Flutter handles native packaging, so use this instead:
+
     packagingOptions {
         jniLibs {
             useLegacyPackaging = false
         }
-        // Also add these for good measure:
+
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

@@ -4,6 +4,7 @@ import 'package:drapyy/fragments/MenuFragment.dart';
 import 'package:drapyy/fragments/ProfileFragment.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:drapyy/models/Model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -34,53 +35,187 @@ class _BottomNavScreenState extends State<MainActivity> {
   String wishCount = "";
   late StreamSubscription cartListener;
   late StreamSubscription wishListener;
+  //
+  // @override
+  // Future<void> initState() async {
+  //   super.initState();
+  //
+  //   if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT) != null){
+  //     if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString() != "null"){
+  //       cartCount = PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString();
+  //     }
+  //   }else{
+  //     cartCount = "0";
+  //   }
+  //
+  //   if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT) != null){
+  //     if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString() != "null"){
+  //       wishCount = PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString();
+  //     }
+  //   }else{
+  //     wishCount = "0";
+  //   }
+  //
+  //   cartListener = eventBus.on<WishlistUpdatedEvent>().listen((event) {
+  //     print("Cart Count Updated: ${event.count}");
+  //     setState(() {
+  //       PreferenceManager.setString(NetworkManager.PREF_CART_COUNT, event.count.toString() ?? "");
+  //       cartCount = event.count;  // Update your UI
+  //     });
+  //   });
+  //
+  //   wishListener = eventBus.on<FavUpdatedEvent>().listen((event) {
+  //     print("Fav Count Updated: ${event.count}");
+  //     setState(() {
+  //       PreferenceManager.setString(NetworkManager.PREF_WISH_COUNT, event.count.toString() ?? "");
+  //       wishCount = event.count;  // Update your UI
+  //     });
+  //   });
+  //
+  //   print("API TOKEN ------> ${PreferenceManager.getString(NetworkManager.API_TOKEN)}");
+  //   if (PreferenceManager.getString(NetworkManager.API_TOKEN).toString().isEmpty ||
+  //       PreferenceManager.getString(NetworkManager.API_TOKEN) == null ||
+  //       PreferenceManager.getString(NetworkManager.API_TOKEN) == "null") {
+  //     print("MAINACT------>");
+  //
+  //
+  //
+  //
+  //     //guestSignup("device_token_12345");
+  //     final String? fcmToken =
+  //         await FirebaseMessaging.instance.getToken();
+  //
+  //     debugPrint("FCM TOKEN: $fcmToken");
+  //
+  //     if (fcmToken != null && fcmToken.isNotEmpty) {
+  //       guestSignup(fcmToken);
+  //     }
+  //
+  //
+  //
+  //
+  //   } else {
+  //     getconfig();
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
 
-    if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT) != null){
-      if(PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString() != "null"){
-        cartCount = PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString();
+    // Get Cart Count
+    if (PreferenceManager.getString(NetworkManager.PREF_CART_COUNT) != null) {
+      if (PreferenceManager.getString(NetworkManager.PREF_CART_COUNT).toString() != "null") {
+        cartCount = PreferenceManager
+            .getString(NetworkManager.PREF_CART_COUNT)
+            .toString();
       }
-    }else{
+    } else {
       cartCount = "0";
     }
 
-    if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT) != null){
-      if(PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString() != "null"){
-        wishCount = PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString();
+    // Get Wishlist Count
+    if (PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT) != null) {
+      if (PreferenceManager.getString(NetworkManager.PREF_WISH_COUNT).toString() != "null") {
+        wishCount = PreferenceManager
+            .getString(NetworkManager.PREF_WISH_COUNT)
+            .toString();
       }
-    }else{
+    } else {
       wishCount = "0";
     }
 
+    // Cart Listener
     cartListener = eventBus.on<WishlistUpdatedEvent>().listen((event) {
       print("Cart Count Updated: ${event.count}");
+
+      if (!mounted) return;
+
       setState(() {
-        PreferenceManager.setString(NetworkManager.PREF_CART_COUNT, event.count.toString() ?? "");
-        cartCount = event.count;  // Update your UI
+        PreferenceManager.setString(
+          NetworkManager.PREF_CART_COUNT,
+          event.count.toString(),
+        );
+
+        cartCount = event.count;
       });
     });
 
+    // Wishlist Listener
     wishListener = eventBus.on<FavUpdatedEvent>().listen((event) {
       print("Fav Count Updated: ${event.count}");
+
+      if (!mounted) return;
+
       setState(() {
-        PreferenceManager.setString(NetworkManager.PREF_WISH_COUNT, event.count.toString() ?? "");
-        wishCount = event.count;  // Update your UI
+        PreferenceManager.setString(
+          NetworkManager.PREF_WISH_COUNT,
+          event.count.toString(),
+        );
+
+        wishCount = event.count;
       });
     });
 
-    print("API TOKEN ------> ${PreferenceManager.getString(NetworkManager.API_TOKEN)}");
-    if (PreferenceManager.getString(NetworkManager.API_TOKEN).toString().isEmpty ||
-        PreferenceManager.getString(NetworkManager.API_TOKEN) == null ||
-        PreferenceManager.getString(NetworkManager.API_TOKEN) == "null") {
+    // Print API Token
+    print(
+      "API TOKEN ------> "
+          "${PreferenceManager.getString(NetworkManager.API_TOKEN)}",
+    );
+
+    // Check API Token
+    final String? apiToken =
+    PreferenceManager.getString(NetworkManager.API_TOKEN);
+
+    if (apiToken == null ||
+        apiToken.isEmpty ||
+        apiToken == "null") {
+
       print("MAINACT------>");
-      guestSignup("device_token_12345");
+
+      // Get Firebase FCM Token and perform guest signup
+      _getFCMTokenAndGuestSignup();
     } else {
       getconfig();
     }
   }
+
+
+  /// Get Firebase FCM Token and call guest signup
+  Future<void> _getFCMTokenAndGuestSignup() async {
+    try {
+      print("Getting Firebase FCM Token...");
+
+      // Request notification permission
+      await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      // Get FCM Token
+      final String? fcmToken =
+      await FirebaseMessaging.instance.getToken();
+
+      print("======================================");
+      print("FIREBASE FCM TOKEN:");
+      print(fcmToken);
+      print("======================================");
+
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        print("Calling guestSignup with Firebase token...");
+
+        guestSignup(fcmToken);
+      } else {
+        print("FCM TOKEN IS NULL OR EMPTY");
+      }
+    } catch (e) {
+      print("FCM TOKEN ERROR: $e");
+    }
+  }
+
+
+
 
   @override
   void dispose() {

@@ -12,6 +12,7 @@ import 'package:drapyy/activities/products_items/HomeProductItem.dart';
 import 'package:drapyy/helper/colors.dart';
 import 'package:drapyy/helper/drawables.dart';
 import 'package:drapyy/models/Model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -67,11 +68,33 @@ class _HomeScreenState extends State<HomeScreen> {
         getHome();
       } else {
         print("HOME_checkGuestStatus------------3>");
-        guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+        //guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+
+        final String? fcmToken =
+        await FirebaseMessaging.instance.getToken();
+
+        debugPrint("FCM TOKEN: $fcmToken");
+
+        if (fcmToken != null && fcmToken.isNotEmpty) {
+          guestSignup(fcmToken);
+        }
+
+
+
       }
     } else {
       print("HOME_checkGuestStatus------------4>");
-      guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+    //  guestSignup("sdhfjdshfjhsd j fhdsjgf hsgdhfgshdghf gdshgf hsdg fsd");
+      final String? fcmToken =
+      await FirebaseMessaging.instance.getToken();
+
+      debugPrint("FCM TOKEN: $fcmToken");
+
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        guestSignup(fcmToken);
+      }
+
+
     }
   }
 
