@@ -2,7 +2,7 @@ name: drapyy
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 4.0.1+5
+version: 4.0.2+6
 
 environment:
   sdk: ^3.7.2 # sdk: ^3.5.3
